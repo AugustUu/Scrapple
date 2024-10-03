@@ -18,7 +18,7 @@ async function init(){
 
     new player(100,100);
 
-    new player(300,100+1);
+    //new player(300,100+1);
 }
 
 init()
