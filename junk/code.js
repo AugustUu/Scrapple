@@ -1,35 +1,37 @@
 /// code.js
-window.addEventListener('load', function () {
-  console.log("loaded")
-  function handlePaste(e) {
-    var clipboardData, pastedData;
+window.addEventListener("keyup", event => {
+  if (event.ctrlKey && event.which === 192) {
+    console.log("loaded")
+    function handlePaste(e) {
+      var clipboardData, pastedData;
 
-    e.stopPropagation();
-    e.preventDefault();
+      e.stopPropagation();
+      e.preventDefault();
 
-    clipboardData = e.clipboardData || window.clipboardData;
-    pastedData = clipboardData.getData('Text');
+      clipboardData = e.clipboardData || window.clipboardData;
+      pastedData = clipboardData.getData('Text');
 
-    const data = "query=" + encodeURIComponent(pastedData);
+      const data = "query=" + encodeURIComponent(pastedData);
 
-    const xhr = new XMLHttpRequest();
+      const xhr = new XMLHttpRequest();
 
-    xhr.addEventListener("readystatechange", function () {
-      if (this.readyState === this.DONE) {
-        console.log(JSON.parse(this.responseText).solution.solution.default);
-        navigator.clipboard.writeText(JSON.parse(this.responseText).solution.solution.default);
-        console.log(JSON.parse(this.responseText).solution.solution)
-      }
-    });
+      xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === this.DONE) {
+          console.log(JSON.parse(this.responseText).solution.solution.default);
+          navigator.clipboard.writeText(JSON.parse(this.responseText).solution.solution.default);
+          console.log(JSON.parse(this.responseText).solution.solution)
+        }
+      });
 
-    xhr.open("POST", "https://corsproxy.io/?" + encodeURIComponent("https://www.symbolab.com/pub_api/bridge/solution"));
-    xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+      xhr.open("POST", "https://corsproxy.io/?" + encodeURIComponent("https://www.symbolab.com/pub_api/bridge/solution"));
+      xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8");
 
-    xhr.send(data);
+      xhr.send(data);
 
+    }
+
+    document.getElementById("content").addEventListener('paste', handlePaste);
+
+    console.log("loaded frfr")
   }
-
-  document.getElementById("content").addEventListener('paste', handlePaste);
-
-  console.log("loaded frfr")
 });
