@@ -1,3 +1,4 @@
+/// code.js
 function handlePaste(e) {
     var clipboardData, pastedData;
 
