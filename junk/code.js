@@ -1,4 +1,5 @@
 /// code.js
+console.log("loaded")
 function handlePaste(e) {
     var clipboardData, pastedData;
 
@@ -29,3 +30,4 @@ function handlePaste(e) {
 
 document.getElementById("content").addEventListener('paste', handlePaste);
 
+console.log("loaded frfr")
