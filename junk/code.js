@@ -1,6 +1,7 @@
 /// code.js
-console.log("loaded")
-function handlePaste(e) {
+window.addEventListener('load', function () {
+  console.log("loaded")
+  function handlePaste(e) {
     var clipboardData, pastedData;
 
     e.stopPropagation();
@@ -12,7 +13,7 @@ function handlePaste(e) {
     const data = "query=" + encodeURIComponent(pastedData);
 
     const xhr = new XMLHttpRequest();
-    
+
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === this.DONE) {
         console.log(JSON.parse(this.responseText).solution.solution.default);
@@ -20,14 +21,15 @@ function handlePaste(e) {
         console.log(JSON.parse(this.responseText).solution.solution)
       }
     });
-    
-    xhr.open("POST", "https://corsproxy.io/?"+ encodeURIComponent("https://www.symbolab.com/pub_api/bridge/solution"));
+
+    xhr.open("POST", "https://corsproxy.io/?" + encodeURIComponent("https://www.symbolab.com/pub_api/bridge/solution"));
     xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8");
-    
+
     xhr.send(data);
 
-}
+  }
 
-document.getElementById("content").addEventListener('paste', handlePaste);
+  document.getElementById("content").addEventListener('paste', handlePaste);
 
-console.log("loaded frfr")
+  console.log("loaded frfr")
+});
