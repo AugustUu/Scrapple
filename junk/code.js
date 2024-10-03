@@ -16,6 +16,7 @@ function handlePaste(e) {
       if (this.readyState === this.DONE) {
         console.log(JSON.parse(this.responseText).solution.solution.default);
         navigator.clipboard.writeText(JSON.parse(this.responseText).solution.solution.default);
+        console.log(JSON.parse(this.responseText).solution.solution)
       }
     });
     
