@@ -1,9 +1,9 @@
 import { Application, Graphics, PointData, Ticker } from "pixi.js";
 import { app } from ".";
+import { InputSystem } from "./util/InputSystem";
 
-const PIXI = require('pixi.js');
-const Keyboard = require('pixi.js-keyboard');
-const Mouse = require('pixi.js-mouse');
+
+
 
 export class player {
     sprite: Graphics;
@@ -26,31 +26,31 @@ export class player {
         })
         this.sprite.eventMode = "static"
         this.sprite.hitArea = app.screen;
-        this.sprite.addEventListener('pointermove', (e)=>{
-            this.sprite.position.copyFrom(e)
-        })
+
     }
 
     gameLoop(delta: Ticker){
         this.play(delta);
-        Keyboard.update();
-        Mouse.update();
     }
+
     play(delta: Ticker) {
-        if(Keyboard.isKeyDown('KeyA')){
+        if(InputSystem.isKeyDown('a')){
             this.sprite.x -= 3;
         }
-        if(Keyboard.isKeyDown('KeyD')){
+        if(InputSystem.isKeyDown('d')){
             this.sprite.x += 3;
         }
-        if(Keyboard.isKeyDown('KeyS')){
+        if(InputSystem.isKeyDown('s')){
             this.sprite.y += 3;
         }
-        if(Keyboard.isKeyDown('KeyW')){
+        if(InputSystem.isKeyDown('w')){
             this.sprite.y -= 3;
         }
 
-        console.log(Mouse.getPosLocalX() + ", " + Mouse.getPosLocalY());
+        if(InputSystem.isMouseDown(0)){
+            this.sprite.x = InputSystem.getMousePos().x;
+            this.sprite.y = InputSystem.getMousePos().y;
+        }
     };
 
     
