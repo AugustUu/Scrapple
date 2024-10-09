@@ -13,9 +13,7 @@
   "dependencies": {
     "@pixi/ui": "^2.1.5",
     "eslint": "^9.11.1",
-    "pixi.js": "^8.4.1",
-    "pixi.js-keyboard": "^1.1.6",
-    "pixi.js-mouse": "^1.1.6"
+    "pixi.js": "^8.4.1"
   },
   "devDependencies": {
     "@types/node": "^22.7.2",
