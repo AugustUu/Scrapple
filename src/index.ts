@@ -4,7 +4,8 @@ import { GameState, StateSystem } from './util/StateSystem';
 import { EventSystem } from './util/EventSystem';
 import { InputSystem } from './util/InputSystem';
 import { Peer } from "peerjs";
-import { MainMenu } from './MainMenu';
+import { MainMenu } from './ui/MainMenu';
+import { Client } from './network/client';
 
 
 export const app = new Application();
@@ -25,7 +26,10 @@ async function init(){
     MainMenu.init();
 
     InputSystem.init();
+    Client.init()
+
     StateSystem.changeSate(GameState.menu);
+
 
     
 /*

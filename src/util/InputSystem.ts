@@ -11,7 +11,6 @@ export class InputSystem {
             InputSystem.position.y = event.clientY
         });
         window.addEventListener("mousedown", (event) => {
-            console.log(event.button)
             InputSystem.mouse_button = event.button
         });
         addEventListener("mouseup", (event) => {
