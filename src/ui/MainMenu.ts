@@ -14,64 +14,70 @@ export class MainMenu {
             container = new Container();
             app.stage.addChild(container);
 
-            let JoinId = new Input({
-                bg: new Graphics().rect(0, 0, 500, 30).fill(0xff0000),
-                padding: {
-                 top: 10,
-                 right: 10,
-                 bottom: 10,
-                 left: 10
-                }
-            });
+            let [myId, joinId, joinButton] = this.setupButtons()
+            container.addChild(myId, joinId, joinButton);
 
-            let MyId = new Input({
-                bg: new Graphics().rect(0, 0, 500, 30).fill(0xff0000),
-                padding: {
-                 top: 10,
-                 right: 10,
-                 bottom: 10,
-                 left: 10
-                }
-            });
-
-            let Join = new Graphics()
-            .rect(0, 0, 100, 100)
-            .fill(0x0000ff);
-
-
-            Join.position._x = window.innerWidth / 2
-            Join.position._y = window.innerHeight / 2 - 100
-
-            JoinId.position._x = window.innerWidth / 2
-            JoinId.position._y = window.innerHeight / 2 + 100
-
-            MyId.position._x = window.innerWidth / 2
-            MyId.position._y = window.innerHeight / 2;
-
-            MyId.value = Client.me.id
-
-            MyId.on('pointerdown',text => {
+            myId.on('pointerdown', text => {
                 alert(Client.me.id)
             });
 
-            JoinId.on('pointerdown',text => {
-                JoinId.value = prompt("player code","") as string
+            joinId.on('pointerdown', text => {
+                joinId.value = prompt("player code", "") as string
             })
 
-            Join.on('pointerdown',text => {
-                Client.connect(JoinId.value)
+            joinButton.on('pointerdown', text => {
+                Client.connect(joinId.value);
             })
-            Join.eventMode = "static"
 
 
-            container.addChild(MyId);
-            container.addChild(JoinId);
-            container.addChild(Join);
+
         })
 
         StateSystem.onExit(GameState.menu, (old_state) => {
             container.destroy(true);
         })
+    }
+
+    private static setupButtons(): [Input, Input, Graphics] {
+        let joinId = new Input({
+            bg: new Graphics().rect(0, 0, 500, 30).fill(0xff0000),
+            padding: {
+                top: 10,
+                right: 10,
+                bottom: 10,
+                left: 10
+            }
+        });
+
+        let myId = new Input({
+            bg: new Graphics().rect(0, 0, 500, 30).fill(0xff0000),
+            padding: {
+                top: 10,
+                right: 10,
+                bottom: 10,
+                left: 10
+            }
+        });
+
+        let joinButton = new Graphics()
+            .rect(0, 0, 100, 100)
+            .fill(0x0000ff);
+
+
+        joinButton.position._x = window.innerWidth / 2
+        joinButton.position._y = window.innerHeight / 2 - 100
+        joinButton.eventMode = "static"
+
+
+        joinId.position._x = window.innerWidth / 2
+        joinId.position._y = window.innerHeight / 2 + 100
+
+        myId.position._x = window.innerWidth / 2
+        myId.position._y = window.innerHeight / 2;
+
+        myId.value = Client.me.id
+
+        return [myId, joinId, joinButton]
     }
 
 }

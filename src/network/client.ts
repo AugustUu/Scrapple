@@ -1,36 +1,38 @@
 import Peer, { DataConnection } from "peerjs";
-import * as crypto from "node:crypto";
+import { EventSystem } from "../util/EventSystem";
 
 
-export class Client{
+export class Client {
     static me: Peer;
+    static host: DataConnection;
 
-    static conn: DataConnection;
-    static peer: Peer;
-
-    static init(){
+    static init() {
         this.me = new Peer(window.crypto.randomUUID());
-    }
-    
-    static connect(peer_id: string){
-        this.peer = new Peer(peer_id)
-        this.conn = this.me.connect(peer_id);
-        console.log("connecting to " + peer_id)
 
-        this.conn.on("open", () => {
-            this.conn.send("Opened Connection");
-        });
-
-        this.peer.on("connection", (conn) => {
+        this.me.on("connection", (conn) => {
             conn.on("data", (data) => {
-                // Will print 'hi!'
                 console.log(data);
             });
             conn.on("open", () => {
+                console.log("Client Connected to me")
                 conn.send("hello!");
             });
         });
 
+    }
+
+    static connect(hostId: string) {
+
+        this.host = this.me.connect(hostId);
+        console.log("connecting to " + hostId)
+
+        this.host.on("open", () => {
+            EventSystem.emit("connectedToHost", this.host);
+
+            this.host.send("hello from2: " + this.me.id)
+        });
+
+
 
     }
-}
+} 
