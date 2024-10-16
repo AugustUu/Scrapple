@@ -1,6 +1,7 @@
 import { Application, Graphics, PointData, Ticker } from "pixi.js";
 import { app } from ".";
 import { InputSystem } from "./util/InputSystem";
+import { Vector2 } from "./util/MathUtils";
 
 
 
@@ -20,10 +21,6 @@ export class player {
 
         app.ticker.add(delta => this.gameLoop(delta))
 
-        this.sprite.on('pointerdown', (event) => {
-            this.sprite.x = event.global.x - 50;
-            this.sprite.y = event.global.y - 50;
-        })
         this.sprite.eventMode = "static"
         this.sprite.hitArea = app.screen;
 
@@ -48,8 +45,13 @@ export class player {
         }
 
         if(InputSystem.isMouseDown(0)){
-            this.sprite.x = InputSystem.getMousePos().x;
-            this.sprite.y = InputSystem.getMousePos().y;
+            var line = new Graphics();
+            line.moveTo(this.sprite.x, this.sprite.y)
+            var end = new Vector2(InputSystem.getMousePos().x - this.sprite.x, InputSystem.getMousePos().y - this.sprite.y).normalized().mul(100000);
+            //line.lineTo(end.x + this.sprite.x, end.y + this.sprite.y);
+            line.lineTo(InputSystem.getMousePos().x, InputSystem.getMousePos().y)
+            line.stroke({ width: 1, color:0x000000 })
+            app.stage.addChild(line);
         }
     };
 

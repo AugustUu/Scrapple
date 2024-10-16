@@ -3,6 +3,10 @@ import { player } from './player';
 import { GameState, StateSystem } from './util/StateSystem';
 import { EventSystem } from './util/EventSystem';
 import { InputSystem } from './util/InputSystem';
+import { Peer } from "peerjs";
+import { MainMenu } from './ui/MainMenu';
+import { Client } from './network/client';
+
 
 export const app = new Application();
 
@@ -13,18 +17,59 @@ async function init(){
         backgroundColor: 0x777777,
         resizeTo: window
     });
-    InputSystem.init();
 
     document.body.appendChild(app.canvas);
+    //const container = new Container();
+    //app.stage.addChild(container);
 
-    const container = new Container();
-    app.stage.addChild(container);
 
-    app.ticker.add(delta => {
-        console.log(InputSystem.isMouseDown(0));
-    })
+    MainMenu.init();
 
-    new player(100,100);
+    InputSystem.init();
+    Client.init()
+
+    StateSystem.changeSate(GameState.menu);
+
+
+    
+/*
+    const peer = new Peer("testingtesting123");
+    const peer2 = new Peer("testingtesting1234");
+    const conn = peer.connect("testingtesting1234");
+    const conn2 = peer.connect("testingtesting123");
+
+    console.log(peer,conn)
+
+    conn.on("open", () => {
+        conn.send("hi!");
+    });
+
+    peer.on("connection", (conn) => {
+        conn.on("data", (data) => {
+            // Will print 'hi!'
+            console.log(data);
+        });
+        conn.on("open", () => {
+            conn.send("hello!");
+        });
+    });
+
+    conn2.on("open", () => {
+        conn.send("hi!");
+    });
+
+    peer2.on("connection", (conn) => {
+        conn.on("data", (data) => {
+            // Will print 'hi!'
+            console.log(data);
+        });
+        conn.on("open", () => {
+            conn.send("hello!");
+        });
+    });*/
+
+
+    //new player(100,100);
 
 }
 
