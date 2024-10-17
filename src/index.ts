@@ -6,7 +6,7 @@ import { InputSystem } from './util/InputSystem';
 import { Peer } from "peerjs";
 import { MainMenu } from './ui/MainMenu';
 import { Client } from './network/client';
-import { World as World } from './world';
+import { World as World } from './Physics/world';
 import RAPIER from '@dimforge/rapier2d-compat';
 
 
