@@ -2,17 +2,22 @@ import { Application, Graphics, PointData, Ticker } from "pixi.js";
 import { app } from ".";
 import { InputSystem } from "./util/InputSystem";
 import { Vector2 } from "./util/MathUtils";
+import { KinematicPhysicsObject } from "./Physics/PhysicsObject";
+import { World } from "./Physics/world";
 
 
 
 
-export class player {
+export class player{
     sprite: Graphics;
-
+    
     constructor(x: number, y: number) {
+        
         this.sprite = new Graphics()
-            .rect(0, 0, 100, 100)
+            .rect(0, 0, 40, 40)
             .fill(0xff0000);
+        
+            let PhysicsObject = new KinematicPhysicsObject(0, 0, 1, 1, World, this.sprite);
 
         this.sprite.x = x;
         this.sprite.y = y;
@@ -33,6 +38,7 @@ export class player {
     play(delta: Ticker) {
         if(InputSystem.isKeyDown('a')){
             this.sprite.x -= 3;
+
         }
         if(InputSystem.isKeyDown('d')){
             this.sprite.x += 3;
