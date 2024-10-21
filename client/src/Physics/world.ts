@@ -11,5 +11,6 @@ export class World {
         app.ticker.add((delta) => {
             this.world.step();
         })
+        this.world.lengthUnit = 10
     }
 }

@@ -4,50 +4,60 @@ import { InputSystem } from "./util/InputSystem";
 import { Vector2 } from "./util/MathUtils";
 import { KinematicPhysicsObject } from "./Physics/PhysicsObject";
 import { World } from "./Physics/world";
+import { RigidBody } from "@dimforge/rapier2d-compat";
 
 
 
 
 export class player{
     sprite: Graphics;
-    
+    physics_object: KinematicPhysicsObject;
+    rb: RigidBody;
     constructor(x: number, y: number) {
         
         this.sprite = new Graphics()
             .rect(0, 0, 40, 40)
-            .fill(0xff0000);
+            .fill(0x800080);
         
-            let PhysicsObject = new KinematicPhysicsObject(0, 0, 1, 1, World, this.sprite);
+        this.physics_object = new KinematicPhysicsObject(0, 20, 2, 2, World, this.sprite);
+        this.rb = this.physics_object.rigidBody;
 
-        this.sprite.x = x;
-        this.sprite.y = y;
-
+        this.sprite.x = this.rb.translation().x * 10;;
+        this.sprite.y = this.rb.translation().y * 10;;
+        
         app.stage.addChild(this.sprite);
 
         app.ticker.add(delta => this.gameLoop(delta))
 
         this.sprite.eventMode = "static"
         this.sprite.hitArea = app.screen;
+        
 
     }
+    
 
     gameLoop(delta: Ticker){
         this.play(delta);
+        //this.sprite.x = this.rb.translation().x * 10 + screen.availWidth / 2 //- 20;
+        //this.sprite.y = this.rb.translation().y * -10 + screen.availHeight / 2//- 62;
+
     }
 
     play(delta: Ticker) {
         if(InputSystem.isKeyDown('a')){
-            this.sprite.x -= 3;
-
+            this.rb.setTranslation({x:this.rb.translation().x - 0.5, y:this.rb.translation().y}, false);
         }
         if(InputSystem.isKeyDown('d')){
-            this.sprite.x += 3;
+            this.rb.setTranslation({x:this.rb.translation().x + 0.5, y:this.rb.translation().y}, false);
         }
         if(InputSystem.isKeyDown('s')){
-            this.sprite.y += 3;
+            this.rb.setTranslation({x:this.rb.translation().x, y:this.rb.translation().y - 0.5}, false);
         }
         if(InputSystem.isKeyDown('w')){
-            this.sprite.y -= 3;
+            this.rb.setTranslation({x:this.rb.translation().x, y:this.rb.translation().y + 0.5}, false);
+        }
+        if(InputSystem.isKeyDown('i')){
+            this.rb.setLinvel({x:this.rb.linvel().x, y:30}, true);
         }
 
         if(InputSystem.isMouseDown(0)){
