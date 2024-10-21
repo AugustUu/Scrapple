@@ -38,8 +38,8 @@ export class player{
 
     gameLoop(delta: Ticker){
         this.play(delta);
-        //this.sprite.x = this.rb.translation().x * 10 + screen.availWidth / 2 //- 20;
-        //this.sprite.y = this.rb.translation().y * -10 + screen.availHeight / 2//- 62;
+        this.sprite.x = this.rb.translation().x * 10 + screen.availWidth / 2 //- 20;
+        this.sprite.y = this.rb.translation().y * -10 + screen.availHeight / 2//- 62;
 
     }
 
