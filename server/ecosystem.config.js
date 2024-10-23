@@ -8,7 +8,7 @@ const os = require('os');
 
 module.exports = {
   apps : [{
-    name: "colyseus-app",
+    name: "scrapple-sverver",
     script: 'build/index.js',
     time: true,
     watch: false,
