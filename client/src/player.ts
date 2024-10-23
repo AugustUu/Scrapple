@@ -45,20 +45,24 @@ export class player{
 
     play(delta: Ticker) {
         if(InputSystem.isKeyDown('a')){
-            this.rb.setTranslation({x:this.rb.translation().x - 0.5, y:this.rb.translation().y}, false);
+            this.rb.setLinvel({x: this.rb.linvel().x - 0.3, y: this.rb.linvel().y}, false);
         }
         if(InputSystem.isKeyDown('d')){
-            this.rb.setTranslation({x:this.rb.translation().x + 0.5, y:this.rb.translation().y}, false);
+            this.rb.setLinvel({x: this.rb.linvel().x + 0.3, y: this.rb.linvel().y}, false);
         }
         if(InputSystem.isKeyDown('s')){
-            this.rb.setTranslation({x:this.rb.translation().x, y:this.rb.translation().y - 0.5}, false);
+            this.rb.setLinvel({x:this.rb.linvel().x, y: -30}, false);
+            //this.rb.setTranslation({x:this.rb.translation().x, y:this.rb.translation().y - 0.5}, false);
         }
         if(InputSystem.isKeyDown('w')){
-            this.rb.setTranslation({x:this.rb.translation().x, y:this.rb.translation().y + 0.5}, false);
+            this.rb.setLinvel({x:this.rb.linvel().x, y:20}, true);
+            //this.rb.setTranslation({x:this.rb.translation().x, y:this.rb.translation().y + 0.5}, false);
         }
-        if(InputSystem.isKeyDown('i')){
-            this.rb.setLinvel({x:this.rb.linvel().x, y:30}, true);
+
+        if(this.rb.linvel().x > 2){
+            this.rb.linvel().x = 2;
         }
+
 
         if(InputSystem.isMouseDown(0)){
             var line = new Graphics();

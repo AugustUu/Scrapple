@@ -37,7 +37,7 @@ async function init() {
     World.init();
 
     let cuboid = new KinematicPhysicsObject(0.0, 10.0, 1.0, 1.0, World, new Graphics);
-    let ground = new StaticPhysicsObject(0.0, 0.0, 10.0, 1.0, World, new Graphics);
+    let ground = new StaticPhysicsObject(0.0, 0.0, 100.0, 1.0, World, new Graphics);
 
     /*let groundColliderDesc = RAPIER.ColliderDesc.cuboid(10.0, 1);
     World.world.createCollider(groundColliderDesc);
