@@ -3,9 +3,7 @@ import RAPIER from '@dimforge/rapier2d-compat';
 import { GameState, StateSystem } from './util/StateSystem';
 import { EventSystem } from './util/EventSystem';
 import { InputSystem } from './util/InputSystem';
-import { Peer } from "peerjs";
 import { MainMenu } from './ui/MainMenu';
-import { Client } from './network/client';
 import { World as World } from './Physics/world';
 import { player } from './player';
 import { KinematicPhysicsObject } from './Physics/PhysicsObject'
@@ -35,6 +33,8 @@ async function init() {
     InputSystem.init();
     //Client.init()
     World.init();
+    StateSystem.changeSate(GameState.menu);
+
 
     let cuboid = new KinematicPhysicsObject(0.0, 10.0, 1.0, 1.0, World, new Graphics);
     let ground = new StaticPhysicsObject(0.0, 0.0, 100.0, 1.0, World, new Graphics);
@@ -49,7 +49,7 @@ async function init() {
     let collider = World.world.createCollider(colliderDesc, rigidBody);
 
     let rigidBodySprite = new Graphics().rect(100, 0, 100, 100).fill(0xff0000);
-    let groundSprite = new Graphics().rect(0, 500, 1000, 100).fill(0x0000ff);*/
+    let groundSprite = new Graphics().rect(0, 500, 1000, 100).fill(0x0000ff);*//*
 
     new player(0, 20);
 
