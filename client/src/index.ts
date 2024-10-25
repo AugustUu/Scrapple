@@ -33,13 +33,13 @@ async function init() {
     InputSystem.init();
     //Client.init()
     World.init();
-    StateSystem.changeSate(GameState.menu);
+    StateSystem.changeSate(GameState.playing);
 
 
     let cuboid = new KinematicPhysicsObject(0.0, 10.0, 1.0, 1.0, World, new Graphics);
     let ground = new StaticPhysicsObject(0.0, 0.0, 100.0, 1.0, World, new Graphics);
 
-    /*let groundColliderDesc = RAPIER.ColliderDesc.cuboid(10.0, 1);
+    let groundColliderDesc = RAPIER.ColliderDesc.cuboid(10.0, 1);
     World.world.createCollider(groundColliderDesc);
 
     let rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic().setTranslation(0.0, 10.0);
@@ -49,7 +49,7 @@ async function init() {
     let collider = World.world.createCollider(colliderDesc, rigidBody);
 
     let rigidBodySprite = new Graphics().rect(100, 0, 100, 100).fill(0xff0000);
-    let groundSprite = new Graphics().rect(0, 500, 1000, 100).fill(0x0000ff);*//*
+    let groundSprite = new Graphics().rect(0, 500, 1000, 100).fill(0x0000ff);//*
 
     new player(0, 20);
 
@@ -85,42 +85,7 @@ async function init() {
 
 
 
-    /*
-        const peer = new Peer("testingtesting123");
-        const peer2 = new Peer("testingtesting1234");
-        const conn = peer.connect("testingtesting1234");
-        const conn2 = peer.connect("testingtesting123");
     
-        console.log(peer,conn)
-    
-        conn.on("open", () => {
-            conn.send("hi!");
-        });
-    
-        peer.on("connection", (conn) => {
-            conn.on("data", (data) => {
-                // Will print 'hi!'
-                console.log(data);
-            });
-            conn.on("open", () => {
-                conn.send("hello!");
-            });
-        });
-    
-        conn2.on("open", () => {
-            conn.send("hi!");
-        });
-    
-        peer2.on("connection", (conn) => {
-            conn.on("data", (data) => {
-                // Will print 'hi!'
-                console.log(data);
-            });
-            conn.on("open", () => {
-                conn.send("hello!");
-            });
-        });*/
-
 
     //new player(100,100);
 

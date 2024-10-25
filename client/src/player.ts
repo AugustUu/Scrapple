@@ -59,6 +59,10 @@ export class player{
         if(InputSystem.isKeyDown('w')){
             this.rb.setLinvel({x:this.rb.linvel().x, y:Math.max(this.rb.linvel().y, 15)}, true);
         }
+        
+
+        this.rb.setLinvel({x:Math.min(Math.max(this.rb.linvel().x, -30), 30), y:this.rb.linvel().y}, true);
+
         if(InputSystem.isMouseDown(0)){
             var line = new Graphics();
             line.moveTo(this.sprite.x, this.sprite.y)
@@ -70,5 +74,5 @@ export class player{
         }
     };
 
-    
+
 }
