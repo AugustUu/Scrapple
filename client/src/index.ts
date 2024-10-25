@@ -48,6 +48,9 @@ async function init() {
     let colliderDesc = RAPIER.ColliderDesc.cuboid(1, 1);
     let collider = World.world.createCollider(colliderDesc, rigidBody);
 
+    let chrongleDesc = RAPIER.ColliderDesc.triangle({x:-40, y:-20}, {x:40, y:-20}, {x:20, y:30})
+    World.world.createCollider(chrongleDesc);
+
     let rigidBodySprite = new Graphics().rect(100, 0, 100, 100).fill(0xff0000);
     let groundSprite = new Graphics().rect(0, 500, 1000, 100).fill(0x0000ff);//*
 
