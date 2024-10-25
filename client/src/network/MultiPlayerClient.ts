@@ -10,8 +10,16 @@ export class MultiPlayerClient {
     }
 
 
-    static connect(room_name: string) {
-        this.client.joinOrCreate(room_name).then(room => {
+    static connect(room_id: string) {
+        this.client.joinById(room_id).then(room => {
+            console.log(room.sessionId, "joined", room.name);
+        }).catch(e => {
+            console.log("JOIN ERROR", e);
+        });
+    }
+
+    static create() {
+        this.client.joinById("GameRoom").then(room => {
             console.log(room.sessionId, "joined", room.name);
         }).catch(e => {
             console.log("JOIN ERROR", e);
