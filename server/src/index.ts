@@ -7,7 +7,7 @@ import { monitor } from "@colyseus/monitor";
 import { playground } from "@colyseus/playground";
 
 
-import { MyRoom } from "./rooms/MyRoom";
+import { GameRoom } from "./rooms/GameRoom";
 
 export const port = Number(process.env.PORT || 2567);
 export const endpoint = "localhost";
@@ -19,7 +19,7 @@ const gameServer = new Server({
   server: http.createServer(app),
 });
 
-gameServer.define("my_room", MyRoom);
+gameServer.define("GameRoom", GameRoom);
 
 app.use("/", express.static(path.resolve(__dirname, "public")));
 
@@ -28,7 +28,7 @@ const auth = basicAuth({ users: { 'admin': 'admin' }, challenge: true });
 app.use("/colyseus", auth, monitor());
 
 if (process.env.NODE_ENV !== "production") {
-    app.use("/", playground);
+  app.use("/", playground);
 }
 
 gameServer.listen(port);
