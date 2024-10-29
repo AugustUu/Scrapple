@@ -21,9 +21,9 @@ export class KinematicPhysicsObject {
         this.sprite.x = this.rigidBody.translation().x * 10 + this.window_offset.x;
         this.sprite.y = this.rigidBody.translation().y * -10 + this.window_offset.y;
         app.stage.addChild(sprite);
-        app.ticker.add(delta => this.gameLoop(delta));
+        app.ticker.add(delta => this.spriteUpdate(delta));
     }
-    gameLoop(delta: Ticker){
+    spriteUpdate(delta: Ticker){
         this.sprite.x = this.rigidBody.translation().x * 10 + this.window_offset.x;
         this.sprite.y = this.rigidBody.translation().y * -10 + this.window_offset.y;
     }

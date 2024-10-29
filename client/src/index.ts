@@ -12,7 +12,8 @@ import { StaticPhysicsObject } from './Physics/PhysicsObject';
 
 
 export const app = new Application();
-
+export let ground:StaticPhysicsObject;
+export let cursor_point:KinematicPhysicsObject;
 async function init() {
 
 
@@ -37,7 +38,10 @@ async function init() {
     
 
     let circoid = new KinematicPhysicsObject(0.0, 10.0, 1.0, World, new Graphics().circle(0, 0, 10).fill(0xf998fa));
-    let ground = new StaticPhysicsObject(0.0, 0.0, 100.0, 2.0, World, new Graphics().rect(0, 0, 2000, 40).fill(0xffffff));
+    ground = new StaticPhysicsObject(0.0, 0.0, 100.0, 2.0, World, new Graphics().rect(0, 0, 2000, 40).fill(0xffffff));
+    cursor_point = new KinematicPhysicsObject(0.0, 0.0, 1.0, World, new Graphics().rect(0, 0, 20, 20).fill(0xffffff)); // debug
+
+
 
     new player(0, 20);
 
@@ -49,7 +53,6 @@ async function init() {
 
     app.ticker.add(() => {
         const { vertices, colors } = World.world.debugRender();
-
 
         lines.clear();
 
