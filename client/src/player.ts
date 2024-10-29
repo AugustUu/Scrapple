@@ -12,23 +12,23 @@ export class player{
     sprite: Graphics;
     physics_object: KinematicPhysicsObject;
     rb: RigidBody;
-    window_offset: {x:number, y:number};
+    //window_offset: {x:number, y:number};
     constructor(x: number, y: number) {
         
         this.sprite = new Graphics()
-            .rect(0, 0, 40, 40)
+            .circle(0, 0, 20)
             .fill(0x800080);
         
-        this.physics_object = new KinematicPhysicsObject(0, 20, 2, 2, World, this.sprite);
+        this.physics_object = new KinematicPhysicsObject(x, y, 2, World, this.sprite);
         this.rb = this.physics_object.rigidBody;
 
-        this.sprite.x = this.rb.translation().x * 10;
+        /*this.sprite.x = this.rb.translation().x * 10;
         this.sprite.y = this.rb.translation().y * 10;
 
-        this.sprite.pivot.x = this.sprite.width / 2
-        this.sprite.pivot.y = this.sprite.height / 2
+        /*this.sprite.pivot.x = this.sprite.width / 2
+        this.sprite.pivot.y = this.sprite.height / 2*/
 
-        this.window_offset = {x:window.innerWidth / 2, y:window.innerHeight / 2}
+        //this.window_offset = {x:window.innerWidth / 2, y:window.innerHeight / 2}
         
         app.stage.addChild(this.sprite);
 
@@ -41,9 +41,15 @@ export class player{
 
     gameLoop(delta: Ticker){
         this.play(delta);
-        this.sprite.x = this.rb.translation().x * 10 + this.window_offset.x//- 20;
-        this.sprite.y = this.rb.translation().y * -10 + this.window_offset.y//- 62;
+        /*this.sprite.x = this.rb.translation().x * 10 + this.window_offset.x;
+        this.sprite.y = this.rb.translation().y * -10 + this.window_offset.y;*/
         this.sprite.rotation = -this.rb.rotation();
+        if(this.rb.linvel().x > 20){
+            this.rb.setLinvel({x: 20, y: this.rb.linvel().y}, false); 
+        }         
+        if(this.rb.linvel().x < -20){
+            this.rb.setLinvel({x: -20, y: this.rb.linvel().y}, false);
+        }
     }
 
     play(delta: Ticker) {
