@@ -21,14 +21,6 @@ export class player{
         
         this.physics_object = new KinematicPhysicsObject(x, y, 2, World, this.sprite);
         this.rb = this.physics_object.rigidBody;
-
-        /*this.sprite.x = this.rb.translation().x * 10;
-        this.sprite.y = this.rb.translation().y * 10;
-
-        /*this.sprite.pivot.x = this.sprite.width / 2
-        this.sprite.pivot.y = this.sprite.height / 2*/
-
-        //this.window_offset = {x:window.innerWidth / 2, y:window.innerHeight / 2}
         
         app.stage.addChild(this.sprite);
 

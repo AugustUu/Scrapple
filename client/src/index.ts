@@ -36,8 +36,8 @@ async function init() {
     StateSystem.changeSate(GameState.playing);
     
 
-    let cuboid = new KinematicPhysicsObject(0.0, 10.0, 1.0, World, new Graphics().circle(0, 10, 10, ).fill(0xf998fa));
-    let ground = new StaticPhysicsObject(0.0, 0.0, 100.0, 1.0, World, new Graphics().rect(0, 0, 2000, 40).fill(0xffffff));
+    let circoid = new KinematicPhysicsObject(0.0, 10.0, 1.0, World, new Graphics().circle(0, 0, 10).fill(0xf998fa));
+    let ground = new StaticPhysicsObject(0.0, 0.0, 100.0, 2.0, World, new Graphics().rect(0, 0, 2000, 40).fill(0xffffff));
 
     new player(0, 20);
 
