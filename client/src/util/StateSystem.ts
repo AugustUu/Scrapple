@@ -1,7 +1,7 @@
 export enum GameState {
     loading,
     menu,
-    playing
+    inRoom
 }
 
 export class StateSystem {
