@@ -8,40 +8,45 @@ export class KinematicPhysicsObject {
     sprite: Graphics;
     rigidBody: RAPIER.RigidBody;
     collider: RAPIER.Collider;
-    //for cuboid
-    constructor(x: number, y: number, halfwidth: number, halfheight: number, world: World, sprite: Graphics){
+    window_offset: {x:number, y:number};
+    //for circle
+    constructor(x: number, y: number, radius: number, world: World, sprite: Graphics){
+        this.sprite = sprite
         this.rigidBody = World.world.createRigidBody(RAPIER.RigidBodyDesc.dynamic().setTranslation(x, y));
 
-        this.collider = World.world.createCollider(RAPIER.ColliderDesc.cuboid(halfwidth, halfwidth), this.rigidBody);
+        this.collider = World.world.createCollider(RAPIER.ColliderDesc.ball(radius), this.rigidBody);
 
+        this.window_offset = {x:window.innerWidth / 2, y:window.innerHeight / 2}
         this.sprite = sprite;
+        this.sprite.x = this.rigidBody.translation().x * 10 + this.window_offset.x;
+        this.sprite.y = this.rigidBody.translation().y * -10 + this.window_offset.y;
+        app.stage.addChild(sprite);
+        app.ticker.add(delta => this.spriteUpdate(delta));
+    }
+    spriteUpdate(delta: Ticker){
+        this.sprite.x = this.rigidBody.translation().x * 10 + this.window_offset.x;
+        this.sprite.y = this.rigidBody.translation().y * -10 + this.window_offset.y;
     }
 }
 
 export class StaticPhysicsObject{
-    sprite: Graphics;
+    sprite: Graphics
     rigidBody: RAPIER.RigidBody;
     collider: RAPIER.Collider;
+    window_offset: {x:number, y:number};
     //for cuboid
     constructor(x: number, y: number, halfwidth: number, halfheight: number, world: World, sprite: Graphics){
+
         this.rigidBody = World.world.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(x, y));
         
         this.collider = World.world.createCollider(RAPIER.ColliderDesc.cuboid(halfwidth, halfheight));
 
-        this.sprite = new Graphics();
+        this.window_offset = {x:window.innerWidth / 2, y:window.innerHeight / 2}
+        this.sprite = sprite;
+        this.sprite.x = this.rigidBody.translation().x * 10 + this.window_offset.x;
+        this.sprite.y = this.rigidBody.translation().y * 10 + this.window_offset.y;
+        this.sprite.pivot.x = sprite.width / 2
+        this.sprite.pivot.y = sprite.height / 2
+        app.stage.addChild(sprite);
     }
 }
-
-/*
-let groundColliderDesc = RAPIER.ColliderDesc.cuboid(10.0, 1);
-World.world.createCollider(groundColliderDesc);
-
-let rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic().setTranslation(0.0, 10.0);
-let rigidBody = World.world.createRigidBody(rigidBodyDesc);
-
-let colliderDesc = RAPIER.ColliderDesc.cuboid(1, 1);
-let collider = World.world.createCollider(colliderDesc, rigidBody);
-
-let rigidBodySprite = new Graphics().rect(100, 0, 100, 100).fill(0xff0000);
-let groundSprite = new Graphics().rect(0, 500, 1000, 100).fill(0x0000ff);
-*/

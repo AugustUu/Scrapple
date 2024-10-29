@@ -19,4 +19,11 @@ export class Vector2{
     public mul(multiplicand: number){
         return(new Vector2(this.x * multiplicand, this.y * multiplicand))
     }
+
+    public rotate(radians: number){
+        let angle = Math.atan2(this.y, this.x)
+        angle += radians
+        let rot_angle = new Vector2(Math.cos(angle), Math.sin(angle))
+        return rot_angle.mul(this.magnitude())
+    }
 }
