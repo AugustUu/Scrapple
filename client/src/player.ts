@@ -49,7 +49,7 @@ export class player{
     }
     
     play(delta: Ticker) {
-        cursor_point.rigidBody.setTranslation(InputSystem.getMousePos(), true) //
+        cursor_point.rigidBody.setTranslation({x:(InputSystem.getMousePos().x - window.innerWidth / 2) / 10, y:-(InputSystem.getMousePos().y - window.innerHeight / 2) / 10 }, true) // debug GET RID OF LATER
 
         if(InputSystem.isKeyDown('a')){
             this.rb.setLinvel({x:this.rb.linvel().x - 0.5, y:this.rb.linvel().y}, true);
