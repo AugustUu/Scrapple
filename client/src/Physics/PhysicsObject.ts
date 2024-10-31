@@ -37,14 +37,15 @@ export class StaticPhysicsObject{
     //for cuboid
     constructor(x: number, y: number, halfwidth: number, halfheight: number, world: World, sprite: Graphics){
 
-        this.rigidBody = World.world.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(x, y));
+        this.rigidBody = World.world.createRigidBody(RAPIER.RigidBodyDesc.fixed());
         
-        this.collider = World.world.createCollider(RAPIER.ColliderDesc.cuboid(halfwidth, halfheight));
+        this.collider = World.world.createCollider(RAPIER.ColliderDesc.cuboid(halfwidth, halfheight), this.rigidBody);
+        this.rigidBody.setTranslation({x, y}, true)
 
         this.window_offset = {x:window.innerWidth / 2, y:window.innerHeight / 2}
         this.sprite = sprite;
         this.sprite.x = this.rigidBody.translation().x * 10 + this.window_offset.x;
-        this.sprite.y = this.rigidBody.translation().y * 10 + this.window_offset.y;
+        this.sprite.y = this.rigidBody.translation().y * -10 + this.window_offset.y;
         this.sprite.pivot.x = sprite.width / 2
         this.sprite.pivot.y = sprite.height / 2
         app.stage.addChild(sprite);
@@ -59,16 +60,22 @@ export class KinPosPhysicsObject{
     //for cuboid
     constructor(x: number, y: number, halfwidth: number, halfheight: number, world: World, sprite: Graphics){
 
-        this.rigidBody = World.world.createRigidBody(RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(x, y));
+        this.rigidBody = World.world.createRigidBody(RAPIER.RigidBodyDesc.kinematicPositionBased());
         
-        this.collider = World.world.createCollider(RAPIER.ColliderDesc.cuboid(halfwidth, halfheight));
+        this.collider = World.world.createCollider(RAPIER.ColliderDesc.cuboid(halfwidth, halfheight), this.rigidBody);
+        this.rigidBody.setTranslation({x, y}, true)
 
         this.window_offset = {x:window.innerWidth / 2, y:window.innerHeight / 2}
         this.sprite = sprite;
         this.sprite.x = this.rigidBody.translation().x * 10 + this.window_offset.x;
-        this.sprite.y = this.rigidBody.translation().y * 10 + this.window_offset.y;
+        this.sprite.y = this.rigidBody.translation().y * -10 + this.window_offset.y;
         this.sprite.pivot.x = sprite.width / 2
         this.sprite.pivot.y = sprite.height / 2
         app.stage.addChild(sprite);
+        app.ticker.add(delta => this.spriteUpdate(delta));
+    }
+    spriteUpdate(delta: Ticker){
+        this.sprite.x = this.rigidBody.translation().x * 10 + this.window_offset.x;
+        this.sprite.y = this.rigidBody.translation().y * -10 + this.window_offset.y;
     }
 }

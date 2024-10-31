@@ -38,7 +38,7 @@ async function init() {
     
 
     let circoid = new KinematicPhysicsObject(0.0, 10.0, 1.0, World, new Graphics().circle(0, 0, 10).fill(0xf998fa));
-    ground = new StaticPhysicsObject(0.0, 0.0, 100.0, 2.0, World, new Graphics().rect(0, 0, 2000, 40).fill(0xffffff));
+    ground = new StaticPhysicsObject(0.0, -10.0, 100.0, 2.0, World, new Graphics().rect(0, 0, 2000, 40).fill(0xffffff));
     cursor_point = new KinPosPhysicsObject(0.0, 0.0, 1.0, 1.0, World, new Graphics().rect(0, 0, 20, 20).fill(0xffffff)); // debug
 
 

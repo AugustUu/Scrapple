@@ -49,7 +49,7 @@ export class player{
     }
     
     play(delta: Ticker) {
-        cursor_point.rigidBody.setTranslation({x:(InputSystem.getMousePos().x - window.innerWidth / 2) / 10, y:-(InputSystem.getMousePos().y - window.innerHeight / 2) / 10 }, true) // debug GET RID OF LATER
+        cursor_point.rigidBody.setNextKinematicTranslation({x:(InputSystem.getMousePos().x - window.innerWidth / 2) / 10, y:-(InputSystem.getMousePos().y - window.innerHeight / 2) / 10 }) // debug GET RID OF LATER
 
         if(InputSystem.isKeyDown('a')){
             this.rb.setLinvel({x:this.rb.linvel().x - 0.5, y:this.rb.linvel().y}, true);
@@ -64,12 +64,12 @@ export class player{
             this.rb.setLinvel({x:this.rb.linvel().x, y:Math.max(this.rb.linvel().y, 15)}, true);
         }
         
-        if(InputSystem.isKeyDown('k')){
+        if(InputSystem.isMouseDown(2)){
             if(!this.made){
-                let ground_offset = new Vector2(ground.rigidBody.translation().x - this.rb.translation().x, ground.rigidBody.translation().y - this.rb.translation().y)
+                let ground_offset = new Vector2(cursor_point.rigidBody.translation().x - this.rb.translation().x, cursor_point.rigidBody.translation().y - this.rb.translation().y)
                 ground_offset = ground_offset.rotate(-this.rb.rotation())
                 let params = JointData.revolute({ x: ground_offset.x, y: ground_offset.y }, { x: 0.0, y: 0.0 });
-                this.joint = World.world.createImpulseJoint(params, this.rb, ground.rigidBody, true);
+                this.joint = World.world.createImpulseJoint(params, this.rb, cursor_point.rigidBody, true);
                 this.made = true
             }
         }
