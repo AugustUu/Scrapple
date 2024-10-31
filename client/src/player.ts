@@ -32,6 +32,9 @@ export class player{
 
         this.joint = World.world.createImpulseJoint(JointData.revolute({ x: 0.0, y: 0.0 }, { x: 0.0, y: 0.0 }), this.rb, ground.rigidBody, true)
         World.world.removeImpulseJoint(this.joint, true)
+
+
+
     }
     
 
@@ -40,6 +43,9 @@ export class player{
         /*this.sprite.x = this.rb.translation().x * 10 + this.window_offset.x;
         this.sprite.y = this.rb.translation().y * -10 + this.window_offset.y;*/
         this.sprite.rotation = -this.rb.rotation();
+
+        app.stage.position.x = (-this.sprite.x + window.innerWidth/2)
+        app.stage.position.y = (-this.sprite.y + window.innerHeight/2)
         /*if(this.rb.linvel().x > 20){
             this.rb.setLinvel({x: 20, y: this.rb.linvel().y}, false); 
         }         
