@@ -10,7 +10,8 @@ import { KinematicPhysicsObject } from './Physics/PhysicsObject'
 import { StaticPhysicsObject } from './Physics/PhysicsObject';
 
 
-
+export let ground:StaticPhysicsObject;
+export let cursor_point:KinematicPhysicsObject;
 export const app = new Application();
 
 async function init() {
