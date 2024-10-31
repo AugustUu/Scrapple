@@ -4,9 +4,8 @@ import { Network } from "./Network";
 import { publicDecrypt } from "crypto";
 import { error } from "console";
 
- export class NetworkClient {
+export class NetworkClient {
 
-a = 1;
     // FIX THIS BEING BROKEN ????????
 
     onStateChange(state: any): void{
