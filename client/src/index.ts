@@ -6,13 +6,14 @@ import { InputSystem } from './util/InputSystem';
 import { MainMenu } from './ui/MainMenu';
 import { World as World } from './Physics/world';
 import { player } from './player';
-import { KinematicPhysicsObject } from './Physics/PhysicsObject'
+import { KinematicPhysicsObject, KinPosPhysicsObject } from './Physics/PhysicsObject'
 import { StaticPhysicsObject } from './Physics/PhysicsObject';
 
 
 
 export const app = new Application();
-
+export let ground:StaticPhysicsObject;
+export let cursor_point:KinPosPhysicsObject;
 async function init() {
 
 
@@ -33,11 +34,14 @@ async function init() {
     InputSystem.init();
     //Client.init()
     World.init();
-    StateSystem.changeSate(GameState.playing);
+    StateSystem.changeSate(GameState.inRoom);
     
 
-    let circloid = new KinematicPhysicsObject(0.0, 10.0, 1.0, World, new Graphics().circle(0, 0, 10).fill(0xf998fa));
-    let ground = new StaticPhysicsObject(0.0, 0.0, 80.0, 2.0, World, new Graphics().rect(0, 0, 1600, 40).fill(0xffffff));
+    let circoid = new KinematicPhysicsObject(0.0, 10.0, 1.0, World, new Graphics().circle(0, 0, 10).fill(0xf998fa));
+    ground = new StaticPhysicsObject(0.0, 0.0, 100.0, 2.0, World, new Graphics().rect(0, 0, 2000, 40).fill(0xffffff));
+    cursor_point = new KinPosPhysicsObject(0.0, 0.0, 1.0, 1.0, World, new Graphics().rect(0, 0, 20, 20).fill(0xffffff)); // debug
+
+
 
     new player(0, 20);
 
@@ -49,7 +53,6 @@ async function init() {
 
     app.ticker.add(() => {
         const { vertices, colors } = World.world.debugRender();
-
 
         lines.clear();
 
