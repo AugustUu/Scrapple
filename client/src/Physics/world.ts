@@ -1,5 +1,5 @@
 import RAPIER from "@dimforge/rapier2d-compat";
-import { app } from "../.";
+import { app } from "..";
 
 export class World {
     static gravity = { x: 0.0, y: -9.81 };

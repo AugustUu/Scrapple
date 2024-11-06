@@ -4,8 +4,8 @@ import { GameState, StateSystem } from './util/StateSystem';
 import { EventSystem } from './util/EventSystem';
 import { InputSystem } from './util/InputSystem';
 import { MainMenu } from './ui/MainMenu';
-import { World as World } from './Physics/world';
-import { player } from './player';
+import { World as World } from './Physics/World';
+import { player } from './Player';
 import { KinematicPhysicsObject, KinPosPhysicsObject } from './Physics/PhysicsObject'
 import { StaticPhysicsObject } from './Physics/PhysicsObject';
 

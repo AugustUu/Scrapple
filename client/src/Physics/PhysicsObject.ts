@@ -1,6 +1,6 @@
 import { Application, Graphics, PointData, Ticker } from "pixi.js";
 import { app } from "..";
-import { World as World } from './world';
+import { World as World } from './World';
 import RAPIER, { RigidBody } from '@dimforge/rapier2d-compat';
 
 
