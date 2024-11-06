@@ -13,6 +13,7 @@ export class player{
     physics_object: KinematicPhysicsObject;
     rb: RigidBody;
     joint: ImpulseJoint;
+    line = new Graphics()
     //window_offset: {x:number, y:number};
     constructor(x: number, y: number) {
         
@@ -32,11 +33,14 @@ export class player{
 
         this.joint = World.world.createImpulseJoint(JointData.revolute({ x: 0.0, y: 0.0 }, { x: 0.0, y: 0.0 }), this.rb, ground.rigidBody, true)
         World.world.removeImpulseJoint(this.joint, true)
+
+        this.line
+        app.stage.addChild(this.line);
     }
     
 
     gameLoop(delta: Ticker){
-        this.play(delta);
+        this.handleInput(delta);
         /*this.sprite.x = this.rb.translation().x * 10 + this.window_offset.x;
         this.sprite.y = this.rb.translation().y * -10 + this.window_offset.y;*/
         this.sprite.rotation = -this.rb.rotation();
@@ -48,7 +52,7 @@ export class player{
         }*/
     }
     
-    play(delta: Ticker) {
+    handleInput(delta: Ticker) {
         cursor_point.rigidBody.setNextKinematicTranslation({x:(InputSystem.getMousePos().x - window.innerWidth / 2) / 10, y:-(InputSystem.getMousePos().y - window.innerHeight / 2) / 10 }) // debug GET RID OF LATER
 
         if(InputSystem.isKeyDown('a')){
@@ -82,14 +86,13 @@ export class player{
 
         //this.rb.setLinvel({x:Math.min(Math.max(this.rb.linvel().x, -90), 90), y:this.rb.linvel().y}, true);
 
+        this.line.clear();
         if(InputSystem.isMouseDown(0)){
-            var line = new Graphics();
-            line.moveTo(this.sprite.x, this.sprite.y)
-            var end = new Vector2(InputSystem.getMousePos().x - this.sprite.x, InputSystem.getMousePos().y - this.sprite.y).normalized().mul(100000);
+            this.line.moveTo(this.sprite.x, this.sprite.y).lineTo(InputSystem.getMousePos().x, InputSystem.getMousePos().y).stroke({ width: 1, color:0x000000 })
+            //var end = new Vector2(InputSystem.getMousePos().x - this.sprite.x, InputSystem.getMousePos().y - this.sprite.y).normalized().mul(100000);
             //line.lineTo(end.x + this.sprite.x, end.y + this.sprite.y);
-            line.lineTo(InputSystem.getMousePos().x, InputSystem.getMousePos().y)
-            line.stroke({ width: 1, color:0x000000 })
-            app.stage.addChild(line);
+            
+            
         }
     };
 
