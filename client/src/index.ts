@@ -5,7 +5,7 @@ import { EventSystem } from './util/EventSystem';
 import { InputSystem } from './util/InputSystem';
 import { MainMenu } from './ui/MainMenu';
 import { World as World } from './physics/World';
-import { player } from './Player';
+import { player } from './game/Player';
 import { KinematicPhysicsObject, KinPosPhysicsObject } from './physics/PhysicsObject'
 import { StaticPhysicsObject } from './physics/PhysicsObject';
 
