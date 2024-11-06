@@ -4,10 +4,10 @@ import { GameState, StateSystem } from './util/StateSystem';
 import { EventSystem } from './util/EventSystem';
 import { InputSystem } from './util/InputSystem';
 import { MainMenu } from './ui/MainMenu';
-import { World as World } from './Physics/World';
+import { World as World } from './physics/World';
 import { player } from './Player';
-import { KinematicPhysicsObject, KinPosPhysicsObject } from './Physics/PhysicsObject'
-import { StaticPhysicsObject } from './Physics/PhysicsObject';
+import { KinematicPhysicsObject, KinPosPhysicsObject } from './physics/PhysicsObject'
+import { StaticPhysicsObject } from './physics/PhysicsObject';
 
 
 

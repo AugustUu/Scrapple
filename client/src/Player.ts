@@ -2,8 +2,8 @@ import { Application, Graphics, PointData, Ticker } from "pixi.js";
 import { app, ground, cursor_point } from ".";
 import { InputSystem } from "./util/InputSystem";
 import { Vector2 } from "./util/MathUtils";
-import { KinematicPhysicsObject } from "./Physics/PhysicsObject";
-import { World } from "./Physics/World";
+import { KinematicPhysicsObject } from "./physics/PhysicsObject";
+import { World } from "./physics/World";
 import { RigidBody, JointData, ImpulseJoint, Ray } from "@dimforge/rapier2d-compat";
 
 
