@@ -1,5 +1,5 @@
 import { Application, Graphics, PointData, Ticker } from "pixi.js";
-import { app, ground, cursor_point } from "..";
+import { app, ground } from "..";
 import { InputSystem } from "../util/InputSystem";
 import { Vector2 } from "../util/MathUtils";
 import { KinematicPhysicsObject } from "../physics/PhysicsObject";
@@ -55,7 +55,6 @@ export class player{
     }
     
     handleInput(delta: Ticker) {
-        cursor_point.rigidBody.setNextKinematicTranslation({x:(InputSystem.getMousePos().x - window.innerWidth / 2) / 10, y:-(InputSystem.getMousePos().y - window.innerHeight / 2) / 10 }) // debug GET RID OF LATER
 
         if(InputSystem.isKeyDown('a')){
             this.rb.setLinvel({x:this.rb.linvel().x - 0.5, y:this.rb.linvel().y}, true);
@@ -72,10 +71,7 @@ export class player{
         
         if(InputSystem.isMouseDown(2)){
             if(!this.made){
-                let ground_offset = new Vector2(cursor_point.rigidBody.translation().x - this.rb.translation().x, cursor_point.rigidBody.translation().y - this.rb.translation().y)
-                ground_offset = ground_offset.rotate(-this.rb.rotation())
-                let params = JointData.revolute({ x: ground_offset.x, y: ground_offset.y }, { x: 0.0, y: 0.0 });
-                this.joint = World.world.createImpulseJoint(params, this.rb, cursor_point.rigidBody, true);
+                this.generateJoint(ground.rigidBody)
                 this.made = true
             }
         }
@@ -94,9 +90,6 @@ export class player{
             //var end = new Vector2(InputSystem.getMousePos().x - this.sprite.x, InputSystem.getMousePos().y - this.sprite.y).normalized().mul(100000);
             //line.lineTo(end.x + this.sprite.x, end.y + this.sprite.y);
             
-            
-        }
-
             let ray = new Ray(this.rb.translation(), new Vector2(((InputSystem.getMousePos().x + window.innerWidth / 2) / 10) - this.rb.translation().x, (-(InputSystem.getMousePos().y + window.innerHeight / 2) / 10) - this.rb.translation().y).normalized());
             let hit = World.world.castRay(ray, 10, false);
             if (hit != null) {
@@ -116,6 +109,16 @@ export class player{
             else{
                 console.log("erm")
             }
+        }
+
+            
+        }
+
+        generateJoint(target:RigidBody){
+            let target_offset = new Vector2(target.translation().x - this.rb.translation().x, target.translation().y - this.rb.translation().y)
+            target_offset = target_offset.rotate(-this.rb.rotation())
+            let params = JointData.revolute({ x: target_offset.x, y: target_offset.y }, { x: 0.0, y: 0.0 });
+            this.joint = World.world.createImpulseJoint(params, this.rb, target, true);
         }
     }
     
