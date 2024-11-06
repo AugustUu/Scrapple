@@ -1,3 +1,5 @@
+import { app } from "..";
+
 export class InputSystem {
     static keyState: { [key: string]: boolean } = {};
     static position = { x: 0, y: 0 }
@@ -25,7 +27,7 @@ export class InputSystem {
     }
 
     static getMousePos() {
-        return this.position;
+        return {x: this.position.x - app.stage.position.x, y: this.position.y - app.stage.position.y};
     }
 
     static isMouseDown(key: number) {
