@@ -8,12 +8,12 @@ import { World as World } from './physics/World';
 import { player } from './game/Player';
 import { KinematicPhysicsObject, KinPosPhysicsObject } from './physics/PhysicsObject'
 import { StaticPhysicsObject } from './physics/PhysicsObject';
+import { Room } from './game/Room';
 
 
 
 export const app = new Application();
-export let ground:StaticPhysicsObject;
-export let cursor_point:KinPosPhysicsObject;
+
 async function init() {
 
 
@@ -32,18 +32,12 @@ async function init() {
     MainMenu.init();
 
     InputSystem.init();
-    //Client.init()
+    Room.init();
     World.init();
     StateSystem.changeState(GameState.inRoom);
     
 
-    let circoid = new KinematicPhysicsObject(0.0, 10.0, 1.0, World, new Graphics().circle(0, 0, 10).fill(0xf998fa));
-    ground = new StaticPhysicsObject(0.0, -10.0, 100.0, 2.0, World, new Graphics().rect(0, 0, 2000, 40).fill(0xffffff));
-    cursor_point = new KinPosPhysicsObject(0.0, 0.0, 1.0, 1.0, World, new Graphics().rect(0, 0, 20, 20).fill(0xffffff)); // debug
 
-
-
-    new player(0, 20);
 
     let lines = new Graphics();
     lines.x = window.innerWidth / 2;
@@ -57,28 +51,11 @@ async function init() {
         lines.clear();
 
         for (let i = 0; i < vertices.length / 4; i += 1) {
-
             //lines.lineStyle(1.0, color, colors[i * 8 + 3], 0.5, true);
             lines.moveTo(vertices[i * 4] *10, -vertices[i * 4 + 1] *10).lineTo(vertices[i * 4 + 2] *10, -vertices[i * 4 + 3] *10).stroke({ width: 1, color: 0xff0000 });
-
-
         }
-
-
     });
 
-
-    //container.addChild(rigidBodySprite)
-    //container.addChild(groundSprite)
-
-
-    //StateSystem.changeSate(GameState.menu);
-
-
-
-    
-
-    //new player(100,100);
 
 }
 
