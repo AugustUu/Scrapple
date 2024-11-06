@@ -13,6 +13,7 @@ export class player{
     physics_object: KinematicPhysicsObject;
     rb: RigidBody;
     joint: ImpulseJoint;
+    line = new Graphics()
     //window_offset: {x:number, y:number};
     constructor(x: number, y: number) {
         
@@ -32,13 +33,15 @@ export class player{
         this.joint = World.world.createImpulseJoint(JointData.revolute({ x: 0.0, y: 0.0 }, { x: 0.0, y: 0.0 }), this.rb, ground.rigidBody, true)
         World.world.removeImpulseJoint(this.joint, true)
 
-
-
+        this.line
+        app.stage.addChild(this.line);
     }
     
 
     gameLoop(delta: Ticker){
-        this.play(delta);
+        this.handleInput(delta);
+        /*this.sprite.x = this.rb.translation().x * 10 + this.window_offset.x;
+        this.sprite.y = this.rb.translation().y * -10 + this.window_offset.y;*/
         this.sprite.rotation = -this.rb.rotation();
 
         app.stage.position.x = (-this.sprite.x + window.innerWidth/2)
@@ -51,8 +54,8 @@ export class player{
         }*/
     }
     
-    play(delta: Ticker) {
-        cursor_point.rigidBody.setTranslation({x:(InputSystem.getMousePos().x - window.innerWidth / 2) / 10, y:-(InputSystem.getMousePos().y - window.innerHeight / 2) / 10 }, true) // debug GET RID OF LATER
+    handleInput(delta: Ticker) {
+        cursor_point.rigidBody.setNextKinematicTranslation({x:(InputSystem.getMousePos().x - window.innerWidth / 2) / 10, y:-(InputSystem.getMousePos().y - window.innerHeight / 2) / 10 }) // debug GET RID OF LATER
 
         if(InputSystem.isKeyDown('a')){
             this.rb.setLinvel({x:this.rb.linvel().x - 0.5, y:this.rb.linvel().y}, true);
@@ -67,12 +70,12 @@ export class player{
             this.rb.setLinvel({x:this.rb.linvel().x, y:Math.max(this.rb.linvel().y, 15)}, true);
         }
         
-        if(InputSystem.isKeyDown('k')){
+        if(InputSystem.isMouseDown(2)){
             if(!this.made){
-                let ground_offset = new Vector2(ground.rigidBody.translation().x - this.rb.translation().x, ground.rigidBody.translation().y - this.rb.translation().y)
+                let ground_offset = new Vector2(cursor_point.rigidBody.translation().x - this.rb.translation().x, cursor_point.rigidBody.translation().y - this.rb.translation().y)
                 ground_offset = ground_offset.rotate(-this.rb.rotation())
                 let params = JointData.revolute({ x: ground_offset.x, y: ground_offset.y }, { x: 0.0, y: 0.0 });
-                this.joint = World.world.createImpulseJoint(params, this.rb, ground.rigidBody, true);
+                this.joint = World.world.createImpulseJoint(params, this.rb, cursor_point.rigidBody, true);
                 this.made = true
             }
         }
@@ -85,8 +88,14 @@ export class player{
 
         //this.rb.setLinvel({x:Math.min(Math.max(this.rb.linvel().x, -90), 90), y:this.rb.linvel().y}, true);
 
+        this.line.clear();
         if(InputSystem.isMouseDown(0)){
+            this.line.moveTo(this.sprite.x, this.sprite.y).lineTo(InputSystem.getMousePos().x, InputSystem.getMousePos().y).stroke({ width: 1, color:0x000000 })
+            //var end = new Vector2(InputSystem.getMousePos().x - this.sprite.x, InputSystem.getMousePos().y - this.sprite.y).normalized().mul(100000);
+            //line.lineTo(end.x + this.sprite.x, end.y + this.sprite.y);
             
+            
+        }
 
             let ray = new Ray(this.rb.translation(), new Vector2(((InputSystem.getMousePos().x + window.innerWidth / 2) / 10) - this.rb.translation().x, (-(InputSystem.getMousePos().y + window.innerHeight / 2) / 10) - this.rb.translation().y).normalized());
             let hit = World.world.castRay(ray, 10, false);
@@ -97,7 +106,7 @@ export class player{
                 var end = new Vector2(InputSystem.getMousePos().x - this.sprite.x, InputSystem.getMousePos().y - this.sprite.y).normalized().mul(100000);
                 //line.lineTo(end.x + this.sprite.x, end.y + this.sprite.y);
                 line.lineTo(InputSystem.getMousePos().x, InputSystem.getMousePos().y)
-                line.stroke({ width: 1, color:0x000000 })
+                //line.stroke({ width: 1, color:0x000000 })
                 app.stage.addChild(line);
                 // The first collider hit has the handle `hit.colliderHandle` and it hit after
                 // the ray travelled a distance equal to `ray.dir * toi`.
@@ -109,5 +118,4 @@ export class player{
             }
         }
     }
-
-}
+    
