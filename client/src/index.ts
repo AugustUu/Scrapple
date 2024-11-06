@@ -48,6 +48,7 @@ async function init() {
 
         for (let i = 0; i < vertices.length / 4; i += 1) {
             //lines.lineStyle(1.0, color, colors[i * 8 + 3], 0.5, true);
+            
             lines.moveTo(vertices[i * 4] * 10, -vertices[i * 4 + 1] * 10).lineTo(vertices[i * 4 + 2] * 10, -vertices[i * 4 + 3] * 10).stroke({ width: 1, color: 0xff0000 });
         }
     });
