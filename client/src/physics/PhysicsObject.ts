@@ -38,6 +38,7 @@ export class StaticPhysicsObject {
         this.rigidBody = World.world.createRigidBody(RAPIER.RigidBodyDesc.fixed());
 
         this.collider = World.world.createCollider(RAPIER.ColliderDesc.cuboid(halfwidth, halfheight), this.rigidBody);
+        //this.collider.setCollisionGroups()
         this.rigidBody.setTranslation({ x, y }, true)
 
         this.window_offset = { x: window.innerWidth / 2, y: window.innerHeight / 2 }

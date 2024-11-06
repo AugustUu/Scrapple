@@ -4,7 +4,7 @@ import { InputSystem } from "../util/InputSystem";
 import { Vector2 } from "../util/MathUtils";
 import { KinematicPhysicsObject } from "../physics/PhysicsObject";
 import { World } from "../physics/World";
-import { RigidBody, JointData, ImpulseJoint, Ray } from "@dimforge/rapier2d-compat";
+import { RigidBody, JointData, ImpulseJoint, Ray, Collider } from "@dimforge/rapier2d-compat";
 
 
 export class player {
@@ -90,17 +90,10 @@ export class player {
             //var end = new Vector2(InputSystem.getMousePos().x - this.sprite.x, InputSystem.getMousePos().y - this.sprite.y).normalized().mul(100000);
             //line.lineTo(end.x + this.sprite.x, end.y + this.sprite.y);
 
-            let ray = new Ray(this.rb.translation(), new Vector2(((InputSystem.getMousePos().x + window.innerWidth / 2) / 10) - this.rb.translation().x, (-(InputSystem.getMousePos().y + window.innerHeight / 2) / 10) - this.rb.translation().y).normalized());
-            let hit = World.world.castRay(ray, 10, false);
+            let ray = new Ray(this.rb.translation(), new Vector2(((InputSystem.getMousePos().x - window.innerWidth / 2) / 10) - this.rb.translation().x, (-(InputSystem.getMousePos().y - window.innerHeight / 2) / 10) - this.rb.translation().y).normalized());
+            let hit = World.world.castRay(ray, 1000, false, undefined, undefined, undefined, this.rb);
             if (hit != null) {
                 console.log("doubleewe!")
-                var line = new Graphics();
-                line.moveTo(this.sprite.x, this.sprite.y)
-                var end = new Vector2(InputSystem.getMousePos().x - this.sprite.x, InputSystem.getMousePos().y - this.sprite.y).normalized().mul(100000);
-                //line.lineTo(end.x + this.sprite.x, end.y + this.sprite.y);
-                line.lineTo(InputSystem.getMousePos().x, InputSystem.getMousePos().y)
-                //line.stroke({ width: 1, color:0x000000 })
-                app.stage.addChild(line);
                 // The first collider hit has the handle `hit.colliderHandle` and it hit after
                 // the ray travelled a distance equal to `ray.dir * toi`.
                 let hitPoint = ray.pointAt(hit.timeOfImpact); // Same as: `ray.origin + ray.dir * toi`
