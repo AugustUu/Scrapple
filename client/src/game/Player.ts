@@ -14,7 +14,6 @@ export class player {
     rb: RigidBody;
     joint: ImpulseJoint;
     line = new Graphics()
-    //window_offset: {x:number, y:number};
     constructor(x: number, y: number) {
 
         this.sprite = new Graphics()
@@ -40,18 +39,15 @@ export class player {
 
     gameLoop(delta: Ticker) {
         this.handleInput(delta);
-        /*this.sprite.x = this.rb.translation().x * 10 + this.window_offset.x;
-        this.sprite.y = this.rb.translation().y * -10 + this.window_offset.y;*/
         this.sprite.rotation = -this.rb.rotation();
 
         app.stage.position.x = (-this.sprite.x + window.innerWidth / 2)
         app.stage.position.y = (-this.sprite.y + window.innerHeight / 2)
-        /*if(this.rb.linvel().x > 20){
-            this.rb.setLinvel({x: 20, y: this.rb.linvel().y}, false); 
-        }         
-        if(this.rb.linvel().x < -20){
-            this.rb.setLinvel({x: -20, y: this.rb.linvel().y}, false);
-        }*/
+
+        // max valocity 
+        //this.rb.setLinvel({x:Math.min(Math.max(this.rb.linvel().x, -90), 90), y:this.rb.linvel().y}, true);
+
+
     }
 
     handleInput(delta: Ticker) {
@@ -82,7 +78,6 @@ export class player {
             }
         }
 
-        //this.rb.setLinvel({x:Math.min(Math.max(this.rb.linvel().x, -90), 90), y:this.rb.linvel().y}, true);
 
         this.line.clear();
         if (InputSystem.isMouseDown(0)) {
@@ -93,14 +88,13 @@ export class player {
             let ray = new Ray(this.rb.translation(), new Vector2(((InputSystem.getMousePos().x - window.innerWidth / 2) / 10) - this.rb.translation().x, (-(InputSystem.getMousePos().y - window.innerHeight / 2) / 10) - this.rb.translation().y).normalized());
             let hit = World.world.castRay(ray, 1000, false, undefined, undefined, undefined, this.rb);
             if (hit != null) {
-                console.log("doubleewe!")
                 // The first collider hit has the handle `hit.colliderHandle` and it hit after
                 // the ray travelled a distance equal to `ray.dir * toi`.
                 let hitPoint = ray.pointAt(hit.timeOfImpact); // Same as: `ray.origin + ray.dir * toi`
                 console.log("Collider", hit.collider, "hit at point", hitPoint);
             }
             else {
-                console.log("erm")
+                console.log("miss")
             }
         }
 
