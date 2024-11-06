@@ -12,6 +12,7 @@ export class player {
     made = false;
     physics_object: KinematicPhysicsObject;
     rb: RigidBody;
+    col: Collider;
     joint: ImpulseJoint;
     line = new Graphics()
     //window_offset: {x:number, y:number};
@@ -23,6 +24,9 @@ export class player {
 
         this.physics_object = new KinematicPhysicsObject(x, y, 2, World, this.sprite);
         this.rb = this.physics_object.rigidBody;
+        this.col = this.physics_object.collider;
+
+        this.col.setCollisionGroups(0x00020001)
 
         app.stage.addChild(this.sprite);
         app.ticker.add(delta => this.gameLoop(delta))
