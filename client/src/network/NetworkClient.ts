@@ -15,7 +15,7 @@ export class NetworkClient {
 
     onLeave(code:number): void{
         console.log("left with code: " + code)
-        StateSystem.changeSate(GameState.menu);
+        StateSystem.changeState(GameState.menu);
     }
 
 
@@ -25,7 +25,7 @@ export class NetworkClient {
 
     onJoin(room: Room): void{
         console.log(room.sessionId, "joined", room.id);
-        StateSystem.changeSate(GameState.inRoom);
+        StateSystem.changeState(GameState.inRoom);
 
         room.onStateChange(this.onStateChange);
         room.onLeave(this.onLeave)

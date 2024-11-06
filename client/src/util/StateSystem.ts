@@ -10,7 +10,7 @@ export class StateSystem {
     private static listeners_exit: { [T in GameState]?: Array<(event: GameState) => void> } = {};
 
 
-    public static changeSate(new_state: GameState) {
+    public static changeState(new_state: GameState) {
        
         this.listeners_exit[StateSystem.state]?.forEach(listener => {
             listener(new_state);

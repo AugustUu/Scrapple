@@ -34,7 +34,7 @@ async function init() {
     InputSystem.init();
     //Client.init()
     World.init();
-    StateSystem.changeSate(GameState.inRoom);
+    StateSystem.changeState(GameState.inRoom);
     
 
     let circoid = new KinematicPhysicsObject(0.0, 10.0, 1.0, World, new Graphics().circle(0, 0, 10).fill(0xf998fa));
