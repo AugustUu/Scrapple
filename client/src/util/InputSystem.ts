@@ -27,7 +27,7 @@ export class InputSystem {
     }
 
     static getMousePos() {
-        return {x: this.position.x - app.stage.position.x, y: this.position.y - app.stage.position.y};
+        return { x: this.position.x - app.stage.position.x, y: this.position.y - app.stage.position.y };
     }
 
     static isMouseDown(key: number) {

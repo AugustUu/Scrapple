@@ -11,12 +11,12 @@ export class StateSystem {
 
 
     public static changeState(new_state: GameState) {
-       
+
         this.listeners_exit[StateSystem.state]?.forEach(listener => {
             listener(new_state);
         });
 
-        
+
         this.listeners_enter[new_state]?.forEach(listener => {
             listener(StateSystem.state);
         });
@@ -26,7 +26,7 @@ export class StateSystem {
     }
 
     public static onEnter(event: GameState, func: (oldState: GameState) => void) {
-        if(this.listeners_enter[event] == undefined){
+        if (this.listeners_enter[event] == undefined) {
             this.listeners_enter[event] = []
         }
 
@@ -34,7 +34,7 @@ export class StateSystem {
     }
 
     public static onExit(event: GameState, func: (oldState: GameState) => void) {
-        if(this.listeners_exit[event] == undefined){
+        if (this.listeners_exit[event] == undefined) {
             this.listeners_exit[event] = []
         }
 

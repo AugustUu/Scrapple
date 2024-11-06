@@ -1,46 +1,46 @@
 import { Application, Graphics, PointData, Ticker } from "pixi.js";
 import { app } from "..";
-import { World as World } from './World';
 import RAPIER, { RigidBody } from '@dimforge/rapier2d-compat';
+import { World } from "./World";
 
 
 export class KinematicPhysicsObject {
     sprite: Graphics;
     rigidBody: RAPIER.RigidBody;
     collider: RAPIER.Collider;
-    window_offset: {x:number, y:number};
+    window_offset: { x: number, y: number };
     //for circle
-    constructor(x: number, y: number, radius: number, world: World, sprite: Graphics){
+    constructor(x: number, y: number, radius: number, world: World, sprite: Graphics) {
         this.sprite = sprite
         this.rigidBody = World.world.createRigidBody(RAPIER.RigidBodyDesc.dynamic().setTranslation(x, y));
 
         this.collider = World.world.createCollider(RAPIER.ColliderDesc.ball(radius), this.rigidBody);
 
-        this.window_offset = {x:window.innerWidth / 2, y:window.innerHeight / 2}
+        this.window_offset = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
         this.sprite = sprite;
         app.stage.addChild(sprite);
         app.ticker.add(delta => this.spriteUpdate(delta));
     }
-    spriteUpdate(delta: Ticker){
+    spriteUpdate(delta: Ticker) {
         this.sprite.x = this.rigidBody.translation().x * 10 + this.window_offset.x;
         this.sprite.y = this.rigidBody.translation().y * -10 + this.window_offset.y;
     }
 }
 
-export class StaticPhysicsObject{
+export class StaticPhysicsObject {
     sprite: Graphics
     rigidBody: RAPIER.RigidBody;
     collider: RAPIER.Collider;
-    window_offset: {x:number, y:number};
+    window_offset: { x: number, y: number };
     //for cuboid
-    constructor(x: number, y: number, halfwidth: number, halfheight: number, world: World, sprite: Graphics){
+    constructor(x: number, y: number, halfwidth: number, halfheight: number, world: World, sprite: Graphics) {
 
         this.rigidBody = World.world.createRigidBody(RAPIER.RigidBodyDesc.fixed());
-        
-        this.collider = World.world.createCollider(RAPIER.ColliderDesc.cuboid(halfwidth, halfheight), this.rigidBody);
-        this.rigidBody.setTranslation({x, y}, true)
 
-        this.window_offset = {x:window.innerWidth / 2, y:window.innerHeight / 2}
+        this.collider = World.world.createCollider(RAPIER.ColliderDesc.cuboid(halfwidth, halfheight), this.rigidBody);
+        this.rigidBody.setTranslation({ x, y }, true)
+
+        this.window_offset = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
         this.sprite = sprite;
         this.sprite.x = this.rigidBody.translation().x * 10 + this.window_offset.x;
         this.sprite.y = this.rigidBody.translation().y * -10 + this.window_offset.y;
@@ -50,20 +50,20 @@ export class StaticPhysicsObject{
     }
 }
 
-export class KinPosPhysicsObject{
+export class KinPosPhysicsObject {
     sprite: Graphics
     rigidBody: RAPIER.RigidBody;
     collider: RAPIER.Collider;
-    window_offset: {x:number, y:number};
+    window_offset: { x: number, y: number };
     //for cuboid
-    constructor(x: number, y: number, halfwidth: number, halfheight: number, world: World, sprite: Graphics){
+    constructor(x: number, y: number, halfwidth: number, halfheight: number, world: World, sprite: Graphics) {
 
         this.rigidBody = World.world.createRigidBody(RAPIER.RigidBodyDesc.kinematicPositionBased());
-        
-        this.collider = World.world.createCollider(RAPIER.ColliderDesc.cuboid(halfwidth, halfheight), this.rigidBody);
-        this.rigidBody.setTranslation({x, y}, true)
 
-        this.window_offset = {x:window.innerWidth / 2, y:window.innerHeight / 2}
+        this.collider = World.world.createCollider(RAPIER.ColliderDesc.cuboid(halfwidth, halfheight), this.rigidBody);
+        this.rigidBody.setTranslation({ x, y }, true)
+
+        this.window_offset = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
         this.sprite = sprite;
         this.sprite.x = this.rigidBody.translation().x * 10 + this.window_offset.x;
         this.sprite.y = this.rigidBody.translation().y * -10 + this.window_offset.y;
@@ -72,7 +72,7 @@ export class KinPosPhysicsObject{
         app.stage.addChild(sprite);
         app.ticker.add(delta => this.spriteUpdate(delta));
     }
-    spriteUpdate(delta: Ticker){
+    spriteUpdate(delta: Ticker) {
         this.sprite.x = this.rigidBody.translation().x * 10 + this.window_offset.x;
         this.sprite.y = this.rigidBody.translation().y * -10 + this.window_offset.y;
     }
