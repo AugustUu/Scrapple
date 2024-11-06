@@ -1,5 +1,5 @@
 import { Application, Graphics, PointData, Ticker } from "pixi.js";
-import { app, ground } from "..";
+import { app } from "..";
 import { InputSystem } from "../util/InputSystem";
 import { Vector2 } from "../util/MathUtils";
 import { KinematicPhysicsObject } from "../physics/PhysicsObject";
@@ -30,7 +30,7 @@ export class player{
         this.sprite.eventMode = "static"
         this.sprite.hitArea = app.screen;
 
-        this.joint = World.world.createImpulseJoint(JointData.revolute({ x: 0.0, y: 0.0 }, { x: 0.0, y: 0.0 }), this.rb, ground.rigidBody, true)
+        this.joint = World.world.createImpulseJoint(JointData.revolute({ x: 0.0, y: 0.0 }, { x: 0.0, y: 0.0 }), this.rb, this.rb, true)
         World.world.removeImpulseJoint(this.joint, true)
 
         this.line
@@ -71,7 +71,7 @@ export class player{
         
         if(InputSystem.isMouseDown(2)){
             if(!this.made){
-                this.generateJoint(ground.rigidBody)
+                //this.generateJoint(ground.rigidBody)
                 this.made = true
             }
         }
