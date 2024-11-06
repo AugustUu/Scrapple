@@ -82,15 +82,11 @@ export class player {
         this.line.clear();
         if (InputSystem.isMouseDown(0)) {
             this.line.moveTo(this.sprite.x, this.sprite.y).lineTo(InputSystem.getMousePos().x, InputSystem.getMousePos().y).stroke({ width: 1, color: 0x000000 })
-            //var end = new Vector2(InputSystem.getMousePos().x - this.sprite.x, InputSystem.getMousePos().y - this.sprite.y).normalized().mul(100000);
-            //line.lineTo(end.x + this.sprite.x, end.y + this.sprite.y);
 
             let ray = new Ray(this.rb.translation(), new Vector2(((InputSystem.getMousePos().x - window.innerWidth / 2) / 10) - this.rb.translation().x, (-(InputSystem.getMousePos().y - window.innerHeight / 2) / 10) - this.rb.translation().y).normalized());
             let hit = World.world.castRay(ray, 1000, false, undefined, undefined, undefined, this.rb);
             if (hit != null) {
-                // The first collider hit has the handle `hit.colliderHandle` and it hit after
-                // the ray travelled a distance equal to `ray.dir * toi`.
-                let hitPoint = ray.pointAt(hit.timeOfImpact); // Same as: `ray.origin + ray.dir * toi`
+                let hitPoint = ray.pointAt(hit.timeOfImpact); 
                 console.log("Collider", hit.collider, "hit at point", hitPoint);
             }
             else {
