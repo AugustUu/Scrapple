@@ -38,6 +38,7 @@ export class StaticPhysicsObject {
         this.rigidBody = World.world.createRigidBody(RAPIER.RigidBodyDesc.fixed());
 
         this.collider = World.world.createCollider(RAPIER.ColliderDesc.cuboid(halfwidth, halfheight), this.rigidBody);
+        //part of group 0001 (0), interacts with 0 & 1 (0011)
         this.collider.setCollisionGroups(0x00010003)
         this.rigidBody.setTranslation({ x, y }, true)
 

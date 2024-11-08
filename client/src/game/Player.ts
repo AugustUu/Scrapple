@@ -25,8 +25,8 @@ export class player {
         this.physics_object = new KinematicPhysicsObject(x, y, 2, World, this.sprite);
         this.rb = this.physics_object.rigidBody;
         this.col = this.physics_object.collider;
-
-        this.col.setCollisionGroups(0x00020001)
+        //part of group 1 (0010) and interacts with 0 and 1 (0011)
+        this.col.setCollisionGroups(0x00020003)
 
         app.stage.addChild(this.sprite);
         app.ticker.add(delta => this.gameLoop(delta))
@@ -36,6 +36,8 @@ export class player {
 
         this.joint = World.world.createImpulseJoint(JointData.revolute({ x: 0.0, y: 0.0 }, { x: 0.0, y: 0.0 }), this.rb, this.rb, true)
         World.world.removeImpulseJoint(this.joint, true)
+
+        
 
         this.line
         app.stage.addChild(this.line);
@@ -56,10 +58,12 @@ export class player {
         if(this.rb.linvel().x < -20){
             this.rb.setLinvel({x: -20, y: this.rb.linvel().y}, false);
         }*/
+
+        //check if ground is beneath us
     }
 
     handleInput(delta: Ticker) {
-
+        this.line.clear();
         if (InputSystem.isKeyDown('a')) {
             this.rb.setLinvel({ x: this.rb.linvel().x - 0.5, y: this.rb.linvel().y }, true);
         }
@@ -70,7 +74,23 @@ export class player {
             this.rb.setLinvel({ x: this.rb.linvel().x, y: Math.min(this.rb.linvel().y, -15) }, true);
         }
         if (InputSystem.isKeyDown('w')) {
-            this.rb.setLinvel({ x: this.rb.linvel().x, y: Math.max(this.rb.linvel().y, 15) }, true);
+            let jumpRay = new Ray(this.rb.translation(), new Vector2((this.rb.translation().x  - window.innerWidth / 2) / 10, (this.rb.translation().y - window.innerHeight / 2) / 10));
+            //doesn't actually touch the ground but gets close enough
+            let hit = World.world.castRay(jumpRay, 0.035, false, undefined, undefined, undefined, this.rb);
+            
+            if(hit != null){
+                if(hit.collider.collisionGroups() == 0x00010003){
+                    this.rb.setLinvel({ x: this.rb.linvel().x, y: Math.max(this.rb.linvel().y, 20) }, true);
+                    this.line.moveTo(this.sprite.x, this.sprite.y).lineTo(InputSystem.getMousePos().x, InputSystem.getMousePos().y).stroke({ width: 1, color: 0x000000 })
+                }
+                else{
+                    console.log("no jump")
+                }
+            }
+            else{
+                console.log("emr")
+            }
+            
         }
 
         if (InputSystem.isMouseDown(2)) {
@@ -88,7 +108,6 @@ export class player {
 
         //this.rb.setLinvel({x:Math.min(Math.max(this.rb.linvel().x, -90), 90), y:this.rb.linvel().y}, true);
 
-        this.line.clear();
         if (InputSystem.isMouseDown(0)) {
             this.line.moveTo(this.sprite.x, this.sprite.y).lineTo(InputSystem.getMousePos().x, InputSystem.getMousePos().y).stroke({ width: 1, color: 0x000000 })
             //var end = new Vector2(InputSystem.getMousePos().x - this.sprite.x, InputSystem.getMousePos().y - this.sprite.y).normalized().mul(100000);
@@ -97,13 +116,16 @@ export class player {
             let ray = new Ray(this.rb.translation(), new Vector2(((InputSystem.getMousePos().x - window.innerWidth / 2) / 10) - this.rb.translation().x, (-(InputSystem.getMousePos().y - window.innerHeight / 2) / 10) - this.rb.translation().y).normalized());
             let hit = World.world.castRay(ray, 1000, false, undefined, undefined, undefined, this.rb);
             if (hit != null) {
-                console.log("doubleewe!")
-                // The first collider hit has the handle `hit.colliderHandle` and it hit after
-                // the ray travelled a distance equal to `ray.dir * toi`.
-                let hitPoint = ray.pointAt(hit.timeOfImpact); // Same as: `ray.origin + ray.dir * toi`
-                console.log("Collider", hit.collider, "hit at point", hitPoint);
+                    let hitPoint = ray.pointAt(hit.timeOfImpact); // Same as: `ray.origin + ray.dir * toi`
+                    console.log("Collider", hit, "hit at point", hitPoint);
+                    if(hit.collider.collisionGroups() == 0x00010003){
+                        console.log("hit static object")
+                    }
+                    if(hit.collider.collisionGroups() == 0x00020003){
+                        console.log("hit player")
+                    }
             }
-            else {
+            else{
                 console.log("erm")
             }
         }
