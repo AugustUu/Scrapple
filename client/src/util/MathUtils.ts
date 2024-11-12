@@ -29,11 +29,11 @@ export class Vector2 {
 }
 
 export class MathUtils {
-    static globalToRapier(vector: Vector2){
-        return new Vector2((vector.x + window.innerWidth / 2) / 10, (vector.y + window.innerHeight / 2) / 10)
+    static screenToRapier(pos: {x: number, y: number}){
+        return new Vector2((pos.x - window.innerWidth / 2) / 10, -(pos.y - window.innerHeight / 2) / 10)
     }
 
-    static rapierToGlobal(vector: Vector2){
-        return new Vector2(vector.x * 10 - window.innerWidth / 2, vector.y * 10 - window.innerHeight / 2)
+    static rapierToScreen(pos: {x: number, y: number}){
+        return new Vector2(pos.x * 10 + window.innerWidth / 2, pos.y * -10 + window.innerHeight / 2)
     }
 }

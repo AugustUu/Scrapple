@@ -1,7 +1,7 @@
 import { Application, Graphics, PointData, Ticker } from "pixi.js";
 import { app } from "..";
 import { InputSystem } from "../util/InputSystem";
-import { Vector2 } from "../util/MathUtils";
+import { Vector2, MathUtils } from "../util/MathUtils";
 import { KinematicPhysicsObject } from "../physics/PhysicsObject";
 import { World } from "../physics/World";
 import { RigidBody, JointData, ImpulseJoint, Ray, Collider } from "@dimforge/rapier2d-compat";
@@ -9,7 +9,6 @@ import { RigidBody, JointData, ImpulseJoint, Ray, Collider } from "@dimforge/rap
 
 export class player {
     sprite: Graphics;
-    made = false;
     physics_object: KinematicPhysicsObject;
     rb: RigidBody;
     joint: ImpulseJoint;
@@ -65,42 +64,45 @@ export class player {
             this.rb.setLinvel({ x: this.rb.linvel().x, y: Math.max(this.rb.linvel().y, 15) }, true);
         }
 
-        if (InputSystem.isMouseDown(2)) {
-            if (!this.made) {
-                //this.generateJoint(ground.rigidBody)
-                this.made = true
-            }
-        }
-        else {
-            if (this.made) {
-                World.world.removeImpulseJoint(this.joint, true)
-                this.made = false;
-            }
-        }
-
-
         this.line.clear();
-        if (InputSystem.isMouseDown(0)) {
-            this.line.moveTo(this.sprite.x, this.sprite.y).lineTo(InputSystem.getMousePos().x, InputSystem.getMousePos().y).stroke({ width: 1, color: 0x000000 })
-
-            let ray = new Ray(this.rb.translation(), new Vector2(((InputSystem.getMousePos().x - window.innerWidth / 2) / 10) - this.rb.translation().x, (-(InputSystem.getMousePos().y - window.innerHeight / 2) / 10) - this.rb.translation().y).normalized());
+        if (InputSystem.isMouseDown(0)) { // todo: make this only check the frame mouse is clicked, rather than every frame it is (augusts job)
+            
+            let rapierMouse = MathUtils.screenToRapier(InputSystem.getMousePos())
+            let ray = new Ray(this.rb.translation(), new Vector2(rapierMouse.x - this.rb.translation().x, rapierMouse.y - this.rb.translation().y).normalized());
             let hit = World.world.castRay(ray, 1000, false, undefined, undefined, undefined, this.rb);
             if (hit != null) {
                 let hitPoint = ray.pointAt(hit.timeOfImpact); 
-                console.log("Collider", hit.collider, "hit at point", hitPoint);
+                console.log("Collider", hit.collider, "hit at point", hitPoint); // remove later smile
+                if (!this.joint.isValid()) {
+                    this.generateJoint(hit.collider.parent(), hitPoint)
+                }
+                /*if(hit.collider.parent() != null){
+                    let lineStart = MathUtils.rapierToScreen({x:this.joint.anchor1().x + this.rb.translation().x, y:this.joint.anchor1().y + this.rb.translation().y})
+                    let lineEnd = MathUtils.rapierToScreen({x:this.joint.anchor1().x + hit.collider.parent().translation().x, y:this.joint.anchor1().y + this.rb.translation().y})
+                }
+                this.line.moveTo(lineStart.x, lineStart.y).lineTo(lineEnd.x, lineEnd.y).stroke({ width: 1, color: 0x000000 })*/ // fix later ughhhhhhhhhhh how hard is it to make a line
             }
             else {
                 console.log("miss")
+            }
+        }
+        else {
+            if (this.joint != null) {
+                World.world.removeImpulseJoint(this.joint, true)
             }
         }
 
 
     }
 
-    generateJoint(target: RigidBody) {
-        let target_offset = new Vector2(target.translation().x - this.rb.translation().x, target.translation().y - this.rb.translation().y)
-        target_offset = target_offset.rotate(-this.rb.rotation())
-        let params = JointData.revolute({ x: target_offset.x, y: target_offset.y }, { x: 0.0, y: 0.0 });
-        this.joint = World.world.createImpulseJoint(params, this.rb, target, true);
+    generateJoint(target: RigidBody | null, hitPoint: {x:number, y:number}) {
+        if(target != null){ // should never be null?
+            let start_offset = new Vector2(hitPoint.x - this.rb.translation().x, hitPoint.y - this.rb.translation().y)
+            start_offset = start_offset.rotate(-this.rb.rotation())
+            let end_offset = new Vector2(hitPoint.x - target.translation().x, hitPoint.y - target.translation().y)
+            end_offset = end_offset.rotate(-target.rotation())
+            let params = JointData.revolute(start_offset, end_offset);
+            this.joint = World.world.createImpulseJoint(params, this.rb, target, true);
+        }
     }
 }
