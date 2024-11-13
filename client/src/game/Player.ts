@@ -25,7 +25,7 @@ export class player {
         this.rb = this.physics_object.rigidBody;
         this.col = this.physics_object.collider;
         //part of group 1 (0010) and interacts with 0 and 1 (0011)
-        this.col.setCollisionGroups(0x00020003)
+        this.col.setCollisionGroups(0x00020007)
 
         app.stage.addChild(this.sprite);
         app.ticker.add(delta => this.gameLoop(delta))
@@ -71,16 +71,13 @@ export class player {
             let hit = World.world.castRay(jumpRay, 2.3, false, undefined, undefined, undefined, this.rb);
             
             if(hit != null){
-                if(hit.collider.collisionGroups() == 0x00010003){
+                if(hit.collider.collisionGroups() == 0x00010007){
                     this.rb.setLinvel({ x: this.rb.linvel().x, y: Math.max(this.rb.linvel().y, 20) }, true);
                     //this.line.moveTo(this.sprite.x, this.sprite.y).lineTo(InputSystem.getMousePos().x, InputSystem.getMousePos().y).stroke({ width: 1, color: 0x000000 })
                 }
                 else{
                     console.log("no jump")
                 }
-            }
-            else{
-                console.log("emr")
             }
             
         }
@@ -105,10 +102,13 @@ export class player {
                 this.aim_line.moveTo(line_start.x, line_start.y).lineTo(line_end.x, line_end.y).stroke({ width: 2, color: 0x000000 })
             }
             if(InputSystem.isMouseDown(0)){
-                if(hit.collider.collisionGroups() == 0x00010003){
+                if(hit.collider.collisionGroups() == 0x00010007){
                     console.log("hit static object")
                 }
-                if(hit.collider.collisionGroups() == 0x00020003){
+                if(hit.collider.collisionGroups() == 0x00040007){
+                    console.log("hit kinematicphysicsobject")
+                }
+                if(hit.collider.collisionGroups() == 0x00020007){
                     console.log("hit player")
                 }
             }

@@ -2,7 +2,7 @@ import RAPIER from "@dimforge/rapier2d-compat";
 import { app } from "..";
 
 export class World {
-    static gravity = { x: 0.0, y: -9.81 };
+    static gravity = { x: 0.0, y: -12.81 };
     static world: RAPIER.World;
 
     static init() {

@@ -15,6 +15,9 @@ export class KinematicPhysicsObject {
         this.rigidBody = World.world.createRigidBody(RAPIER.RigidBodyDesc.dynamic().setTranslation(x, y));
 
         this.collider = World.world.createCollider(RAPIER.ColliderDesc.ball(radius), this.rigidBody);
+        
+        //group 2 (0100)and interacts with 0, 1, 2 (0111)
+        this.collider.setCollisionGroups(0x00040007)
 
         this.window_offset = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
         this.sprite = sprite;
@@ -38,8 +41,8 @@ export class StaticPhysicsObject {
         this.rigidBody = World.world.createRigidBody(RAPIER.RigidBodyDesc.fixed());
 
         this.collider = World.world.createCollider(RAPIER.ColliderDesc.cuboid(halfwidth, halfheight), this.rigidBody);
-        //part of group 0001 (0), interacts with 0 & 1 (0011)
-        this.collider.setCollisionGroups(0x00010003)
+        //part of group 0001 (0), interacts with 0 & 1 & 2(0111)
+        this.collider.setCollisionGroups(0x00010007)
         this.rigidBody.setTranslation({ x, y }, true)
 
         this.window_offset = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
