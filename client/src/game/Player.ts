@@ -68,7 +68,7 @@ export class player {
         if (InputSystem.isKeyDown('w')) {
             let jumpRay = new Ray(this.rb.translation(), {x:0, y:-1})
             //doesn't actually touch the ground but gets close enough
-            let hit = World.world.castRay(jumpRay, 0.035, false, undefined, undefined, undefined, this.rb);
+            let hit = World.world.castRay(jumpRay, 2.3, false, undefined, undefined, undefined, this.rb);
             
             if(hit != null){
                 if(hit.collider.collisionGroups() == 0x00010003){
@@ -92,7 +92,7 @@ export class player {
         let hit = World.world.castRay(ray, 1000, false, undefined, undefined, undefined, this.rb);
         if (hit != null) {
             let hit_point = ray.pointAt(hit.timeOfImpact); 
-            if (InputSystem.isMouseDown(0)) { // todo: make this only check the frame mouse is clicked, rather than every frame it is (augusts job)
+            if (InputSystem.isMouseDown(2)) { // todo: make this only check the frame mouse is clicked, rather than every frame it is (augusts job)
                 
                 //console.log("Collider", hit.collider, "hit at point", hitPoint); 
                 if (!this.joint.isValid()) {
@@ -103,6 +103,14 @@ export class player {
                 let line_start = MathUtils.rapierToScreen(this.rb.translation())
                 let line_end = MathUtils.rapierToScreen(hit_point)
                 this.aim_line.moveTo(line_start.x, line_start.y).lineTo(line_end.x, line_end.y).stroke({ width: 2, color: 0x000000 })
+            }
+            if(InputSystem.isMouseDown(0)){
+                if(hit.collider.collisionGroups() == 0x00010003){
+                    console.log("hit static object")
+                }
+                if(hit.collider.collisionGroups() == 0x00020003){
+                    console.log("hit player")
+                }
             }
         }
         else{
@@ -116,7 +124,7 @@ export class player {
         }*/
 
         if(this.joint.isValid()){
-            if(!InputSystem.isMouseDown(0)){ // this feels dumb? but i can't think of another way to do it so w/e
+            if(!InputSystem.isMouseDown(2)){ // this feels dumb? but i can't think of another way to do it so w/e
                 World.world.removeImpulseJoint(this.joint, true)
             }
             else{
