@@ -99,7 +99,7 @@ export class player {
             else{
                 let line_start = MathUtils.rapierToScreen(this.rb.translation())
                 let line_end = MathUtils.rapierToScreen(hit_point)
-                this.aim_line.moveTo(line_start.x, line_start.y).lineTo(line_end.x, line_end.y).stroke({ width: 2, color: 0x000000 })
+                this.aim_line.moveTo(line_start.x, line_start.y).lineTo(line_end.x, line_end.y).stroke({ width: 3, color: 0xffffff })
             }
             if(InputSystem.isMouseDown(0)){
                 if(hit.collider.collisionGroups() == 0x00010007){
@@ -114,10 +114,12 @@ export class player {
             }
         }
         else{
-            let line_start = MathUtils.rapierToScreen(this.rb.translation())
-            let line_end = rapier_mouse.sub(this.rb.translation()).normalized().scale(300) // kinda stupid probably rework later
-            line_end = MathUtils.rapierToScreen(line_end.add(this.rb.translation()))
-            this.aim_line.moveTo(line_start.x, line_start.y).lineTo(line_end.x, line_end.y).stroke({ width: 2, color: 0x444444 })
+            if (!this.joint.isValid()) {
+                let line_start = MathUtils.rapierToScreen(this.rb.translation())
+                let line_end = rapier_mouse.sub(this.rb.translation()).normalized().scale(300) // kinda stupid probably rework later
+                line_end = MathUtils.rapierToScreen(line_end.add(this.rb.translation()))
+                this.aim_line.moveTo(line_start.x, line_start.y).lineTo(line_end.x, line_end.y).stroke({ width: 2, color: 0xaaaaaa })
+            }
         }
         /*else {
             console.log("miss")
