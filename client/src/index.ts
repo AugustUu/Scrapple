@@ -1,61 +1,27 @@
-import { Application, Assets, Container, Graphics, Sprite, Texture } from 'pixi.js';
-import RAPIER from '@dimforge/rapier2d-compat';
+import { Engine, Color, DisplayMode, Actor, CollisionType, Scene,  } from 'excalibur';
 import { GameState, StateSystem } from './util/StateSystem';
-import { EventSystem } from './util/EventSystem';
-import { InputSystem } from './util/InputSystem';
 import { MainMenu } from './ui/MainMenu';
-import { World as World } from './physics/World';
-import { player } from './game/Player';
-import { Room } from './game/Room';
+import { World } from './world/world';
 
 
+StateSystem.changeState(GameState.loading);
 
-export const app = new Application();
-
-async function init() {
-
-
-    await app.init({
-        backgroundColor: 0x777777,
-        resizeTo: window
-    });
-
-    await RAPIER.init();
-
-    document.body.appendChild(app.canvas);
-    const container = new Container();
-    app.stage.addChild(container);
+export const engine = new Engine({
+    backgroundColor: Color.fromHex('#5fcde4'),
+    fixedUpdateFps: 60,
+    width: 1920,
+    height: 1080,
+    displayMode: DisplayMode.FitScreenAndFill
+});
 
 
-    MainMenu.init();
+engine.start();
+engine.toggleDebug();
 
-    InputSystem.init();
-    Room.init();
-    World.init();
-    StateSystem.changeState(GameState.inRoom);
+MainMenu.init();
+World.init();
 
-
-
-
-    let lines = new Graphics();
-    lines.x = window.innerWidth / 2;
-    lines.y = window.innerHeight / 2;
-    app.stage.addChild(lines);
-
-    app.ticker.add(() => {
-        const { vertices, colors } = World.world.debugRender();
-        lines.clear();
-
-        for (let i = 0; i < vertices.length / 4; i += 1) {
-            //lines.lineStyle(1.0, color, colors[i * 8 + 3], 0.5, true);
-            
-            lines.moveTo(vertices[i * 4] * 10, -vertices[i * 4 + 1] * 10).lineTo(vertices[i * 4 + 2] * 10, -vertices[i * 4 + 3] * 10).stroke({ width: 1, color: 0xff0000 });
-        }
-    });
+console.log("Game started fr fr")
 
 
-}
-
-init()
-
-console.log("starting game?")
+StateSystem.changeState(GameState.menu);

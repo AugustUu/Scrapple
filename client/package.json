@@ -12,10 +12,9 @@
   "description": "",
   "dependencies": {
     "@dimforge/rapier2d-compat": "^0.14.0",
-    "@pixi/ui": "^2.1.5",
     "colyseus.js": "^0.15.26",
     "eslint": "^9.11.1",
-    "pixi.js": "^8.4.1"
+    "excalibur": "^0.29.3"
   },
   "devDependencies": {
     "@types/matter-js": "^0.19.7",
