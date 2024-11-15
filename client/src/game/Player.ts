@@ -5,6 +5,7 @@ import { Vector2, MathUtils } from "../util/MathUtils";
 import { KinematicPhysicsObject } from "../physics/PhysicsObject";
 import { World } from "../physics/World";
 import { RigidBody, JointData, ImpulseJoint, Ray, Collider } from "@dimforge/rapier2d-compat";
+import { bullet } from "./Bullet";
 
 
 export class player {
