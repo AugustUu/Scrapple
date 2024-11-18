@@ -1,27 +1,29 @@
-import { Engine, Color, DisplayMode, Actor, CollisionType, Scene,  } from 'excalibur';
-import { GameState, StateSystem } from './util/StateSystem';
+import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution,  } from 'excalibur';
+import { World } from './world/World';
 import { MainMenu } from './ui/MainMenu';
-import { World } from './world/world';
-
-
-StateSystem.changeState(GameState.loading);
+import RAPIER from '@dimforge/rapier2d-compat';
 
 export const engine = new Engine({
-    backgroundColor: Color.fromHex('#5fcde4'),
+    backgroundColor: Color.Gray,
     fixedUpdateFps: 60,
     width: 1920,
     height: 1080,
-    displayMode: DisplayMode.FitScreenAndFill
+    displayMode: DisplayMode.FitScreenAndFill,
+    antialiasing:false,
+    scenes: {
+        mainMenu: MainMenu,
+        world: World,
+    }
 });
 
+async function init() {
+   
+    await RAPIER.init();
 
-engine.start();
-engine.toggleDebug();
+    engine.start();
+    engine.toggleDebug();
+    engine.goToScene("mainMenu");
+    
+}
 
-MainMenu.init();
-World.init();
-
-console.log("Game started fr fr")
-
-
-StateSystem.changeState(GameState.menu);
+init()

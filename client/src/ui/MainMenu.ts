@@ -1,34 +1,26 @@
 import { Actor, Color, Scene, Vector } from "excalibur";
-import { GameState, StateSystem } from "../util/StateSystem";
 import { engine } from "..";
+import { World } from "../world/World";
 
 
-export class MainMenu {
+export class MainMenu extends Scene {
 
-    static scene: Scene;
+    private playButton: Actor | undefined;
 
-    static init() {
-        this.scene = new Scene();
-        engine.add('menu', MainMenu.scene);
-
-        StateSystem.onEnter(GameState.menu,  () => {
-            engine.goToScene('menu');
-        })
-        
-        const playButton = new Actor({
+    public onInitialize() {
+        this.playButton = new Actor({
             width: 50,
             height: 50,
             color: Color.Red,
             pos: new Vector(100, 100)
         })
 
-        playButton.on("pointerdown",function(){
+        this.playButton.on("pointerdown",function(){
             console.log("aaa")
-            StateSystem.changeState(GameState.inRoom)
+            engine.goToScene("world");
         })
 
-        this.scene.add(playButton)
+        this.add(this.playButton)
     }
-
 
 }

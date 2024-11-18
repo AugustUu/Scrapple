@@ -1,29 +1,50 @@
-import { Actor, Color, Scene, Vector } from "excalibur";
+import { Actor, Canvas, Color, Debug, Entity, Scene, TransformComponent, Vector } from "excalibur";
 import { engine } from "..";
-import { MainMenu } from "../ui/MainMenu";
-import { GameState, StateSystem } from "../util/StateSystem";
+import { createOtherPlayerEntity } from "../game/OtherPlayer";
+import { LocalPlayer } from "../game/LocalPlayer";
+import { PhysicsSystem, PhysicsSystemDebug } from "../physics/PhysicsSystems";
+import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
+import { ColliderDesc, RigidBodyDesc, RigidBodyType, Vector2 } from "@dimforge/rapier2d-compat";
+import { createTransformComponent } from "../util";
 
-export class World {
+export class World extends Scene {
 
-    static scene: Scene;
+    private playButton: Actor | undefined;
 
-    static init() {
-        this.scene = new Scene();
-        engine.add('game', MainMenu.scene);
 
-        StateSystem.onEnter(GameState.inRoom,  () => {
-            debugger
-            engine.goToScene('game');
-        })
+    public onInitialize() {
+        this.world.systemManager.addSystem(PhysicsSystem);
+        this.world.systemManager.addSystem(PhysicsSystemDebug);
 
-        const playButton = new Actor({
+        let localPlayer = new LocalPlayer(0,300);
+        engine.add(localPlayer)
+
+        let floor = new Entity()
+        .addComponent(createTransformComponent(Vector.Zero))
+        .addComponent(new ColliderComponent(ColliderDesc.cuboid(20, 2)))
+
+        this.add(floor)
+
+
+
+
+        this.playButton = new Actor({
             width: 50,
             height: 50,
-            color: Color.Green,
-            pos: new Vector(100, 100)
+            color: Color.Orange,
+            pos: new Vector(-400, -400),
+            anchor: Vector.Half
+        })
+        
+        this.camera.pos = Vector.Zero
+
+        this.playButton.on("pointerdown", function () {
+            engine.goToScene("mainMenu");
         })
 
-        this.scene.add(playButton)
+        this.add(this.playButton)
+
+
     }
 
 }
