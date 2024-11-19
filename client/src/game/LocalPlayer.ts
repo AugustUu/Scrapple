@@ -92,13 +92,13 @@ export class LocalPlayer extends Actor {
 
         if(this.joint.isValid()){
             if(!engine.input.pointers.isDown(1)){ // this feels dumb? but i can't think of another way to do it so w/e
-                World.world.removeImpulseJoint(this.joint, true)
+                PhysicsSystem.physicsWorld.removeImpulseJoint(this.joint, true)
             }
             else{
                 let line_start = MathUtils.rapierToExc({x:rb.translation().x, y:rb.translation().y})
                 let rot_anchor2 = new Vector2(this.joint.anchor2()).rotate(this.joint.body2().rotation())
                 let line_end = MathUtils.rapierToExc({x:this.joint.body2().translation().x + rot_anchor2.x, y:this.joint.body2().translation().y + rot_anchor2.y})
-                this.grapple_line.moveTo(line_start.x, line_start.y).lineTo(line_end.x, line_end.y).stroke({ width: 4, color: 0x000000 })
+                //this.grapple_line.moveTo(line_start.x, line_start.y).lineTo(line_end.x, line_end.y).stroke({ width: 4, color: 0x000000 })
             }
         }
     }
@@ -111,7 +111,7 @@ export class LocalPlayer extends Actor {
             let end_offset = hit_point_vector.sub(target.translation())
             end_offset = end_offset.rotate(-target.rotation())
             let params = JointData.revolute(start_offset, end_offset);
-            this.joint = World.world.createImpulseJoint(params, rb, target, true);
+            this.joint = PhysicsSystem.physicsWorld.createImpulseJoint(params, rb, target, true);
         }
     }
         super.update(engine, delta);
