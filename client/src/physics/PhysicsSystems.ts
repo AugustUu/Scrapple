@@ -1,4 +1,4 @@
-import {Debug, Query, System, SystemType, TransformComponent, Vector, World } from "excalibur";
+import {Color, Debug, Query, System, SystemType, TransformComponent, Vector, World } from "excalibur";
 import RAPIER, { RigidBody, RigidBodyDesc, Vector2 } from '@dimforge/rapier2d-compat';
 import { ColliderComponent, RigidBodyComponent } from "./PhysicsComponents";
 
@@ -50,6 +50,7 @@ export class PhysicsSystem extends System {
 
             let pos = body.body.translation()
             transform.pos.setTo(pos.x*10, -pos.y*10);
+            transform.rotation = -body.body.rotation();
         }
     }
 
@@ -61,7 +62,7 @@ export class PhysicsSystemDebug extends System {
     update(elapsedMs: number): void {
         const { vertices, colors } = PhysicsSystem.physicsWorld.debugRender();
         for (let i = 0; i < vertices.length / 4; i += 1) {
-            Debug.drawLine(new Vector(vertices[i * 4]*10, -vertices[i * 4 + 1]*10), new Vector(vertices[i * 4 + 2]*10, -vertices[i * 4 + 3]*10))
+            Debug.drawLine(new Vector(vertices[i * 4]*10, -vertices[i * 4 + 1]*10), new Vector(vertices[i * 4 + 2]*10, -vertices[i * 4 + 3]*10),{color:Color.Red})
         }
     }
 
