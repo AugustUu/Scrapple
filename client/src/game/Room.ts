@@ -3,6 +3,7 @@ import { KinematicPhysicsObject, KinPosPhysicsObject, StaticPhysicsObject } from
 import { World } from "../physics/World";
 import { GameState, StateSystem } from "../util/StateSystem";
 import { player } from "./Player";
+import { bullet } from "./Bullet";
 
 
 export class Room {
@@ -19,6 +20,7 @@ export class Room {
 
 
             new player(0, 20);
+            new bullet({x: -10, y: 0}, {x:0, y:0}, 4)
         });
     }
 

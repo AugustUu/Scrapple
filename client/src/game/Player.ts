@@ -6,6 +6,7 @@ import { KinematicPhysicsObject } from "../physics/PhysicsObject";
 import { World } from "../physics/World";
 import { RigidBody, JointData, ImpulseJoint, Ray, Collider } from "@dimforge/rapier2d-compat";
 import { bullet } from "./Bullet";
+import { Input } from "@pixi/ui";
 
 
 export class player {
@@ -112,6 +113,11 @@ export class player {
                 if(hit.collider.collisionGroups() == 0x00020007){
                     console.log("hit player")
                 }
+
+                let line_start = MathUtils.rapierToScreen(this.rb.translation())
+                let line_end = MathUtils.rapierToScreen(hit_point)
+                
+
             }
         }
         else{
