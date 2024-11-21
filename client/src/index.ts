@@ -1,4 +1,4 @@
-import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution,  } from 'excalibur';
+import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering,  } from 'excalibur';
 import { World } from './world/World';
 import { MainMenu } from './ui/MainMenu';
 import RAPIER from '@dimforge/rapier2d-compat';
@@ -9,7 +9,13 @@ export const engine = new Engine({
     width: 1920,
     height: 1080,
     displayMode: DisplayMode.FitScreenAndFill,
-    antialiasing:false,
+    antialiasing: {
+        pixelArtSampler: true, // turns on the sub-pixel shader for pixel art
+        nativeContextAntialiasing: false, // turns off canvas aa
+        multiSampleAntialiasing: true, // turns on msaa which smooths quad boundaries
+        filtering: ImageFiltering.Blended, // hints the image loader to use blended filtering
+        canvasImageRendering: 'auto' // applies the 'auto'-matic css to the canvas CSS image-rendering
+      },
     scenes: {
         mainMenu: MainMenu,
         world: World,
