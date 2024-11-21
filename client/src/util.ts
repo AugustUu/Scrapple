@@ -1,4 +1,6 @@
+import { JointData, RigidBody } from "@dimforge/rapier2d-compat";
 import { TransformComponent, Vector } from "excalibur";
+import { PhysicsSystem } from "./physics/PhysicsSystems";
 
 export function createTransformComponent(position:Vector){
     let transform = new TransformComponent();
@@ -54,3 +56,15 @@ export class MathUtils {
         return new Vector2({x:pos.x * 10, y:pos.y * -10})
     }
 }
+
+export function generateRevoluteJoint(target: RigidBody | null, rb: RigidBody, hitPoint: {x:number, y:number}) {
+    if(target != null){ // should never be null?
+        let hit_point_vector = new Vector2(hitPoint)
+        let start_offset = hit_point_vector.sub(rb.translation())
+        start_offset = start_offset.rotate(-rb.rotation())
+        let end_offset = hit_point_vector.sub(target.translation())
+        end_offset = end_offset.rotate(-target.rotation())
+        let params = JointData.revolute(start_offset, end_offset);
+        return PhysicsSystem.physicsWorld.createImpulseJoint(params, rb, target, true);
+    }
+}   
