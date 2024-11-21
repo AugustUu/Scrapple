@@ -18,10 +18,12 @@ export class World extends Scene {
 
         let localPlayer = new LocalPlayer(0,300);
         engine.add(localPlayer)
-
+        
+        let colliderDesc = ColliderDesc.cuboid(100, 2).setCollisionGroups(0x00010007)
         let floor = new Entity()
         .addComponent(createTransformComponent(Vector.Zero))
-        .addComponent(new ColliderComponent(ColliderDesc.cuboid(20, 2)))
+        .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
+        .addComponent(new ColliderComponent(colliderDesc))
 
         this.add(floor)
 
