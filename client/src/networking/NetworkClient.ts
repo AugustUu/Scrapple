@@ -1,6 +1,7 @@
-import Colyseus, { Client, Room } from "colyseus.js";
+import Colyseus, { Client, Room,  } from "colyseus.js";
 import { Networking } from "./Networking";
 import * as NeworkEvents from "./NeworkEvents";
+import { Schema } from '@colyseus/schema';
 
 export class NetworkClient {
 
@@ -23,14 +24,19 @@ export class NetworkClient {
         Networking.events.emit("error", new NeworkEvents.Error(code, message));
     }
 
+    onMessage(type: string | number | Schema, message: any){
+
+    }
+
     onJoin(room: Room): void {
         console.log(room.sessionId, "joined", room.id);
-        //StateSystem.changeState(GameState.inRoom);
         Networking.events.emit("joined", new NeworkEvents.Joined(room));
 
+
         room.onStateChange(this.onStateChange);
-        room.onLeave(this.onLeave)
+        room.onLeave(this.onLeave);
         room.onError(this.onError);
+        room.onMessage("*",this.onMessage);
 
     }
 

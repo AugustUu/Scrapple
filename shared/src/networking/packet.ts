@@ -11,7 +11,7 @@ interface Ping extends Packet {
 }
 
 interface Pong extends Packet {
-    name: "ping",
+    name: "pong",
     args: {
         time: number
     }
