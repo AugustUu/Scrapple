@@ -1,11 +1,18 @@
-export enum toServer{
-    joind,
-    ping,
-    spawn
+type Packet = {
+    name: String,
+    args: {}
 }
 
-export enum toClient{
-    initalInfo,
-    pong,
-    spawned,
+interface Ping extends Packet {
+    name: "ping",
+    args: {
+        time: number
+    }
+}
+
+interface Pong extends Packet {
+    name: "ping",
+    args: {
+        time: number
+    }
 }
