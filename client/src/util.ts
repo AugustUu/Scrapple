@@ -47,10 +47,10 @@ export class Vector2 {
 
 export class MathUtils {
     static excToRapier(pos: {x: number, y: number}){
-        return new Vector2(pos).scale(0.1)
+        return new Vector2({x:pos.x * 0.1, y:pos.y * -0.1})
     }
 
     static rapierToExc(pos: {x: number, y: number}){
-        return new Vector2(pos).scale(10)
+        return new Vector2({x:pos.x * 10, y:pos.y * -10})
     }
 }
