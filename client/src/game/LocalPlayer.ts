@@ -1,9 +1,9 @@
-import { Actor, Color, Component, CoordPlane, Engine, Entity, GraphicsComponent, Input, Keys, Rectangle, System, SystemType, TransformComponent, Vector } from "excalibur";
+import { Actor, Color, Component, CoordPlane, Engine, Entity, GraphicsComponent, Input, Keys, Rectangle, System, SystemType, TransformComponent, Util, Vector } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import { World } from "../world/World";
 import RAPIER, { RigidBody, JointData, ImpulseJoint, Ray, Collider, RigidBodyType } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
-import { Vector2, MathUtils } from "../util"
+import { Vector2, MathUtils, generateRevoluteJoint as generateRevoluteJoint } from "../util"
 
 export class LocalPlayer extends Actor {
     public health: number = 100;
@@ -57,12 +57,15 @@ export class LocalPlayer extends Actor {
         let ray = new Ray(rb.translation(), rapier_mouse.sub(rb.translation()).normalized());
         let hit = PhysicsSystem.physicsWorld.castRay(ray, 1000, false, undefined, undefined, undefined, rb);
         if (hit != null) {
-            let hit_point = ray.pointAt(hit.timeOfImpact); 
+            let hit_point = ray.pointAt(hit.timeOfImpact);
             if (engine.input.pointers.isDown(0)) { // todo: make this only check the frame mouse is clicked, rather than every frame it is (augusts job)
                 
                 //console.log("Collider", hit.collider, "hit at point", hitPoint); 
                 if (!this.joint.isValid()) {
-                    this.generateJoint(hit.collider.parent(), rb, hit_point)
+                    let newJoint = generateRevoluteJoint(hit.collider.parent(), rb, hit_point)
+                    if(newJoint != undefined){
+                        this.joint = newJoint
+                    }
                 }
             }
             else{
@@ -109,15 +112,5 @@ export class LocalPlayer extends Actor {
         super.update(engine, delta);
     }
 
-    generateJoint(target: RigidBody | null, rb: RigidBody, hitPoint: {x:number, y:number}) {
-        if(target != null){ // should never be null?
-            let hit_point_vector = new Vector2(hitPoint)
-            let start_offset = hit_point_vector.sub(rb.translation())
-            start_offset = start_offset.rotate(-rb.rotation())
-            let end_offset = hit_point_vector.sub(target.translation())
-            end_offset = end_offset.rotate(-target.rotation())
-            let params = JointData.revolute(start_offset, end_offset);
-            this.joint = PhysicsSystem.physicsWorld.createImpulseJoint(params, rb, target, true);
-        }
-    }       
+        
 }

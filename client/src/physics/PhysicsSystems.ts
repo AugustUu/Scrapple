@@ -21,6 +21,7 @@ export class PhysicsSystem extends System {
         this.rigidBodyQuery.entityAdded$.subscribe(entity => {
             const rigidBody = entity.get(RigidBodyComponent);
             let description = new RigidBodyDesc(rigidBody.rigidBodyType);
+            description.setCcdEnabled(true)
             let pos = entity.get(TransformComponent).pos
             description.translation = new Vector2(pos.x/10,pos.y/10);
 
