@@ -1,4 +1,4 @@
-import { Actor, Canvas, Color, Debug, Entity, Scene, TransformComponent, Vector } from "excalibur";
+import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic } from "excalibur";
 import { engine } from "..";
 import { createOtherPlayerEntity } from "../game/OtherPlayer";
 import { LocalPlayer } from "../game/LocalPlayer";
@@ -19,13 +19,7 @@ export class Level extends Scene {
         let localPlayer = new LocalPlayer(0,300);
         engine.add(localPlayer)
         
-        let colliderDesc = ColliderDesc.cuboid(100, 2).setCollisionGroups(0x00010007)
-        let floor = new Entity()
-        .addComponent(createTransformComponent(Vector.Zero))
-        .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
-        .addComponent(new ColliderComponent(colliderDesc))
-
-        this.add(floor)
+        engine.add(this.createGroundRect(0, 0, 100, 2, new Color(50, 50, 50)))
 
 
 
@@ -47,6 +41,22 @@ export class Level extends Scene {
         this.add(this.playButton)
 
 
+    }
+
+    public createGroundRect(x:number, y:number, width:number, height:number, color:Color): Entity{
+        let colliderDesc = ColliderDesc.cuboid(width, height).setCollisionGroups(0x00010007)
+        let floor = new Entity()
+        .addComponent(createTransformComponent(new Vector(x, y)))
+        .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
+        .addComponent(new ColliderComponent(colliderDesc))
+        
+        let sprite = new Rectangle({ width: width * 20, height: height * 20, color: color })
+        let graphics = new GraphicsComponent();
+        graphics.add(sprite);
+
+        floor.addComponent(graphics)
+
+        return floor
     }
 
 }

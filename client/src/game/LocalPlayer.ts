@@ -9,7 +9,7 @@ export class LocalPlayer extends Actor {
     public health: number = 100;
     joint!: ImpulseJoint;
 
-    constructor(x: number, y: number,) {
+    constructor(x: number, y: number) {
         super({ x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor:Vector.Half });
 
         let rigidBody = new RigidBodyComponent(RigidBodyType.Dynamic);
