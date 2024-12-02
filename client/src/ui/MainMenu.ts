@@ -1,11 +1,15 @@
-import { Actor, Color, Scene, Vector } from "excalibur";
+import { Actor, Color, Scene, SceneActivationContext, Vector } from "excalibur";
 import { engine } from "..";
 import { Level } from "../world/Level";
+import { Networking } from "../networking/Networking";
 
 
 export class MainMenu extends Scene {
 
     private playButton: Actor | undefined;
+    private rootElement!: HTMLElement;
+    private inputElement!: HTMLInputElement;
+    private createOrJoin!: HTMLElement;
 
     public onInitialize() {
         this.playButton = new Actor({
@@ -15,12 +19,36 @@ export class MainMenu extends Scene {
             pos: new Vector(100, 100)
         })
 
+        this.rootElement = document.getElementById('menu')!;
+        this.inputElement = document.getElementById('serverInput')! as HTMLInputElement;
+        this.createOrJoin = document.getElementById('joinButton')!;
+
+        
+
         this.playButton.on("pointerdown",function(){
-            console.log("aaa")
             engine.goToScene("level");
         })
 
+        
+
+        this.createOrJoin.addEventListener("click",()=>{
+            if(this.inputElement.value == ""){
+                Networking.create()
+            }else{
+                Networking.connect(this.inputElement.value)
+            }
+        })
+        
+
         this.add(this.playButton)
+    }
+
+    public onActivate(context: SceneActivationContext<unknown>): void {
+        this.rootElement.style.display = "";
+    }
+
+    public onDeactivate(context: SceneActivationContext): void {
+        this.rootElement.style.display = "none";
     }
 
 }
