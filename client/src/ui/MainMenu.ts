@@ -1,6 +1,6 @@
 import { Actor, Color, Scene, Vector } from "excalibur";
 import { engine } from "..";
-import { World } from "../world/World";
+import { Level } from "../world/Level";
 
 
 export class MainMenu extends Scene {
@@ -17,7 +17,7 @@ export class MainMenu extends Scene {
 
         this.playButton.on("pointerdown",function(){
             console.log("aaa")
-            engine.goToScene("world");
+            engine.goToScene("level");
         })
 
         this.add(this.playButton)

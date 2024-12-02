@@ -1,7 +1,7 @@
 import Colyseus, { Client, Room } from "colyseus.js";
 import { NetworkClient } from "./NetworkClient";
 import { EventEmitter, GameEvent } from "excalibur";
-import * as NeworkEvents from "./NeworkEvents";
+import * as NeworkEvents from "./NetworkEvents";
 
 export class Networking {
 

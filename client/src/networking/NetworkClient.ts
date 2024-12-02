@@ -1,6 +1,6 @@
 import Colyseus, { Client, Room,  } from "colyseus.js";
 import { Networking } from "./Networking";
-import * as NeworkEvents from "./NeworkEvents";
+import * as NeworkEvents from "./NetworkEvents";
 import { Schema } from '@colyseus/schema';
 
 export class NetworkClient {

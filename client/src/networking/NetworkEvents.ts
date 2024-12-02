@@ -1,7 +1,7 @@
 import { GameEvent } from "excalibur";
 import Colyseus from "colyseus.js";
 
-export type onMessage = {
+export type Events = {
     connected: ServerConnected
     disconnected: ServerDisconnected
     stateChanged: StateChanged
@@ -39,9 +39,4 @@ export class Joined extends GameEvent<Colyseus.Room<unknown>> {
     constructor(public room: Colyseus.Room<unknown>) {
         super();
     }
-}
-export type onPacket = {
-    [name: string]: {
-        arg: any;
-    };
 }

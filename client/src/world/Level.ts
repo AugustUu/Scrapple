@@ -7,7 +7,7 @@ import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsCompone
 import { ColliderDesc, RigidBodyDesc, RigidBodyType, Vector2 } from "@dimforge/rapier2d-compat";
 import { createTransformComponent } from "../util";
 
-export class World extends Scene {
+export class Level extends Scene {
 
     private playButton: Actor | undefined;
 

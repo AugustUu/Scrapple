@@ -1,5 +1,5 @@
 import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering,  } from 'excalibur';
-import { World } from './world/World';
+import { Level } from './world/Level';
 import { MainMenu } from './ui/MainMenu';
 import RAPIER from '@dimforge/rapier2d-compat';
 
@@ -18,7 +18,7 @@ export const engine = new Engine({
       },
     scenes: {
         mainMenu: MainMenu,
-        world: World,
+        level: Level,
     }
 });
 
