@@ -1,17 +1,30 @@
-import { Actor, Color, Component, CoordPlane, Engine, Entity, GraphicsComponent, Input, Keys, Rectangle, System, SystemType, TransformComponent, Util, Vector } from "excalibur";
+import { Actor, Color, Component, CoordPlane, Engine, Entity, GraphicsComponent, Input, Keys, Rectangle, System, SystemType, TransformComponent, Util, Vector, Line } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
-import { Level } from "../world/Level";
+import { Game } from "../world/Game";
 import RAPIER, { RigidBody, JointData, ImpulseJoint, Ray, Collider, RigidBodyType } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
 import { Vector2, MathUtils, generateRevoluteJoint as generateRevoluteJoint } from "../util"
+import { engine } from "..";
 
 export class LocalPlayer extends Actor {
     public health: number = 100;
     joint!: ImpulseJoint;
+    lineActor: Actor;
 
     constructor(x: number, y: number) {
         super({ x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor:Vector.Half });
 
+        this.lineActor = new Actor({pos:Vector.Zero})
+        this.lineActor.graphics.anchor = Vector.Zero
+        let line = new Line({
+            start: Vector.Zero,
+            end: Vector.Zero,
+            color: Color.Black,
+            thickness: 2
+        })
+        this.lineActor.graphics.add(line)
+        engine.add(this.lineActor)
+        
         let rigidBody = new RigidBodyComponent(RigidBodyType.Dynamic);
         this.addComponent(rigidBody)
 
@@ -52,6 +65,9 @@ export class LocalPlayer extends Actor {
             this.joint = PhysicsSystem.physicsWorld.createImpulseJoint(JointData.revolute({ x: 0.0, y: 0.0 }, { x: 0.0, y: 0.0 }), rb, rb, true)
             PhysicsSystem.physicsWorld.removeImpulseJoint(this.joint, true)
         }
+
+        //debug
+        console.log(this.lineActor.graphics.getGraphic("line"))
 
         let rapier_mouse = MathUtils.excToRapier(engine.input.pointers.primary.lastWorldPos)
         let ray = new Ray(rb.translation(), rapier_mouse.sub(rb.translation()).normalized());
