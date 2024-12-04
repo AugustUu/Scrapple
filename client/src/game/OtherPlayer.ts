@@ -10,11 +10,7 @@ export class OtherPlayerComponent extends Component {
     }
 }
 
-console.log("aa");
 
-Networking.events.on("stateChanged",()=>{
-    debugger
-})
 
 export function createOtherPlayerEntity(name: String, position: Vector): Entity {
     const entity = new Entity({
