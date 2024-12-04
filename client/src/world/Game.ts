@@ -1,16 +1,18 @@
 import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic } from "excalibur";
 import { engine } from "..";
-import { createOtherPlayerEntity } from "../game/OtherPlayer";
+import { createOtherPlayerEntity, OtherPlayerComponent } from "../game/OtherPlayer";
 import { LocalPlayer } from "../game/LocalPlayer";
 import { PhysicsSystem, PhysicsSystemDebug } from "../physics/PhysicsSystems";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import { ColliderDesc, RigidBodyDesc, RigidBodyType, Vector2 } from "@dimforge/rapier2d-compat";
 import { createTransformComponent } from "../util";
+import { Networking } from "../networking/Networking";
 
-export class Level extends Scene {
+export class Game extends Scene {
 
     private playButton: Actor | undefined;
 
+    
 
     public onInitialize() {
         this.world.systemManager.addSystem(PhysicsSystem);
@@ -21,6 +23,12 @@ export class Level extends Scene {
         
         engine.add(this.createGroundRect(0, 0, 100, 2, new Color(50, 50, 50)))
 
+        Networking.events.on("stateChanged",(state)=>{
+            state.newState.players.forEach((element: any) => {
+                console.log("player",element)
+            });
+            console.log(state)
+        })
 
 
 
@@ -35,6 +43,7 @@ export class Level extends Scene {
         this.camera.pos = Vector.Zero
 
         this.playButton.on("pointerdown", function () {
+            Networking.client.room?.leave();
             engine.goToScene("mainMenu");
         })
 

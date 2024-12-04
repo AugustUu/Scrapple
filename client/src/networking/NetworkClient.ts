@@ -2,13 +2,17 @@ import Colyseus, { Client, Room,  } from "colyseus.js";
 import { Networking } from "./Networking";
 import * as NeworkEvents from "./NetworkEvents";
 import { Schema } from '@colyseus/schema';
+import {S2CPackets,C2SPacket} from "shared/src/networking/Packet"
 
 export class NetworkClient {
 
+    public room:Colyseus.Room<any> | null = null;
+    public state: any = null;
+    public clientId = "";
 
     onStateChange(state: any): void {
         console.log("multiPlayerState Changed", state);
-        Networking.state = state;
+        this.state = state;
 
         Networking.events.emit("stateChanged", new NeworkEvents.StateChanged(state));
     }
@@ -29,14 +33,25 @@ export class NetworkClient {
     }
 
     onJoin(room: Room): void {
-        console.log(room.sessionId, "joined", room.id);
-        Networking.events.emit("joined", new NeworkEvents.Joined(room));
+        this.room == room
 
+        Networking.events.emit("joined", new NeworkEvents.Joined(room));
 
         room.onStateChange(this.onStateChange);
         room.onLeave(this.onLeave);
         room.onError(this.onError);
-        room.onMessage("*",this.onMessage);
+        //room.onMessage("*",this.onMessage);
+
+        room.onMessage(S2CPackets.InitClient,(id)=>{
+            this.clientId = id
+        })
+
+        room.onMessage(S2CPackets.Pong,()=>{
+            room.send(C2SPacket.Ping,{})
+        })
+
+
+        room.send(C2SPacket.Connect,{name:"jorbis"});
 
     }
 

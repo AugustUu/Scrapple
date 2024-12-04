@@ -1,4 +1,5 @@
 import { Color, Component, CoordPlane, Entity, GraphicsComponent, Rectangle, System, SystemType, TransformComponent, Vector } from "excalibur";
+import { Networking } from "../networking/Networking";
 
 export class OtherPlayerComponent extends Component {
     public name: String = 'jorbis';
@@ -8,6 +9,12 @@ export class OtherPlayerComponent extends Component {
         super();
     }
 }
+
+console.log("aa");
+
+Networking.events.on("stateChanged",()=>{
+    debugger
+})
 
 export function createOtherPlayerEntity(name: String, position: Vector): Entity {
     const entity = new Entity({

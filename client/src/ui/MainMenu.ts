@@ -1,6 +1,6 @@
 import { Actor, Color, Scene, SceneActivationContext, Vector } from "excalibur";
 import { engine } from "..";
-import { Level } from "../world/Level";
+import { Game } from "../world/Game";
 import { Networking } from "../networking/Networking";
 
 
@@ -26,10 +26,12 @@ export class MainMenu extends Scene {
         
 
         this.playButton.on("pointerdown",function(){
-            engine.goToScene("level");
+            engine.goToScene("game");
         })
 
-        
+        Networking.events.on("joined",()=>{
+            engine.goToScene("game");
+        })
 
         this.createOrJoin.addEventListener("click",()=>{
             if(this.inputElement.value == ""){

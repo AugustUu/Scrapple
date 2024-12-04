@@ -14,7 +14,8 @@
     "@dimforge/rapier2d-compat": "^0.14.0",
     "colyseus.js": "^0.15.26",
     "eslint": "^9.11.1",
-    "excalibur": "^0.29.3"
+    "excalibur": "^0.29.3",
+    "shared": "file:../shared"
   },
   "devDependencies": {
     "@types/node": "^22.7.2",
