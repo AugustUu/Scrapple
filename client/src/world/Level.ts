@@ -20,7 +20,7 @@ export class Level extends Scene {
         let localPlayer = new LocalPlayer(20,300);
         engine.add(localPlayer)
 
-        let bullet = new Bullet(new Vector(-20, 10), new Vector(20, 20), 5)
+        let bullet = new Bullet(new Vector(-20, 10), new Vector(40, 40), 5)
         engine.add(bullet)
         
         let colliderDesc = ColliderDesc.cuboid(100, 2).setCollisionGroups(0x00010007)
