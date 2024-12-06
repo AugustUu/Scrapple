@@ -1,4 +1,4 @@
-import { Circle, Color, Component, CoordPlane, Entity, GraphicsComponent, Rectangle, System, SystemType, TransformComponent, Vector } from "excalibur";
+import { Circle, Color, Component, CoordPlane, Entity, Font, GraphicsComponent, GraphicsGroup, Rectangle, System, SystemType, Text, TextAlign, TransformComponent, vec, Vector } from "excalibur";
 import { Networking } from "../networking/Networking";
 
 export class OtherPlayerComponent extends Component {
@@ -12,7 +12,7 @@ export class OtherPlayerComponent extends Component {
 
 
 
-export function createOtherPlayerEntity(name: String, position: Vector): Entity {
+export function createOtherPlayerEntity(name: string, position: Vector): Entity {
     const entity = new Entity({
         name: 'Player ' + name,
     });
@@ -20,9 +20,21 @@ export function createOtherPlayerEntity(name: String, position: Vector): Entity 
     entity.addComponent(new OtherPlayerComponent(name))
 
     let sprite = new Circle({ radius: 20, color: Color.Red })
+    let nameTag = new Text({ text: name,font: new Font({  size: 30,textAlign:TextAlign.Center})})
+
+    const group = new GraphicsGroup({
+        //useAnchor:false,
+        members: [
+            { graphic: sprite, offset: vec(0, 0) },
+            { graphic: nameTag, offset: vec(0, -20) }
+        ]
+    });
+
 
     let graphics = new GraphicsComponent();
-    graphics.add(sprite);
+    graphics.use(group);
+    graphics.offset = vec(0,10)
+
     entity.addComponent(graphics)
 
     let transform = new TransformComponent();

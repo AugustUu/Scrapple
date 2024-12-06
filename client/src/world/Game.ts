@@ -1,4 +1,4 @@
-import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic } from "excalibur";
+import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic, vec } from "excalibur";
 import { engine } from "..";
 import { createOtherPlayerEntity, OtherPlayerComponent } from "../game/OtherPlayer";
 import { LocalPlayer } from "../game/LocalPlayer";
@@ -40,7 +40,6 @@ export class Game extends Scene {
         })
 
 
-
         this.playButton = new Actor({
             width: 50,
             height: 50,
@@ -57,6 +56,7 @@ export class Game extends Scene {
         })
 
         this.add(this.playButton)
+        this.add(createOtherPlayerEntity("test",vec(0,-20)))
 
 
     }
