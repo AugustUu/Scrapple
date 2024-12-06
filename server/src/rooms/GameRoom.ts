@@ -4,11 +4,15 @@ import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 
 
 export class Player extends Schema {
-    name: String;
-    postion: { x: number, y: number };
+    @type("string") name: string;
+
+    @type("number") x: number;
+    @type("number") y: number;
     constructor(name: string) {
         super();
         this.name = name
+        this.x = 0
+        this.y = 0
     }
 }
 
@@ -30,17 +34,20 @@ export class GameRoom extends Room<State> {
             client.send(S2CPackets.Pong, {})
         })
 
-        this.onMessage(C2SPacket.Connect, (client, message) => {
-            if (!this.state.players.get(client.sessionId)) {
-                this.state.players.set(client.sessionId, new Player(message.name));
-                client.send(S2CPackets.InitClient, client.sessionId)
-            }
+        this.onMessage(C2SPacket.Move, (client, message) => {
+            let player = this.state.players.get(client.sessionId)
+            player.x = message.x
+            player.y = message.y
         })
+
 
     }
 
     onJoin(client: Client, options: any) {
         console.log(client.sessionId, "joined!", options);
+        if (options && options.name) {
+            this.state.players.set(client.sessionId, new Player(options.name));
+        }
     }
 
     onLeave(client: Client, consented: boolean) {

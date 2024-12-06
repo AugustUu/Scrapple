@@ -35,8 +35,8 @@ export class StateChanged extends GameEvent<any> {
 }
 
 
-export class Joined extends GameEvent<Colyseus.Room<unknown>> {
-    constructor(public room: Colyseus.Room<unknown>) {
+export class Joined extends GameEvent<Colyseus.Room<any>> {
+    constructor(public room: Colyseus.Room<any>) {
         super();
     }
 }

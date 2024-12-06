@@ -29,15 +29,11 @@ export class MainMenu extends Scene {
             engine.goToScene("game");
         })
 
-        Networking.events.on("joined",()=>{
-            engine.goToScene("game");
-        })
-
         this.createOrJoin.addEventListener("click",()=>{
             if(this.inputElement.value == ""){
-                Networking.create()
+                Networking.create("jorbis"+Math.random())
             }else{
-                Networking.connect(this.inputElement.value)
+                Networking.connect(this.inputElement.value,"jorbis"+Math.random())
             }
         })
         
