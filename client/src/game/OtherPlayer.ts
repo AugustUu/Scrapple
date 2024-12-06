@@ -1,4 +1,5 @@
-import { Color, Component, CoordPlane, Entity, GraphicsComponent, Rectangle, System, SystemType, TransformComponent, Vector } from "excalibur";
+import { Circle, Color, Component, CoordPlane, Entity, GraphicsComponent, Rectangle, System, SystemType, TransformComponent, Vector } from "excalibur";
+import { Networking } from "../networking/Networking";
 
 export class OtherPlayerComponent extends Component {
     public name: String = 'jorbis';
@@ -9,6 +10,8 @@ export class OtherPlayerComponent extends Component {
     }
 }
 
+
+
 export function createOtherPlayerEntity(name: String, position: Vector): Entity {
     const entity = new Entity({
         name: 'Player ' + name,
@@ -16,7 +19,7 @@ export function createOtherPlayerEntity(name: String, position: Vector): Entity 
 
     entity.addComponent(new OtherPlayerComponent(name))
 
-    let sprite = new Rectangle({ width: 100, height: 100, color: Color.Red })
+    let sprite = new Circle({ radius: 20, color: Color.Red })
 
     let graphics = new GraphicsComponent();
     graphics.add(sprite);
