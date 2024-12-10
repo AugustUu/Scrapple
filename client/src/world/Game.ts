@@ -8,6 +8,7 @@ import { ColliderDesc, RigidBodyDesc, RigidBodyType, Vector2 } from "@dimforge/r
 import { createTransformComponent } from "../util";
 import { Networking } from "../networking/Networking";
 import { NetworkClient } from "../networking/NetworkClient";
+import { Bullet } from "../game/Bullet";
 
 export class Game extends Scene {
 
@@ -21,6 +22,8 @@ export class Game extends Scene {
 
         let localPlayer = new LocalPlayer(0, 300);
         engine.add(localPlayer)
+
+
 
         engine.add(this.createGroundRect(0, 0, 100, 2, new Color(50, 50, 50)))
 

@@ -1,4 +1,4 @@
-import { Actor, Color, Component, CoordPlane, Engine, Entity, GraphicsComponent, Input, Keys, Rectangle, System, SystemType, TransformComponent, Util, Vector, Line } from "excalibur";
+import { Actor, Color, Component, CoordPlane, Engine, Entity, GraphicsComponent, Input, Keys, Rectangle, System, SystemType, TransformComponent, Util, Vector, Line, Transform } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { RigidBody, JointData, ImpulseJoint, Ray, Collider, RigidBodyType } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -7,11 +7,13 @@ import { engine } from "..";
 import { Network } from "inspector/promises";
 import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
+import { Bullet } from "./Bullet";
 
 export class LocalPlayer extends Actor {
     public health: number = 100;
     joint!: ImpulseJoint;
     lineActor: Actor;
+    shooting: boolean
 
     constructor(x: number, y: number) {
         super({ x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
@@ -31,6 +33,9 @@ export class LocalPlayer extends Actor {
         this.addComponent(rigidBody)
 
         this.addComponent(new ColliderComponent(RAPIER.ColliderDesc.ball(2).setCollisionGroups(0x00020007), rigidBody.body))
+
+        this.shooting = false
+        
     }
 
     public update(engine: Engine, delta: number) {
@@ -74,6 +79,7 @@ export class LocalPlayer extends Actor {
         let rapier_mouse = MathUtils.excToRapier(engine.input.pointers.primary.lastWorldPos)
         let ray = new Ray(rb.translation(), rapier_mouse.sub(rb.translation()).normalized());
         let hit = PhysicsSystem.physicsWorld.castRay(ray, 1000, false, undefined, undefined, undefined, rb);
+        
         if (hit != null) {
             let hit_point = ray.pointAt(hit.timeOfImpact);
             if (engine.input.pointers.isDown(0)) { // todo: make this only check the frame mouse is clicked, rather than every frame it is (augusts job)
@@ -125,6 +131,18 @@ export class LocalPlayer extends Actor {
                 let line_end = MathUtils.rapierToExc({x:this.joint.body2().translation().x + rot_anchor2.x, y:this.joint.body2().translation().y + rot_anchor2.y})
                 this.grapple_line.moveTo(line_start.x, line_start.y).lineTo(line_end.x, line_end.y).stroke({ width: 4, color: 0x000000 })*/ // old pixi line code
             }
+        }
+
+        if (engine.input.pointers.isDown(0) && this.shooting == false) {
+            //flip targetpos y to negative so it works
+            let bullet = new Bullet(MathUtils.rapierToExc(rb.translation()), rapier_mouse, 50)
+            engine.add(bullet)
+            this.shooting = true;
+            
+            console.log(rapier_mouse)
+        }
+        if(!engine.input.pointers.isDown(0)){
+            this.shooting = false;
         }
 
         Networking.client.room?.send(C2SPacket.Move, { x: this.pos.x, y: this.pos.y })
