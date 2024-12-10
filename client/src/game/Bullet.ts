@@ -1,6 +1,6 @@
 import { Actor, Color, Component, CoordPlane, Engine, Entity, GraphicsComponent, Input, Keys, PhysicsWorld, Rectangle, System, SystemType, TransformComponent, Util, Vector } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
-import { Level } from "../world/Level";
+import { Game } from "../world/Game";
 import RAPIER, { RigidBody, JointData, ImpulseJoint, Ray, Collider, RigidBodyType, Ball, ColliderDesc } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
 import { Vector2, MathUtils, generateRevoluteJoint as generateRevoluteJoint } from "../util"

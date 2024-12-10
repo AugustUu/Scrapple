@@ -8,6 +8,7 @@ import { ColliderDesc, RigidBodyDesc, RigidBodyType, Vector2 } from "@dimforge/r
 import { createTransformComponent } from "../util";
 import { Networking } from "../networking/Networking";
 import { NetworkClient } from "../networking/NetworkClient";
+import { CreateGrappleLine, GrappleLineComponent, GrappleLineSystem } from "../game/GrappleLine";
 
 export class Game extends Scene {
 
@@ -18,6 +19,7 @@ export class Game extends Scene {
     public onInitialize() {
         this.world.systemManager.addSystem(PhysicsSystem);
         this.world.systemManager.addSystem(PhysicsSystemDebug);
+        this.world.systemManager.addSystem(GrappleLineSystem)
 
         let localPlayer = new LocalPlayer(0, 300);
         engine.add(localPlayer)
@@ -57,6 +59,8 @@ export class Game extends Scene {
 
         this.add(this.playButton)
         this.add(createOtherPlayerEntity("test",vec(0,-20)))
+
+        this.add(CreateGrappleLine())
 
 
     }

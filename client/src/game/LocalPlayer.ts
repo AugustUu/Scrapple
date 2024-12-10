@@ -11,21 +11,11 @@ import { C2SPacket } from "shared/src/networking/Packet";
 export class LocalPlayer extends Actor {
     public health: number = 100;
     joint!: ImpulseJoint;
-    lineActor: Actor;
 
     constructor(x: number, y: number) {
         super({ x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
 
-        this.lineActor = new Actor({ pos: Vector.Zero })
-        this.lineActor.graphics.anchor = Vector.Zero
-        let line = new Line({
-            start: Vector.Zero,
-            end: Vector.Zero,
-            color: Color.Black,
-            thickness: 2
-        })
-        this.lineActor.graphics.add(line)
-        engine.add(this.lineActor)
+        
 
         let rigidBody = new RigidBodyComponent(RigidBodyType.Dynamic);
         this.addComponent(rigidBody)
