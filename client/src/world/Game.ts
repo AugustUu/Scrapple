@@ -60,8 +60,6 @@ export class Game extends Scene {
         this.add(this.playButton)
         this.add(createOtherPlayerEntity("test",vec(0,-20)))
 
-        this.add(CreateGrappleLine())
-
 
     }
 
