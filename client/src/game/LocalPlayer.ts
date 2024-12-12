@@ -7,7 +7,6 @@ import { engine } from "..";
 import { Network } from "inspector/promises";
 import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
-import { Bullet } from "./Bullet";
 import { CreateGrappleLine } from "./GrappleLine";
 
 export class LocalPlayer extends Actor {
@@ -90,12 +89,12 @@ export class LocalPlayer extends Actor {
         }
 
         if (engine.input.pointers.isDown(0) && this.shooting == false) {
-            //flip targetpos y to negative so it works
-            let bullet = new Bullet(MathUtils.rapierToExc(rb.translation()), rapier_mouse, 50)
-            engine.add(bullet)
+            let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
+            //let bullet = createBullet("a",angle,this.pos)
+            //engine.add(bullet)
+            Networking.client.room?.send(C2SPacket.Shoot, { angle: angle })
             this.shooting = true;
 
-            console.log(rapier_mouse)
         }
         if (!engine.input.pointers.isDown(0)) {
             this.shooting = false;

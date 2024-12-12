@@ -8,8 +8,9 @@ import { ColliderDesc, RigidBodyDesc, RigidBodyType, Vector2 } from "@dimforge/r
 import { createTransformComponent } from "../util";
 import { Networking } from "../networking/Networking";
 import { NetworkClient } from "../networking/NetworkClient";
-import { Bullet, BulletMoveSystem, createBullet } from "../game/Bullet";
+import { BulletMoveSystem, createBullet } from "../game/Bullet";
 import { S2CPackets } from "shared/src/networking/Packet";
+import { GrappleLineSystem } from "../game/GrappleLine";
 
 export class Game extends Scene {
 
