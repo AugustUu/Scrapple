@@ -23,18 +23,11 @@ export function createOtherPlayerEntity(name: string, id: string, position: Vect
     entity.addComponent(new OtherPlayerComponent(name, id))
 
     let sprite = new Circle({ radius: 20, color: Color.Red })
-    let nameTag = new Text({ text: name, font: new Font({ size: 30, textAlign: TextAlign.Center }) })
 
-    const group = new GraphicsGroup({
-        useAnchor:false,
-        members: [
-            { graphic: sprite, offset: vec(0, 0) },
-            { graphic: nameTag, offset: vec(0, 10) }
-        ]
-    });
+
 
     let graphics = new GraphicsComponent();
-    graphics.use(group);
+    graphics.use(sprite);
     //graphics.offset = vec(0, 10)
     //graphics.anchor = vec(0.5,0.5)
 
@@ -45,6 +38,16 @@ export function createOtherPlayerEntity(name: string, id: string, position: Vect
     transform.pos = position;
 
     entity.addComponent(transform);
+
+    let nameTag = new Text({ text: name, font: new Font({ size: 30, textAlign: TextAlign.Center }) })
+    let nameTagGraphics = new GraphicsComponent();
+    nameTagGraphics.anchor= vec(0.5,0.5)
+    nameTagGraphics.use(nameTag)
+
+    let nameTagEntity = new Entity();
+    nameTagEntity.addComponent(nameTagGraphics)
+    nameTagEntity.addComponent(new TransformComponent())
+    entity.addChild(nameTagEntity)
 
     return entity
 }
