@@ -36,7 +36,7 @@ export function createOtherPlayerEntity(name: string, id: string, position: Vect
     let graphics = new GraphicsComponent();
     graphics.use(group);
     //graphics.offset = vec(0, 10)
-    g//raphics.anchor = vec(0.5,0.5)
+    //graphics.anchor = vec(0.5,0.5)
 
     entity.addComponent(graphics)
 
