@@ -8,7 +8,8 @@ import { ColliderDesc, RigidBodyDesc, RigidBodyType, Vector2 } from "@dimforge/r
 import { createTransformComponent } from "../util";
 import { Networking } from "../networking/Networking";
 import { NetworkClient } from "../networking/NetworkClient";
-import { Bullet } from "../game/Bullet";
+import { Bullet, BulletMoveSystem, createBullet } from "../game/Bullet";
+import { S2CPackets } from "shared/src/networking/Packet";
 
 export class Game extends Scene {
 
@@ -20,6 +21,8 @@ export class Game extends Scene {
         this.world.systemManager.addSystem(PhysicsSystem);
         this.world.systemManager.addSystem(PhysicsSystemDebug);
         this.world.systemManager.addSystem(OtherPlayerMoveSystem);
+        this.world.systemManager.addSystem(BulletMoveSystem);
+        
 
 
         let localPlayer = new LocalPlayer(0, 300);
@@ -42,6 +45,11 @@ export class Game extends Scene {
                     ent.get(TransformComponent).pos.y = value
                 })*/
             }
+        })
+
+        Networking.client.room!.onMessage(S2CPackets.BulletSpawn,(message)=>{
+            let bullet = createBullet("a",message.angle,vec(message.position.x,message.position.y))
+            engine.add(bullet)
         })
 
 

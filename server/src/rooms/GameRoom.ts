@@ -40,6 +40,11 @@ export class GameRoom extends Room<State> {
             player.y = message.y
         })
 
+        this.onMessage(C2SPacket.Shoot, (client, message) => {
+            let player = this.state.players.get(client.sessionId)
+            this.broadcast(S2CPackets.BulletSpawn, { angle: message.angle, position: { x: player.x, y: player.y } })
+        })
+
 
     }
 
