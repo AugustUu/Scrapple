@@ -1,6 +1,6 @@
-import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic } from "excalibur";
+import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic, vec } from "excalibur";
 import { engine } from "..";
-import { createOtherPlayerEntity, OtherPlayerComponent } from "../game/OtherPlayer";
+import { createOtherPlayerEntity, OtherPlayerComponent, OtherPlayerMoveSystem } from "../game/OtherPlayer";
 import { LocalPlayer } from "../game/LocalPlayer";
 import { PhysicsSystem, PhysicsSystemDebug } from "../physics/PhysicsSystems";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
@@ -19,6 +19,8 @@ export class Game extends Scene {
     public onInitialize() {
         this.world.systemManager.addSystem(PhysicsSystem);
         this.world.systemManager.addSystem(PhysicsSystemDebug);
+        this.world.systemManager.addSystem(OtherPlayerMoveSystem);
+
 
         let localPlayer = new LocalPlayer(0, 300);
         engine.add(localPlayer)
@@ -28,20 +30,19 @@ export class Game extends Scene {
         engine.add(this.createGroundRect(0, 0, 100, 2, new Color(50, 50, 50)))
 
         Networking.client.room!.state.players.onAdd((player: any, id: string) => {
-            if(Networking.client.clientId != id){
-                let ent = createOtherPlayerEntity(player.name, new Vector(0, -60));
+            if (Networking.client.clientId != id) {
+                let ent = createOtherPlayerEntity(player.name, id, new Vector(0, -60));
                 this.add(ent)
-
-                player.listen("x", (value:number, previousValue:number) => {
-                    ent.get(TransformComponent).pos.x = value
+                /*
+                player.listen("x", (value: number, previousValue: number) => {
+                    ent.get().pos.x = value
                 })
 
-                player.listen("y", (value:number, previousValue:number) => {
+                player.listen("y", (value: number, previousValue: number) => {
                     ent.get(TransformComponent).pos.y = value
-                })
+                })*/
             }
         })
-
 
 
         this.playButton = new Actor({
@@ -60,6 +61,7 @@ export class Game extends Scene {
         })
 
         this.add(this.playButton)
+        //this.add(createOtherPlayerEntity("test", vec(0, -20)))
 
 
     }
