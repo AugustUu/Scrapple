@@ -1,6 +1,6 @@
 import { Actor, Color, Component, CoordPlane, Engine, Entity, GraphicsComponent, Input, Keys, Rectangle, System, SystemType, TransformComponent, Util, Vector, Line, Query, World } from "excalibur";
 import RAPIER, { RigidBody, JointData, ImpulseJoint, Ray, Collider, RigidBodyType } from '@dimforge/rapier2d-compat';
-import { Vector2 } from "../util";
+import { Vector2, MathUtils } from "../util";
 
 export class GrappleLineSystem extends System {
     public systemType = SystemType.Update;
@@ -16,13 +16,19 @@ export class GrappleLineSystem extends System {
         
         for(let entity of this.spriteQuery.entities){
             let sprite = entity.get(GraphicsComponent)
-            let pos1 = entity.get(GrappleLineComponent).pos1
-            let pos2 = entity.get(GrappleLineComponent).pos2
-            let line: Line = sprite.getGraphic(sprite.getNames()[0]) as Line
+            let joint = entity.get(GrappleLineComponent).joint
+            if(joint.isValid()){
 
-            line.start.setTo(pos1.x, pos1.y);
-            line.end.setTo(pos2.x, pos2.y);
+                //let rot_anchor1 = new Vector2(joint.anchor1()).rotate(joint.body2().rotation())         add later question markÍ
+                let pos1 = MathUtils.rapierToExc(new Vector2(joint.body1().translation()))//.add(rot_anchor1))
+                
+                let pos2 = MathUtils.rapierToExc(new Vector2(joint.body2().translation()).add(joint.anchor2()))
+                let line: Line = sprite.getGraphic(sprite.getNames()[0]) as Line
 
+                line.start.setTo(pos1.x, pos1.y);
+                line.end.setTo(pos2.x, pos2.y);
+            }
+            
         }
     }
 
@@ -30,14 +36,10 @@ export class GrappleLineSystem extends System {
 
 export class GrappleLineComponent extends Component {
     public joint: ImpulseJoint
-    public pos1: Vector2
-    public pos2: Vector2
 
     constructor(joint: ImpulseJoint) {
         super();
         this.joint = joint
-        this.pos1 = new Vector2(joint.body1().translation()).add(joint.anchor1())
-        this.pos2 = new Vector2(joint.body2().translation()).add(joint.anchor2())
     }
 }
 
