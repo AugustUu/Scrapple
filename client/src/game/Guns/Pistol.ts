@@ -5,7 +5,7 @@ export class Pistol extends Gun {
         super("pistol", 20, 20, 20)
     }
 
-    Shoot(){
+    Shoot(angle: number){
         
     }
 }
