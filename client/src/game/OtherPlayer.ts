@@ -69,12 +69,14 @@ export class OtherPlayerMoveSystem extends System {
         for (let entity of this.query.entities) {
             let player = entity.get(OtherPlayerComponent);
             let state = Networking.client.room!.state.players.get(player.id)
+            if(state){
 
-            const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
+                const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
 
 
-            entity.get(TransformComponent).pos.x = lerp(entity.get(TransformComponent).pos.x, state.x, elapsedMs / 50)
-            entity.get(TransformComponent).pos.y = lerp(entity.get(TransformComponent).pos.y, state.y, elapsedMs / 50)
+                entity.get(TransformComponent).pos.x = lerp(entity.get(TransformComponent).pos.x, state.x, elapsedMs / 50)
+                entity.get(TransformComponent).pos.y = lerp(entity.get(TransformComponent).pos.y, state.y, elapsedMs / 50)
+            }
         }
     }
 }
