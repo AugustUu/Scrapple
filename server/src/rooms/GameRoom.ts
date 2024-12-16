@@ -21,7 +21,7 @@ export class State extends Schema {
 }
 
 export class GameRoom extends Room<State> {
-    maxClients = 4;
+    maxClients = 8;
 
     onCreate(options: any) {
         this.setState(new State());
@@ -57,6 +57,7 @@ export class GameRoom extends Room<State> {
 
     onLeave(client: Client, consented: boolean) {
         console.log(client.sessionId, "left!");
+        this.state.players.delete(client.sessionId);
     }
 
     onDispose() {
