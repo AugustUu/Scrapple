@@ -5,9 +5,17 @@ export class Inventory{
     static gun: Gun
     static upgrades: Upgrade[]
 
-    constructor(gun: Gun, upgrades: Upgrade[]){
-        Inventory.gun = gun
-        Inventory.upgrades = upgrades
+    constructor(){
+        
+        //Inventory.upgrades = upgrades
+    }
+
+    GetGun(){
+        return Inventory.gun
+    }
+
+    GetUpgrades(){
+        return Inventory.upgrades
     }
 
     ChangeGun(newGun: Gun){

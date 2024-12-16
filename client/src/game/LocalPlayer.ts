@@ -8,12 +8,18 @@ import { Network } from "inspector/promises";
 import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./GrappleLine";
+import { Inventory } from "./Inventory";
+import { Upgrade } from "./Upgrades/Upgrade";
+import { Pistol } from "./Guns/Pistol";
+import { Rifle } from "./Guns/Rifle";
+import { Shotgun } from "./Guns/Shotgun";
 
 export class LocalPlayer extends Actor {
     public health: number = 100;
     joint!: ImpulseJoint;
     shooting: boolean
     line!: Entity
+    inventory: Inventory;
 
     constructor(x: number, y: number) {
         super({ x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
@@ -26,6 +32,9 @@ export class LocalPlayer extends Actor {
         this.addComponent(new ColliderComponent(RAPIER.ColliderDesc.ball(2).setCollisionGroups(0x00020007), rigidBody.body))
 
         this.shooting = false
+        this.inventory = new Inventory()
+        let gun = new Shotgun
+        this.inventory.ChangeGun(gun)
 
     }
 
@@ -88,13 +97,16 @@ export class LocalPlayer extends Actor {
             PhysicsSystem.physicsWorld.removeImpulseJoint(this.joint, true)
         }
 
-        if (engine.input.pointers.isDown(0) && this.shooting == false) {
-            let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-            //let bullet = createBullet("a",angle,this.pos)
-            //engine.add(bullet)
-            Networking.client.room?.send(C2SPacket.Shoot, { angle: angle })
-            this.shooting = true;
-
+        if (engine.input.pointers.isDown(0)) {
+            if(this.inventory.GetGun().automatic){
+                let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
+                this.inventory.GetGun().Shoot(angle)
+            }
+            else if(this.shooting == false){
+                let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
+                this.inventory.GetGun().Shoot(angle)
+                this.shooting = true;
+            }
         }
         if (!engine.input.pointers.isDown(0)) {
             this.shooting = false;

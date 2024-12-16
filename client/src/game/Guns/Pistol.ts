@@ -1,11 +1,8 @@
 import { Gun } from "./Gun";
 
 export class Pistol extends Gun {
-    constructor(){
-        super("pistol", 20, 20, 20)
-    }
 
-    Shoot(angle: number){
-        
+    constructor(){
+        super("pistol", 20, 20, 6, 0, 1, false)
     }
 }
