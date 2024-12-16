@@ -1,6 +1,7 @@
 import { JointData, RigidBody } from "@dimforge/rapier2d-compat";
-import { TransformComponent, Vector } from "excalibur";
+import { PointerButton, TransformComponent, Vector } from "excalibur";
 import { PhysicsSystem } from "./physics/PhysicsSystems";
+import { engine } from ".";
 
 export function createTransformComponent(position:Vector){
     let transform = new TransformComponent();
@@ -71,4 +72,27 @@ export function generateRevoluteJoint(target: RigidBody | null, rb: RigidBody, h
         let params = JointData.revolute(start_offset, end_offset);
         return PhysicsSystem.physicsWorld.createImpulseJoint(params, rb, target, true);
     }
-}   
+}
+
+export class MouseInput {
+    static mouseButtons = {left: false, right: false}
+
+    static init() {
+        engine.input.pointers.primary.on('down', (evt) => {
+            if(evt.button == PointerButton.Left){
+                this.mouseButtons.left = true
+            }
+            if(evt.button == PointerButton.Right){
+                this.mouseButtons.right = true
+            }
+        })
+        engine.input.pointers.primary.on('up', (evt) => {
+            if(evt.button == PointerButton.Left){
+                this.mouseButtons.left = false
+            }
+            if(evt.button == PointerButton.Right){
+                this.mouseButtons.right = false
+            }
+        })
+    }
+}
