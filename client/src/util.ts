@@ -74,7 +74,7 @@ export function generateRevoluteJoint(target: RigidBody | null, rb: RigidBody, h
     }
 }
 
-export class MouseInput {
+export class MouseInput { // USELESS CODE!!!!!!!!!!!!!!!!!!!!
     static mouseButtons = {left: false, right: false}
 
     static init() {

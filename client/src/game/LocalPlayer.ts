@@ -69,7 +69,7 @@ export class LocalPlayer extends Actor {
 
         if (hit != null) {
             let hit_point = ray.pointAt(hit.timeOfImpact);
-            if (MouseInput.mouseButtons.right) { // todo: make this only check the frame mouse is clicked, rather than every frame it is (augusts job)
+            if (engine.input.keyboard.isHeld(Keys.Space)) { // todo: make this only check the frame mouse is clicked, rather than every frame it is (augusts job)
 
                 //console.log("Collider", hit.collider, "hit at point", hitPoint); 
                 if (!this.joint.isValid()) {
@@ -85,7 +85,7 @@ export class LocalPlayer extends Actor {
 
         
 
-        if (this.joint.isValid() && !MouseInput.mouseButtons.right) { // this feels dumb? but i can't think of another way to do it so w/e
+        if (this.joint.isValid() && !engine.input.keyboard.isHeld(Keys.Space)) { // this feels dumb? but i can't think of another way to do it so w/e
             this.line.kill() // nice code
             PhysicsSystem.physicsWorld.removeImpulseJoint(this.joint, true)
         }
