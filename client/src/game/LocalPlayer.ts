@@ -20,10 +20,11 @@ export class LocalPlayer extends Actor {
     shooting: boolean
     line!: Entity
     inventory: Inventory;
+    jumpHeight: number
 
     constructor(x: number, y: number) {
         super({ x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
-
+        this.jumpHeight = 60
 
 
         let rigidBody = new RigidBodyComponent(RigidBodyType.Dynamic);

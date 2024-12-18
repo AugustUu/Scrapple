@@ -56,10 +56,6 @@ export class MathUtils {
     static rapierToExc(pos: {x: number, y: number}){
         return new Vector2({x:pos.x * 10, y:pos.y * -10})
     }
-
-    static rapierToExcVector(pos: {x: number, y: number}){
-        return new Vector(pos.x, -pos.y)
-    }
 }
 
 export function generateRevoluteJoint(target: RigidBody | null, rb: RigidBody, hitPoint: {x:number, y:number}) {
