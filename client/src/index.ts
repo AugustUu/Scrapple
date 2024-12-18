@@ -1,7 +1,9 @@
 import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering,  } from 'excalibur';
 import { Game } from './world/Game';
+
 import { MainMenu } from './ui/MainMenu';
 import RAPIER from '@dimforge/rapier2d-compat';
+import { MouseInput } from './util';
 
 export const engine = new Engine({
     backgroundColor: Color.Gray,
@@ -31,6 +33,7 @@ async function init() {
     engine.toggleDebug();
     engine.goToScene("mainMenu");
     
+    MouseInput.init();
 }
 
 init()

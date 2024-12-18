@@ -11,6 +11,10 @@ import { NetworkClient } from "../networking/NetworkClient";
 import { BulletMoveSystem, createBullet } from "../game/Bullet";
 import { S2CPackets } from "shared/src/networking/Packet";
 import { GrappleLineSystem } from "../game/GrappleLine";
+import { debug } from "console";
+
+export var PlayerEntities: Entity<any>[] = [];
+
 
 export class Game extends Scene {
 
@@ -24,12 +28,11 @@ export class Game extends Scene {
         this.world.systemManager.addSystem(GrappleLineSystem)
         this.world.systemManager.addSystem(OtherPlayerMoveSystem);
         this.world.systemManager.addSystem(BulletMoveSystem);
-        
+
 
 
         let localPlayer = new LocalPlayer(0, 300);
         engine.add(localPlayer)
-
 
 
         engine.add(this.createGroundRect(0, 0, 100, 2, new Color(50, 50, 50)))
@@ -37,21 +40,22 @@ export class Game extends Scene {
         Networking.client.room!.state.players.onAdd((player: any, id: string) => {
             if (Networking.client.clientId != id) {
                 let ent = createOtherPlayerEntity(player.name, id, new Vector(0, -60));
+                PlayerEntities.push(ent)
                 this.add(ent)
-                /*
-                player.listen("x", (value: number, previousValue: number) => {
-                    ent.get().pos.x = value
-                })
 
-                player.listen("y", (value: number, previousValue: number) => {
-                    ent.get(TransformComponent).pos.y = value
-                })*/
             }
         })
+        Networking.client.room!.state.players.onRemove((player: any, id: string) => {
+            PlayerEntities.forEach((entity) => {
+                if(entity.get(OtherPlayerComponent).id == id){
+                    entity.kill()
+                }
+            })
+        })
 
-        Networking.client.room!.onMessage(S2CPackets.BulletSpawn,(message)=>{
-            let bullet = createBullet("a",message.angle,vec(message.position.x,message.position.y))
-            engine.add(bullet)
+        Networking.client.room!.onMessage(S2CPackets.BulletSpawn, (message) => {
+            let bullet = createBullet("a", message.angle, vec(message.position.x, message.position.y))
+            this.add(bullet)
         })
 
 

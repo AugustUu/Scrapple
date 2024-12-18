@@ -1,8 +1,8 @@
-import { Actor, Color, Component, CoordPlane, Engine, Entity, GraphicsComponent, Input, Keys, Rectangle, System, SystemType, TransformComponent, Util, Vector, Line, Transform, ScreenElement } from "excalibur";
+import { Actor, Buttons, Color, Component, CoordPlane, Engine, Entity, GraphicsComponent, Input, Keys, Rectangle, System, SystemType, TransformComponent, Util, Vector, Line, Transform, ScreenElement } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { RigidBody, JointData, ImpulseJoint, Ray, Collider, RigidBodyType } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
-import { Vector2, MathUtils, generateRevoluteJoint as generateRevoluteJoint } from "../util"
+import { Vector2, MathUtils, generateRevoluteJoint as generateRevoluteJoint, MouseInput } from "../util"
 import { engine } from "..";
 import { Network } from "inspector/promises";
 import { Networking } from "../networking/Networking";
@@ -78,7 +78,7 @@ export class LocalPlayer extends Actor {
 
         if (hit != null) {
             let hit_point = ray.pointAt(hit.timeOfImpact);
-            if (engine.input.pointers.isDown(0)) { // todo: make this only check the frame mouse is clicked, rather than every frame it is (augusts job)
+            if (engine.input.keyboard.isHeld(Keys.Space)) { // todo: make this only check the frame mouse is clicked, rather than every frame it is (augusts job)
 
                 //console.log("Collider", hit.collider, "hit at point", hitPoint); 
                 if (!this.joint.isValid()) {
@@ -92,12 +92,14 @@ export class LocalPlayer extends Actor {
             }
         }
 
-        if (this.joint.isValid() && !engine.input.pointers.isDown(0)) { // this feels dumb? but i can't think of another way to do it so w/e
-            engine.remove(this.line as Actor) // EVIL CODE
+        
+
+        if (this.joint.isValid() && !engine.input.keyboard.isHeld(Keys.Space)) { // this feels dumb? but i can't think of another way to do it so w/e
+            this.line.kill() // nice code
             PhysicsSystem.physicsWorld.removeImpulseJoint(this.joint, true)
         }
 
-        if (engine.input.pointers.isDown(0)) {
+        if (MouseInput.mouseButtons.left) {
             if(this.inventory.GetGun().automatic){
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
                 this.inventory.GetGun().Shoot(angle)
@@ -108,7 +110,7 @@ export class LocalPlayer extends Actor {
                 this.shooting = true;
             }
         }
-        if (!engine.input.pointers.isDown(0)) {
+        if (!MouseInput.mouseButtons.left) {
             this.shooting = false;
         }
 
