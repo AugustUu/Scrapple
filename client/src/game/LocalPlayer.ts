@@ -32,8 +32,9 @@ export class LocalPlayer extends Actor {
         this.addComponent(new ColliderComponent(RAPIER.ColliderDesc.ball(2).setCollisionGroups(0x00020007), rigidBody.body))
 
         this.shooting = false
+
         this.inventory = new Inventory()
-        let gun = new Shotgun
+        let gun = new Pistol
         this.inventory.ChangeGun(gun)
 
     }
