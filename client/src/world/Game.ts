@@ -1,10 +1,10 @@
-import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic, vec } from "excalibur";
+import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic, vec, Circle } from "excalibur";
 import { engine } from "..";
 import { createOtherPlayerEntity, OtherPlayerComponent, OtherPlayerMoveSystem } from "../game/OtherPlayer";
 import { LocalPlayer } from "../game/LocalPlayer";
 import { PhysicsSystem, PhysicsSystemDebug } from "../physics/PhysicsSystems";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
-import { ColliderDesc, RigidBodyDesc, RigidBodyType } from "@dimforge/rapier2d-compat";
+import { Ball, ColliderDesc, RigidBodyDesc, RigidBodyType } from "@dimforge/rapier2d-compat";
 import { createTransformComponent, Vector2 } from "../util";
 import { Networking } from "../networking/Networking";
 import { NetworkClient } from "../networking/NetworkClient";
@@ -93,7 +93,8 @@ export class Game extends Scene {
     }
 
     public createGroundRect(x: number, y: number, color: Color, width?: number, height?: number, radius?: number): Entity {
-        let sprite: Graphic | undefined = undefined
+        let sprite: Graphic
+        let floor: Entity()
         if(width != undefined && height != undefined){
             let colliderDesc = ColliderDesc.cuboid(width, height).setCollisionGroups(0x00010007)
             let floor = new Entity()
@@ -102,22 +103,32 @@ export class Game extends Scene {
                 .addComponent(new ColliderComponent(colliderDesc))
     
             sprite = new Rectangle({ width: width * 20, height: height * 20, color: color })
-            
+
+            let graphics = new GraphicsComponent();
+            graphics.add(sprite);
+    
+            floor.addComponent(graphics)
+    
+            return floor
         }
         if(radius != undefined){
+            let colliderDesc = ColliderDesc.ball(radius).setCollisionGroups(0x00010007)
+            let floor = new Entity()
+                .addComponent(createTransformComponent(new Vector(x, y)))
+                .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
+                .addComponent(new ColliderComponent(colliderDesc))
+    
+            sprite = new Circle({ radius: radius * 20, color: color })
 
+            let graphics = new GraphicsComponent();
+            graphics.add(sprite);
+    
+            floor.addComponent(graphics)
+    
+            return floor
         }
-
-        if(sprite != null){
-
-        }
-        let graphics = new GraphicsComponent();
-        graphics.add(sprite);
-
-        floor.addComponent(graphics)
 
         return floor
-        
     }
 
 }
