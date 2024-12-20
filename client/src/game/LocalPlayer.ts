@@ -9,7 +9,6 @@ import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./GrappleLine";
 import { Inventory } from "./Inventory";
-import { Upgrade } from "./Upgrades/Upgrade";
 import { Pistol } from "./Guns/Pistol";
 import { Rifle } from "./Guns/Rifle";
 import { Shotgun } from "./Guns/Shotgun";

@@ -1,5 +1,5 @@
 import { Gun } from "./Guns/Gun"
-import { Upgrade } from "./Upgrades/Upgrade"
+import { Upgrade } from "./Upgrades/UpgradeManager"
 
 export class Inventory{
     static gun: Gun
