@@ -82,11 +82,14 @@ export class LocalPlayer extends Actor {
 
                 //console.log("Collider", hit.collider, "hit at point", hitPoint); 
                 if (!this.joint.isValid()) {
+
                     let newJoint = generateRevoluteJoint(hit.collider.parent(), rb, hit_point)
                     if (newJoint != undefined) {
                         this.joint = newJoint
-                        this.line = CreateGrappleLine(newJoint)
+                        let endPoint = MathUtils.rapierToExc(hit_point);
+                        this.line = CreateGrappleLine(this,endPoint)
                         engine.add(this.line)
+                        Networking.client.room?.send(C2SPacket.Grapple, { x: endPoint.x, y: endPoint.y })
                     }
                 }
             }
@@ -97,6 +100,7 @@ export class LocalPlayer extends Actor {
         if (this.joint.isValid() && !engine.input.keyboard.isHeld(Keys.Space)) { // this feels dumb? but i can't think of another way to do it so w/e
             this.line.kill() // nice code
             PhysicsSystem.physicsWorld.removeImpulseJoint(this.joint, true)
+            Networking.client.room?.send(C2SPacket.EndGrapple, {})
         }
 
         if (MouseInput.mouseButtons.left) {

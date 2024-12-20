@@ -18,6 +18,10 @@ export class Vector2 {
 
     }
 
+    static new(x:number,y:number) {
+        return new Vector2({x: x, y: y})
+    }
+
     public magnitude() {
         return (Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2)));
     }

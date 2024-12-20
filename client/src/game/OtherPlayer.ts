@@ -5,6 +5,7 @@ export class OtherPlayerComponent extends Component {
     public name: string = 'jorbis';
     public id: string = "";
     public health: number = 100;
+    public grappleLine!: Entity;
 
     constructor(name: string, id: string) {
         super();
