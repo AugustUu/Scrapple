@@ -13,6 +13,7 @@ import { Upgrade } from "./Upgrades/Upgrade";
 import { Pistol } from "./Guns/Pistol";
 import { Rifle } from "./Guns/Rifle";
 import { Shotgun } from "./Guns/Shotgun";
+import { Sniper } from "./Guns/Sniper";
 
 export class LocalPlayer extends Actor {
     public health: number = 100;
@@ -34,7 +35,7 @@ export class LocalPlayer extends Actor {
         this.shooting = false
 
         this.inventory = new Inventory()
-        let gun = new Pistol
+        let gun = new Rifle
         this.inventory.ChangeGun(gun)
 
     }
@@ -66,6 +67,9 @@ export class LocalPlayer extends Actor {
                     console.log("no jump")
                 }
             }
+        }
+        if (engine.input.keyboard.isHeld(Keys.R)){
+            this.inventory.GetGun().Reload()
         }
 
         if (this.joint == null) { // this is so stupid
