@@ -35,7 +35,7 @@ export class Game extends Scene {
         engine.add(localPlayer)
 
 
-        engine.add(this.createGroundRect(0, 0, 100, 2, new Color(50, 50, 50)))
+        engine.add(this.createGroundRect(0, 0, new Color(50, 50, 50), 100, 2))
 
         Networking.client.room!.state.players.onAdd((player: any, id: string) => {
             if (Networking.client.clientId != id) {
@@ -92,20 +92,32 @@ export class Game extends Scene {
 
     }
 
-    public createGroundRect(x: number, y: number, width: number, height: number, color: Color): Entity {
-        let colliderDesc = ColliderDesc.cuboid(width, height).setCollisionGroups(0x00010007)
-        let floor = new Entity()
-            .addComponent(createTransformComponent(new Vector(x, y)))
-            .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
-            .addComponent(new ColliderComponent(colliderDesc))
+    public createGroundRect(x: number, y: number, color: Color, width?: number, height?: number, radius?: number): Entity {
+        let sprite: Graphic | undefined = undefined
+        if(width != undefined && height != undefined){
+            let colliderDesc = ColliderDesc.cuboid(width, height).setCollisionGroups(0x00010007)
+            let floor = new Entity()
+                .addComponent(createTransformComponent(new Vector(x, y)))
+                .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
+                .addComponent(new ColliderComponent(colliderDesc))
+    
+            sprite = new Rectangle({ width: width * 20, height: height * 20, color: color })
+            
+        }
+        if(radius != undefined){
 
-        let sprite = new Rectangle({ width: width * 20, height: height * 20, color: color })
+        }
+
+        if(sprite != null){
+
+        }
         let graphics = new GraphicsComponent();
         graphics.add(sprite);
 
         floor.addComponent(graphics)
 
         return floor
+        
     }
 
 }
