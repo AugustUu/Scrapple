@@ -8,6 +8,11 @@ export class Player extends Schema {
 
     @type("number") x: number;
     @type("number") y: number;
+
+    @type("boolean") grappling: boolean;
+    @type("number") grappleX: number;
+    @type("number") grappleY: number;
+
     constructor(name: string) {
         super();
         this.name = name
@@ -43,6 +48,21 @@ export class GameRoom extends Room<State> {
         this.onMessage(C2SPacket.Shoot, (client, message) => {
             let player = this.state.players.get(client.sessionId)
             this.broadcast(S2CPackets.BulletSpawn, { angle: message.angle, position: { x: player.x, y: player.y } })
+        })
+
+        this.onMessage(C2SPacket.Grapple, (client, message) => {
+            let player = this.state.players.get(client.sessionId)
+            player.grappling = true;
+            player.grappleX = message.x
+            player.grappleY = message.y
+            //this.broadcast(S2CPackets.BulletSpawn, { angle: message.angle, position: { x: player.x, y: player.y } })
+        })
+
+        this.onMessage(C2SPacket.EndGrapple, (client, message) => {
+            let player = this.state.players.get(client.sessionId)
+            if(player.grappling){
+                player.grappling = false
+            }
         })
 
 

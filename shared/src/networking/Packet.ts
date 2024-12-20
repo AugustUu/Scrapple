@@ -3,10 +3,12 @@ export var C2SPacket = {
     Connect: "connect",
     Spawn: "spawn",
     Move: "move",
-    Shoot: "shoot"
+    Shoot: "shoot",
+    Grapple: "grapple",
+    EndGrapple: "endgrapple",
 }
 
 export var S2CPackets = {
     Pong: "pong",
-    BulletSpawn:"bulletspawn"
+    BulletSpawn: "bulletspawn",
 }

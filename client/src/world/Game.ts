@@ -4,17 +4,17 @@ import { createOtherPlayerEntity, OtherPlayerComponent, OtherPlayerMoveSystem } 
 import { LocalPlayer } from "../game/LocalPlayer";
 import { PhysicsSystem, PhysicsSystemDebug } from "../physics/PhysicsSystems";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
-import { ColliderDesc, RigidBodyDesc, RigidBodyType, Vector2 } from "@dimforge/rapier2d-compat";
-import { createTransformComponent } from "../util";
+import { ColliderDesc, RigidBodyDesc, RigidBodyType } from "@dimforge/rapier2d-compat";
+import { createTransformComponent, Vector2 } from "../util";
 import { Networking } from "../networking/Networking";
 import { NetworkClient } from "../networking/NetworkClient";
 import { BulletMoveSystem, createBullet } from "../game/Bullet";
 import { S2CPackets } from "shared/src/networking/Packet";
-import { GrappleLineSystem } from "../game/GrappleLine";
+import { CreateGrappleLine, GrappleLineSystem } from "../game/GrappleLine";
 import { debug } from "console";
 
-export var PlayerEntities: Entity<any>[] = [];
-
+//export var PlayerEntities: Entity<any>[] = [];
+export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
 
 export class Game extends Scene {
 
@@ -40,18 +40,30 @@ export class Game extends Scene {
         Networking.client.room!.state.players.onAdd((player: any, id: string) => {
             if (Networking.client.clientId != id) {
                 let ent = createOtherPlayerEntity(player.name, id, new Vector(0, -60));
-                PlayerEntities.push(ent)
+                PlayerEntities.set(id, ent)
                 this.add(ent)
+
+
+
+                player.listen("grappling", (value: boolean, previousValue: boolean) => {
+                    if (value) {
+                        //debugger
+                        let me = PlayerEntities.get(id)!;
+                        let grapple = CreateGrappleLine(me, Vector2.new(player.grappleX,player.grappleY))
+                        this.add(grapple);
+                        me.get(OtherPlayerComponent).grappleLine = grapple;
+                    } else {
+                        let me = PlayerEntities.get(id)!;
+                        me.get(OtherPlayerComponent).grappleLine.kill()
+                    }
+                })
 
             }
         })
         Networking.client.room!.state.players.onRemove((player: any, id: string) => {
-            PlayerEntities.forEach((entity) => {
-                if(entity.get(OtherPlayerComponent).id == id){
-                    entity.kill()
-                }
-            })
+            PlayerEntities.get(id)?.kill()
         })
+
 
         Networking.client.room!.onMessage(S2CPackets.BulletSpawn, (message) => {
             let bullet = createBullet("a", message.angle, vec(message.position.x, message.position.y))
