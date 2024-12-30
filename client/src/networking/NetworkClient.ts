@@ -3,7 +3,7 @@ import { Networking } from "./Networking";
 import * as NeworkEvents from "./NetworkEvents";
 import { Schema } from '@colyseus/schema';
 import {S2CPackets,C2SPacket} from "shared/src/networking/Packet"
-import { createOtherPlayerEntity } from "../game/OtherPlayer";
+import { createOtherPlayerEntity } from "../game/Entities/OtherPlayer";
 import { Vector } from "excalibur";
 import { engine } from "..";
 

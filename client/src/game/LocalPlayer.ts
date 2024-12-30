@@ -7,7 +7,7 @@ import { engine } from "..";
 import { Network } from "inspector/promises";
 import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
-import { CreateGrappleLine } from "./GrappleLine";
+import { CreateGrappleLine } from "./Entities/GrappleLine";
 import { Inventory } from "./Inventory";
 import { Pistol } from "./Guns/Pistol";
 import { Rifle } from "./Guns/Rifle";

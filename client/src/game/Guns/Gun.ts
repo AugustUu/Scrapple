@@ -43,7 +43,7 @@ export class Gun {
             if(Date.now() > this.timeSinceLastShot + this.fireRate * 1000){
                 let x = 0
             while(x < this.bulletsPerShot){
-                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle + this.random.floating(this.spread * -1, this.spread + 1) * (Math.PI / 180)})
+                Networking.client.room?.send(C2SPacket.Shoot, { angle: (angle - Math.PI) + (this.random.floating(this.spread * -1, this.spread + 1) * (Math.PI / 180))})
                 x += 1
             }
             

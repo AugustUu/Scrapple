@@ -1,6 +1,6 @@
 import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic, vec } from "excalibur";
 import { engine } from "..";
-import { createOtherPlayerEntity, OtherPlayerComponent, OtherPlayerMoveSystem } from "../game/OtherPlayer";
+import { createOtherPlayerEntity, OtherPlayerComponent, OtherPlayerMoveSystem } from "../game/Entities/OtherPlayer";
 import { LocalPlayer } from "../game/LocalPlayer";
 import { PhysicsSystem, PhysicsSystemDebug } from "../physics/PhysicsSystems";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
@@ -8,9 +8,9 @@ import { ColliderDesc, RigidBodyDesc, RigidBodyType } from "@dimforge/rapier2d-c
 import { createTransformComponent, Vector2 } from "../util";
 import { Networking } from "../networking/Networking";
 import { NetworkClient } from "../networking/NetworkClient";
-import { BulletMoveSystem, createBullet } from "../game/Bullet";
+import { BulletMoveSystem, createBullet } from "../game/Entities/Bullet";
 import { S2CPackets } from "shared/src/networking/Packet";
-import { CreateGrappleLine, GrappleLineSystem } from "../game/GrappleLine";
+import { CreateGrappleLine, GrappleLineSystem } from "../game/Entities/GrappleLine";
 import { debug } from "console";
 
 //export var PlayerEntities: Entity<any>[] = [];
@@ -46,29 +46,36 @@ export class Game extends Scene {
 
 
                 player.listen("grappling", (value: boolean, previousValue: boolean) => {
+                    let me = PlayerEntities.get(id)!;
+                    let playerData = me.get(OtherPlayerComponent);
+
                     if (value) {
-                        //debugger
-                        let me = PlayerEntities.get(id)!;
                         let grapple = CreateGrappleLine(me, Vector2.new(player.grappleX,player.grappleY))
                         this.add(grapple);
-                        me.get(OtherPlayerComponent).grappleLine = grapple;
+                        playerData.grappleLine = grapple;
                     } else {
-                        let me = PlayerEntities.get(id)!;
-                        me.get(OtherPlayerComponent).grappleLine.kill()
+                        playerData.grappleLine?.kill()
+                        
                     }
                 })
 
             }
         })
+        
         Networking.client.room!.state.players.onRemove((player: any, id: string) => {
             PlayerEntities.get(id)?.kill()
         })
 
+        Networking.client.room!.state.bullets.onAdd((bullet: any, id: string) => {
+            let bulletEntity = createBullet(bullet.angle, vec(bullet.position.x, bullet.position.y),id,"a")
+            this.add(bulletEntity)
+        })
 
+        /*
         Networking.client.room!.onMessage(S2CPackets.BulletSpawn, (message) => {
             let bullet = createBullet("a", message.angle, vec(message.position.x, message.position.y))
             this.add(bullet)
-        })
+        })*/
 
 
         this.playButton = new Actor({
