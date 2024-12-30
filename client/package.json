@@ -15,7 +15,8 @@
     "colyseus.js": "^0.15.26",
     "eslint": "^9.11.1",
     "excalibur": "^0.29.3",
-    "shared": "file:../shared"
+    "shared": "file:../shared",
+    "server": "file:../server"
   },
   "devDependencies": {
     "@types/node": "^22.7.2",

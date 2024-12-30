@@ -1,53 +1,8 @@
 import { Room, Client } from "@colyseus/core";
-import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
+//import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 import { randomBytes } from "crypto"
-
-export class Position extends Schema {
-    @type("number") x: number;
-    @type("number") y: number;
-
-    constructor(x: number, y: number) {
-        super();
-        this.x = x;
-        this.y = y;
-    }
-}
-
-export class Player extends Schema {
-    @type("string") name: string;
-
-    @type(Position) position: Position;
-
-    @type("boolean") grappling: boolean;
-    @type("number") grappleX: number;
-    @type("number") grappleY: number;
-
-    constructor(name: string) {
-        super();
-        this.name = name
-        this.position = new Position(0, 0)
-    }
-}
-
-export class Bullet extends Schema {
-    @type(Position) position: Position;
-    @type("number") angle: number;
-
-    constructor(x: number, y: number, angle: number) {
-        super()
-        this.position = new Position(x, y)
-        this.angle = angle;
-
-    }
-}
-
-export class State extends Schema {
-    @type({ map: Player }) players = new MapSchema<Player>();
-    @type({ map: Bullet }) bullets = new MapSchema<Bullet>();
-}
-
-
+import { State, Bullet, Player } from "../State"
 
 
 export class GameRoom extends Room<State> {
@@ -56,7 +11,8 @@ export class GameRoom extends Room<State> {
 
     onCreate(options: any) {
         this.setState(new State());
-
+        this.setPatchRate(15.625)
+        
 
 
         this.onMessage(C2SPacket.Ping, (client, message) => {
@@ -89,17 +45,17 @@ export class GameRoom extends Room<State> {
             }
         })
 
-        this.clock.setInterval(() => {
-            this.state.bullets.forEach((bullet) => {
-                bullet.position.x += Math.cos(bullet.angle)
-                bullet.position.y += Math.sin(bullet.angle)
-            })
-        }, 1000 / 60)
-
-
 
     }
 
+    onBeforePatch(){
+        this.state.bullets.forEach((bullet) => {
+            bullet.position.x += Math.cos(bullet.angle)
+            bullet.position.y += Math.sin(bullet.angle)
+        })
+    }
+
+    
     onJoin(client: Client, options: any) {
         console.log(client.sessionId, "joined!", options);
         if (options && options.name) {

@@ -1,17 +1,14 @@
-import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic, vec } from "excalibur";
+import { Actor, Color, Entity, GraphicsComponent, Scene, Vector, Rectangle, vec } from "excalibur";
 import { engine } from "..";
 import { createOtherPlayerEntity, OtherPlayerComponent, OtherPlayerMoveSystem } from "../game/Entities/OtherPlayer";
 import { LocalPlayer } from "../game/LocalPlayer";
 import { PhysicsSystem, PhysicsSystemDebug } from "../physics/PhysicsSystems";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
-import { ColliderDesc, RigidBodyDesc, RigidBodyType } from "@dimforge/rapier2d-compat";
+import { ColliderDesc, RigidBodyType } from "@dimforge/rapier2d-compat";
 import { createTransformComponent, Vector2 } from "../util";
 import { Networking } from "../networking/Networking";
-import { NetworkClient } from "../networking/NetworkClient";
 import { BulletMoveSystem, createBullet } from "../game/Entities/Bullet";
-import { S2CPackets } from "shared/src/networking/Packet";
 import { CreateGrappleLine, GrappleLineSystem } from "../game/Entities/GrappleLine";
-import { debug } from "console";
 
 //export var PlayerEntities: Entity<any>[] = [];
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
