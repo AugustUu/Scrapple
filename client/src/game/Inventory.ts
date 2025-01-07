@@ -1,5 +1,5 @@
 import { Gun } from "./Guns/Gun"
-import { Upgrade } from "./UpgradeManager/Upgrade"
+import { Upgrade } from "./UpgradeManager/Upgrades/Upgrade"
 import { Upgrades } from "./UpgradeManager/UpgradeManager"
 
 export class Inventory {

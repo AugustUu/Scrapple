@@ -1,5 +1,5 @@
-import { Upgrade } from "./Upgrade";
-import("./Speed")
+import { Upgrade } from "./Upgrades/Upgrade";
+import("./Upgrades/Speed")
 
 export const Upgrades: Map<string,Upgrade> = new Map()
 
