@@ -94,10 +94,10 @@ export class Game extends Scene {
 
     public createGroundRect(x: number, y: number, color: Color, width?: number, height?: number, radius?: number): Entity {
         let sprite: Graphic
-        let floor: Entity()
+        let floor = new Entity
         if(width != undefined && height != undefined){
             let colliderDesc = ColliderDesc.cuboid(width, height).setCollisionGroups(0x00010007)
-            let floor = new Entity()
+            floor
                 .addComponent(createTransformComponent(new Vector(x, y)))
                 .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
                 .addComponent(new ColliderComponent(colliderDesc))
@@ -109,11 +109,10 @@ export class Game extends Scene {
     
             floor.addComponent(graphics)
     
-            return floor
         }
         if(radius != undefined){
             let colliderDesc = ColliderDesc.ball(radius).setCollisionGroups(0x00010007)
-            let floor = new Entity()
+            floor
                 .addComponent(createTransformComponent(new Vector(x, y)))
                 .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
                 .addComponent(new ColliderComponent(colliderDesc))
@@ -124,11 +123,11 @@ export class Game extends Scene {
             graphics.add(sprite);
     
             floor.addComponent(graphics)
-    
-            return floor
+
         }
 
         return floor
+
     }
 
 }
