@@ -12,6 +12,8 @@ import { GameRoom } from "./rooms/GameRoom";
 export const port = Number(process.env.PORT || 2567);
 export const endpoint = "localhost";
 
+
+
 export let STATIC_DIR: string;
 
 const app = express();

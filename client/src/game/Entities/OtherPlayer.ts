@@ -1,11 +1,11 @@
 import { Circle, Color, Component, CoordPlane, Entity, Font, GraphicsComponent, GraphicsGroup, Query, Rectangle, System, SystemType, Text, TextAlign, TransformComponent, vec, Vector, World } from "excalibur";
-import { Networking } from "../networking/Networking";
+import { Networking } from "../../networking/Networking";
 
 export class OtherPlayerComponent extends Component {
     public name: string = 'jorbis';
     public id: string = "";
     public health: number = 100;
-    public grappleLine!: Entity;
+    public grappleLine?: Entity;
 
     constructor(name: string, id: string) {
         super();
@@ -42,7 +42,7 @@ export function createOtherPlayerEntity(name: string, id: string, position: Vect
 
     let nameTag = new Text({ text: name, font: new Font({ size: 30, textAlign: TextAlign.Center }) })
     let nameTagGraphics = new GraphicsComponent();
-    nameTagGraphics.anchor= vec(0.5,0.5)
+    nameTagGraphics.anchor = vec(0.5, 0.5)
     nameTagGraphics.use(nameTag)
 
     let nameTagEntity = new Entity();
@@ -70,13 +70,12 @@ export class OtherPlayerMoveSystem extends System {
         for (let entity of this.query.entities) {
             let player = entity.get(OtherPlayerComponent);
             let state = Networking.client.room!.state.players.get(player.id)
-            if(state){
+            if (state) {
 
                 const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
 
-
-                entity.get(TransformComponent).pos.x = lerp(entity.get(TransformComponent).pos.x, state.x, elapsedMs / 50)
-                entity.get(TransformComponent).pos.y = lerp(entity.get(TransformComponent).pos.y, state.y, elapsedMs / 50)
+                entity.get(TransformComponent).pos.x = lerp(entity.get(TransformComponent).pos.x, state.position.x, elapsedMs / 50)
+                entity.get(TransformComponent).pos.y = lerp(entity.get(TransformComponent).pos.y, state.position.y, elapsedMs / 50)
             }
         }
     }

@@ -1,6 +1,6 @@
 import { Actor, Color, Component, CoordPlane, Engine, Entity, GraphicsComponent, Input, Keys, Rectangle, System, SystemType, TransformComponent, Util, Vector, Line, Query, World } from "excalibur";
 import RAPIER, { RigidBody, JointData, ImpulseJoint, Ray, Collider, RigidBodyType } from '@dimforge/rapier2d-compat';
-import { Vector2, MathUtils } from "../util";
+import { Vector2, MathUtils } from "../../util";
 
 export class GrappleLineSystem extends System {
     public systemType = SystemType.Update;
