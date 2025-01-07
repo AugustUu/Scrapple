@@ -2,6 +2,7 @@ import { Networking } from "../../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
 import { Engine, Random } from "excalibur";
 import { time } from "console";
+import { GunManager } from "./GunManager";
 
 export class Gun {
     name: String;
@@ -19,7 +20,7 @@ export class Gun {
     reloading: boolean;
     shotsSinceLastReload: number;
 
-    constructor(name: String, damage: number, fireRate: number, timeToReload: number, magSize: number, spread: number, bulletsPerShot: number, automatic: boolean){
+    constructor(name: String, damage: number, fireRate: number, timeToReload: number, magSize: number, spread: number, bulletsPerShot: number, automatic: boolean) {
         this.name = name
         this.damage = damage
         this.fireRate = fireRate
@@ -35,43 +36,44 @@ export class Gun {
         this.reloading = false;
         this.shotsSinceLastReload = 0;
 
+        GunManager.gunList.set(name,this)
     }
 
-    Shoot(angle: number){
-        
-        if(this.shotsSinceLastReload < this.magSize && !this.reloading){
-            if(Date.now() > this.timeSinceLastShot + this.fireRate * 1000){
+    Shoot(angle: number) {
+
+        if (this.shotsSinceLastReload < this.magSize && !this.reloading) {
+            if (Date.now() > this.timeSinceLastShot + this.fireRate * 1000) {
                 let x = 0
-            while(x < this.bulletsPerShot){
-                Networking.client.room?.send(C2SPacket.Shoot, { angle: (angle - Math.PI) + (this.random.floating(this.spread * -1, this.spread + 1) * (Math.PI / 180))})
-                x += 1
-            }
-            
-            this.timeSinceLastShot = Date.now()
-            this.shotsSinceLastReload += 1
+                while (x < this.bulletsPerShot) {
+                    Networking.client.room?.send(C2SPacket.Shoot, { angle: (angle - Math.PI) + (this.random.floating(this.spread * -1, this.spread + 1) * (Math.PI / 180)) })
+                    x += 1
+                }
+
+                this.timeSinceLastShot = Date.now()
+                this.shotsSinceLastReload += 1
             }
         }
-        else if (!this.reloading){
+        else if (!this.reloading) {
             this.Reload()
         }
-        
+
     }
 
-    public Reload(){
-        if(!this.reloading){
+    public Reload() {
+        if (!this.reloading) {
             this.reloading = true;
             console.log("reloading...")
             setTimeout(() => {
-            this.reloading = false;
-            this.shotsSinceLastReload = 0
-            console.log("reloaded!")
-        }, this.timeToReload * 1000)
+                this.reloading = false;
+                this.shotsSinceLastReload = 0
+                console.log("reloaded!")
+            }, this.timeToReload * 1000)
         }
-        else{
+        else {
             return
         }
-        
+
     }
 
-    
+
 }

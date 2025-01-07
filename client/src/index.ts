@@ -5,6 +5,7 @@ import { MainMenu } from './ui/MainMenu';
 import RAPIER from '@dimforge/rapier2d-compat';
 import { MouseInput } from './util';
 
+
 export const engine = new Engine({
     backgroundColor: Color.Gray,
     fixedUpdateFps: 60,
