@@ -9,10 +9,10 @@ import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./Entities/GrappleLine";
 import { Inventory } from "./Inventory";
-import { Pistol } from "./Guns/Pistol";
-import { Rifle } from "./Guns/Rifle";
-import { Shotgun } from "./Guns/Shotgun";
-import { Sniper } from "./Guns/Sniper";
+import { Pistol } from "./GunManager/Guns/Pistol";
+import { Rifle } from "./GunManager/Guns/Rifle";
+import { Shotgun } from "./GunManager/Guns/Shotgun";
+import { Sniper } from "./GunManager/Guns/Sniper";
 
 export class LocalPlayer extends Actor {
     public health: number = 100;
