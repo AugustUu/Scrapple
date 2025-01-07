@@ -1,4 +1,4 @@
-import { Gun } from "./Guns/Gun"
+import { Gun } from "./GunManager/Gun"
 import { Upgrade } from "./UpgradeManager/Upgrade"
 import { Upgrades } from "./UpgradeManager/UpgradeManager"
 

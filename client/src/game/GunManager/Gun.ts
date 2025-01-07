@@ -2,7 +2,6 @@ import { Networking } from "../../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
 import { Engine, Random } from "excalibur";
 import { time } from "console";
-import { GunManager } from "./GunManager";
 
 export class Gun {
     name: String;
@@ -20,7 +19,10 @@ export class Gun {
     reloading: boolean;
     shotsSinceLastReload: number;
 
-    constructor(name: String, damage: number, fireRate: number, timeToReload: number, magSize: number, spread: number, bulletsPerShot: number, automatic: boolean) {
+    constructor(name: String = "ERROR", damage: number = 10, fireRate: number = 0.5, timeToReload: number = 1, magSize: number = 10, spread: number = 0, bulletsPerShot: number = 1, automatic: boolean = false) {
+        if(name == "ERROR"){
+            console.error("GUN HAS NO NAME YO, FIX IT")
+        }
         this.name = name
         this.damage = damage
         this.fireRate = fireRate
@@ -36,7 +38,6 @@ export class Gun {
         this.reloading = false;
         this.shotsSinceLastReload = 0;
 
-        GunManager.gunList.set(name,this)
     }
 
     Shoot(angle: number) {
