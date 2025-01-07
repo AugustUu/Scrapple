@@ -19,7 +19,6 @@ export class LocalPlayer extends Actor {
     joint!: ImpulseJoint;
     shooting: boolean
     line!: Entity
-    inventory: Inventory;
     jumpHeight: number
 
     constructor(x: number, y: number) {
@@ -34,9 +33,9 @@ export class LocalPlayer extends Actor {
 
         this.shooting = false
 
-        this.inventory = new Inventory()
+        Inventory.init()
         let gun = new Rifle
-        this.inventory.ChangeGun(gun)
+        Inventory.ChangeGun(gun)
 
     }
 
@@ -69,7 +68,7 @@ export class LocalPlayer extends Actor {
             }
         }
         if (engine.input.keyboard.isHeld(Keys.R)){
-            this.inventory.GetGun().Reload()
+            Inventory.GetGun().Reload()
         }
 
         if (this.joint == null) { // this is so stupid
@@ -89,6 +88,7 @@ export class LocalPlayer extends Actor {
                 if (!this.joint.isValid()) {
 
                     let newJoint = generateRevoluteJoint(hit.collider.parent(), rb, hit_point)
+                    
                     if (newJoint != undefined) {
                         this.joint = newJoint
                         let endPoint = MathUtils.rapierToExc(hit_point);
@@ -109,13 +109,13 @@ export class LocalPlayer extends Actor {
         }
 
         if (MouseInput.mouseButtons.left) {
-            if(this.inventory.GetGun().automatic){
+            if(Inventory.GetGun().automatic){
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                this.inventory.GetGun().Shoot(angle)
+                Inventory.GetGun().Shoot(angle)
             }
             else if(this.shooting == false){
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                this.inventory.GetGun().Shoot(angle)
+                Inventory.GetGun().Shoot(angle)
                 this.shooting = true;
             }
         }

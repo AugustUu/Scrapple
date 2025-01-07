@@ -1,29 +1,28 @@
 import { Gun } from "./Guns/Gun"
-import { Upgrade } from "./UpgradeManager/Upgrades/Upgrade"
+import { Upgrade } from "./UpgradeManager/Upgrade"
 import { Upgrades } from "./UpgradeManager/UpgradeManager"
 
 export class Inventory {
     static gun: Gun
-    static upgrades: Upgrade[]
+    static upgrades: Map<string,Upgrade>
 
-    constructor() {
-        Inventory.upgrades = Array.from(Upgrades.values())
+    static init() {
+        Inventory.upgrades = Upgrades
     }
 
-    GetGun() {
+    static GetGun() {
         return Inventory.gun
     }
 
-    GetUpgrades() {
-        return Inventory.upgrades
+    static GetUpgrade(upgrade: string) {
+        return Inventory.upgrades.get(upgrade)
     }
 
-    ChangeGun(newGun: Gun) {
+    static ChangeGun(newGun: Gun) {
         Inventory.gun = newGun
     }
 
-
-    ChangeUpgrade(indexNum: number, newUpgrade: Upgrade) {
-        Inventory.upgrades[indexNum] = newUpgrade
+    static LevelUpgrade(upgrade: string) {
+        Inventory.upgrades.get(upgrade).level += 1
     }
 }
