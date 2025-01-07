@@ -24,5 +24,6 @@ export class Inventory {
 
     static LevelUpgrade(upgrade: string) {
         Inventory.upgrades.get(upgrade).level += 1
+        console.log("upgraded " + upgrade + " to " + (Inventory.upgrades.get(upgrade).level))
     }
 }

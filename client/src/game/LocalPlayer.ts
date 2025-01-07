@@ -20,11 +20,12 @@ export class LocalPlayer extends Actor {
     shooting: boolean
     line!: Entity
     jumpHeight: number
+    speed: number
 
     constructor(x: number, y: number) {
         super({ x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
-        this.jumpHeight = 60
-
+        this.jumpHeight = 60 + (Inventory.GetUpgrade("Jump").level * 20)
+        this.speed = 4 + Inventory.GetUpgrade("Speed").level
 
         let rigidBody = new RigidBodyComponent(RigidBodyType.Dynamic);
         this.addComponent(rigidBody)
@@ -33,7 +34,6 @@ export class LocalPlayer extends Actor {
 
         this.shooting = false
 
-        Inventory.init()
         let gun = new Rifle
         Inventory.ChangeGun(gun)
 
@@ -45,22 +45,22 @@ export class LocalPlayer extends Actor {
         let col = this.get(ColliderComponent).collider;
 
         if (engine.input.keyboard.isHeld(Keys.A)) {
-            rb.setLinvel({ x: rb.linvel().x - 4, y: rb.linvel().y }, true);
+            rb.setLinvel({ x: rb.linvel().x - this.speed, y: rb.linvel().y }, true);
         }
         if (engine.input.keyboard.isHeld(Keys.D)) {
-            rb.setLinvel({ x: rb.linvel().x + 4, y: rb.linvel().y }, true);
+            rb.setLinvel({ x: rb.linvel().x + this.speed, y: rb.linvel().y }, true);
         }
         if (engine.input.keyboard.isHeld(Keys.S)) {
             rb.setLinvel({ x: rb.linvel().x, y: Math.min(rb.linvel().y, -75) }, true);
         }
-        if (engine.input.keyboard.isHeld(Keys.W)) {
+        if (engine.input.keyboard.wasPressed(Keys.W)) {
             let jumpRay = new Ray(rb.translation(), { x: 0, y: -1 })
             //doesn't actually touch the ground but gets close enough
             let hit = PhysicsSystem.physicsWorld.castRay(jumpRay, 2, true, undefined, undefined, undefined, rb);
 
             if (hit != null) {
                 if (hit.collider.collisionGroups() == 0x00010007) {
-                    rb.setLinvel({ x: rb.linvel().x, y: Math.max(rb.linvel().y, 60) }, true);
+                    rb.setLinvel({ x: rb.linvel().x, y: Math.max(rb.linvel().y, this.jumpHeight) }, true);
                 }
                 else {
                     console.log("no jump")
@@ -70,6 +70,11 @@ export class LocalPlayer extends Actor {
         if (engine.input.keyboard.isHeld(Keys.R)){
             Inventory.GetGun().Reload()
         }
+        if (engine.input.keyboard.wasPressed(Keys.E)) { // just testing, make upgrade later ?
+            rb.setLinvel({ x: rb.linvel().x * -0.75, y: rb.linvel().y * -0.75}, true);
+        }
+
+
 
         if (this.joint == null) { // this is so stupid
             this.joint = PhysicsSystem.physicsWorld.createImpulseJoint(JointData.revolute({ x: 0.0, y: 0.0 }, { x: 0.0, y: 0.0 }), rb, rb, true)
@@ -82,7 +87,7 @@ export class LocalPlayer extends Actor {
 
         if (hit != null) {
             let hit_point = ray.pointAt(hit.timeOfImpact);
-            if (engine.input.keyboard.isHeld(Keys.Space)) { // todo: make this only check the frame mouse is clicked, rather than every frame it is (augusts job)
+            if (engine.input.keyboard.wasPressed(Keys.Space)) {
 
                 //console.log("Collider", hit.collider, "hit at point", hitPoint); 
                 if (!this.joint.isValid()) {
@@ -102,7 +107,7 @@ export class LocalPlayer extends Actor {
 
         
 
-        if (this.joint.isValid() && !engine.input.keyboard.isHeld(Keys.Space)) { // this feels dumb? but i can't think of another way to do it so w/e
+        if (this.joint.isValid() && engine.input.keyboard.wasReleased(Keys.Space)) { // this feels dumb? but i can't think of another way to do it so w/e
             this.line.kill() // nice code
             PhysicsSystem.physicsWorld.removeImpulseJoint(this.joint, true)
             Networking.client.room?.send(C2SPacket.EndGrapple, {})
