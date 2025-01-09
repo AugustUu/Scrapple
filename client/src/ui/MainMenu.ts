@@ -31,9 +31,9 @@ export class MainMenu extends Scene {
 
         this.createOrJoin.addEventListener("click",()=>{
             if(this.inputElement.value == ""){
-                Networking.create("jorbis"+Math.random())
+                Networking.create("jorbis" + Math.random())
             }else{
-                Networking.connect(this.inputElement.value,"jorbis"+Math.random())
+                Networking.connect(this.inputElement.value,"jorbis" + Math.random())
             }
         })
         
