@@ -4,7 +4,7 @@ import { Networking } from "../../networking/Networking";
 
 
 export class BulletComponent extends Component {
-    public shotBy: string = 'jorbis';
+    public shotBy: string = 'jorbis'; // make it not be jorbis eventually
     public dammage: number = 100;
     public angle: number;
     public id: string;
