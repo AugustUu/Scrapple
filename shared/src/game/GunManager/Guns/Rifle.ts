@@ -1,5 +1,7 @@
-import { Gun } from "./Gun";
+import { Gun } from "../Gun";
+import { registerGun } from "../GunManager";
 
+@registerGun
 export class Rifle extends Gun {
 
     constructor(){

@@ -4,6 +4,7 @@ import { Game } from './world/Game';
 import { MainMenu } from './ui/MainMenu';
 import RAPIER from '@dimforge/rapier2d-compat';
 import { MouseInput } from './util';
+import { Inventory } from './game/Inventory';
 
 
 export const engine = new Engine({
@@ -35,6 +36,8 @@ async function init() {
     engine.goToScene("mainMenu");
     
     MouseInput.init();
+    Inventory.init()
+        
 }
 
 init()

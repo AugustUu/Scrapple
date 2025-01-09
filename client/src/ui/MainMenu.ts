@@ -2,6 +2,7 @@ import { Actor, Color, Scene, SceneActivationContext, Vector } from "excalibur";
 import { engine } from "..";
 import { Game } from "../world/Game";
 import { Networking } from "../networking/Networking";
+import { Inventory } from "../game/Inventory";
 
 
 export class MainMenu extends Scene {
@@ -26,7 +27,8 @@ export class MainMenu extends Scene {
         
 
         this.playButton.on("pointerdown",function(){
-            engine.goToScene("game");
+            //engine.goToScene("game");
+            Inventory.LevelUpgrade("Speed")
         })
 
         this.createOrJoin.addEventListener("click",()=>{

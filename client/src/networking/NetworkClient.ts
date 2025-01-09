@@ -22,6 +22,7 @@ export class NetworkClient {
     onLeave(code: number): void {
         console.log("left with code: " + code)
         Networking.events.emit("disconnected", new NeworkEvents.ServerDisconnected(code));
+        this.room = null
     }
 
 
