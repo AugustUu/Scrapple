@@ -43,7 +43,7 @@ export class Inventory {
                 this.reloading = false;
                 this.gun.shotsSinceLastReload = 0
                 console.log("reloaded!")
-            }, this.gun.timeToReload * 1000)
+            }, this.gun.timeToReload * 1000 * (1 - (0.1 * Inventory.GetUpgrade("ReloadSpeed").level)))
         }
         else {
             return
