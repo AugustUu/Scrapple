@@ -128,7 +128,7 @@ export class LocalPlayer extends Actor {
 
 
 
-        if (engine.input.keyboard.isHeld(Keys.R)) {
+        if (engine.input.keyboard.wasPressed(Keys.R)) {
             Inventory.Reload()
         }
 

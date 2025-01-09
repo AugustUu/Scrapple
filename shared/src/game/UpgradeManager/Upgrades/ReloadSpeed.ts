@@ -4,6 +4,6 @@ import { registerUpgrade } from "../UpgradeManager"
 @registerUpgrade
 export class ReloadSpeed extends Upgrade {
     constructor() {
-        super("ReloadSpeed")
+        super("ReloadSpeed", 5)
     }
 }

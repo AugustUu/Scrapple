@@ -2,8 +2,8 @@ import { Upgrade } from "../Upgrade"
 import { registerUpgrade } from "../UpgradeManager"
 
 @registerUpgrade
-export class Speed extends Upgrade {
+export class ShootSpeed extends Upgrade {
     constructor() {
-        super("Speed", 3)
+        super("ShootSpeed", 5)
     }
 }

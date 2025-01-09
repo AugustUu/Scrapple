@@ -4,6 +4,6 @@ import { registerUpgrade } from "../UpgradeManager"
 @registerUpgrade
 export class Jump extends Upgrade {
     constructor() {
-        super("Jump")
+        super("Jump", 3)
     }
 }

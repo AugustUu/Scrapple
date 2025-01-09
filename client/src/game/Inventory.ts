@@ -7,7 +7,7 @@ import { Random } from "excalibur"
 
 export class Inventory {
     static gun: Gun
-    static upgrades: Map<string,Upgrade>
+    static upgrades: Map<string, Upgrade>
     static random: Random;
     static reloading: boolean;
 
@@ -16,29 +16,36 @@ export class Inventory {
         this.random = new Random;
     }
 
-    static Shoot(angle: number){
+    static Shoot(angle: number) {
         let gun = this.gun;
-        if (gun.shotsSinceLastReload < gun.magSize && !this.reloading) {
-            if (Date.now() > gun.timeSinceLastShot + gun.fireRate * 1000) {
-                let x = 0
-                while (x < gun.bulletsPerShot) {
-                    Networking.client.room?.send(C2SPacket.Shoot, { angle: (angle - Math.PI) + (this.random.floating(gun.spread * -1, gun.spread + 1) * (Math.PI / 180)) })
-                    x += 1
-                }
+        if(!this.reloading){
+                if (gun.shotsSinceLastReload < gun.magSize){
+                if (Date.now() > gun.timeSinceLastShot + gun.fireRate * 1000 * (1 - (0.1 * Inventory.GetUpgrade("ShootSpeed").level))) {
+                    let x = 0
+                    while (x < gun.bulletsPerShot) {
+                        Networking.client.room?.send(C2SPacket.Shoot, { angle: (angle - Math.PI) + (this.random.floating(gun.spread * -1, gun.spread + 1) * (Math.PI / 180)) })
+                        x += 1
+                    }
 
-                gun.timeSinceLastShot = Date.now()
-                gun.shotsSinceLastReload += 1
+                    gun.timeSinceLastShot = Date.now()
+                    gun.shotsSinceLastReload += 1
+                }
             }
-        }
-        else if (!this.reloading) {
-            this.Reload()
+            else{
+                this.Reload()
+            }
         }
     }
 
     static Reload() {
-        if (!this.reloading) {
+        if (!this.reloading && this.gun.shotsSinceLastReload > 0) {
             this.reloading = true;
             console.log("reloading...")
+            if(Inventory.GetUpgrade("ReloadBurst").level == 1 && this.gun.shotsSinceLastReload == this.gun.magSize){
+                for(let i = 0; i < 5; i++){
+                    Networking.client.room?.send(C2SPacket.Shoot, { angle: (this.random.floating(0, Math.PI * 2)) })
+                }
+            }
             setTimeout(() => {
                 this.reloading = false;
                 this.gun.shotsSinceLastReload = 0
@@ -63,8 +70,11 @@ export class Inventory {
         Inventory.gun = newGun
     }
 
-    static LevelUpgrade(upgrade: string) {
-        Inventory.upgrades.get(upgrade).level += 1
-        console.log("upgraded " + upgrade + " to " + (Inventory.upgrades.get(upgrade).level))
+    static LevelUpgrade(upgradeName: string) {
+        let upgrade = Inventory.upgrades.get(upgradeName)
+        if(upgrade.level < upgrade.max){
+            upgrade.level += 1
+            console.log("upgraded " + upgradeName + " to " + (upgrade.level))
+        }
     }
 }

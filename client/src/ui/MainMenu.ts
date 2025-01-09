@@ -28,7 +28,7 @@ export class MainMenu extends Scene {
 
         this.playButton.on("pointerdown",function(){
             //engine.goToScene("game");
-            Inventory.LevelUpgrade("ReloadSpeed") // debug
+            Inventory.LevelUpgrade("ReloadBurst") // debug
         })
 
         this.createOrJoin.addEventListener("click",()=>{
