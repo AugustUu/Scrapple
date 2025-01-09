@@ -1,13 +1,16 @@
 import { Actor, Color, Engine, Entity, Keys, Scene, Vector } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
-import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType } from '@dimforge/rapier2d-compat';
+import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
 import { MathUtils, generateRevoluteJoint as generateRevoluteJoint, MouseInput } from "../util"
 import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./Entities/GrappleLine";
 import { Inventory } from "./Inventory";
+import { Pistol} from "shared/src/game/GunManager/Guns/Pistol";
 import { Rifle } from "shared/src/game/GunManager/Guns/Rifle";
+import { Shotgun } from "shared/src/game/GunManager/Guns/Shotgun";
+import { Sniper } from "shared/src/game/GunManager/Guns/Sniper";
 
 export class LocalPlayer extends Actor {
     public health: number = 100;
@@ -16,6 +19,9 @@ export class LocalPlayer extends Actor {
     line!: Entity
     jumpHeight: number
     speed: number
+    radius:  number
+    x: number
+    y: number
 
     constructor(x: number, y: number) {
         super({name:"localplayer", x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
@@ -51,8 +57,10 @@ export class LocalPlayer extends Actor {
         }
         if (engine.input.keyboard.wasPressed(Keys.W)) {
             let jumpRay = new Ray(rigidBody.translation(), { x: 0, y: -1 })
+            let shape = new Ball(this.radius * 100)
             //doesn't actually touch the ground but gets close enough
             let hit = PhysicsSystem.physicsWorld.castRay(jumpRay, 2, true, undefined, undefined, undefined, rigidBody);
+            //let hit = PhysicsSystem.physicsWorld.castShape(rigidBody.translation(), 0, {x: 0, y: -5}, shape, undefined, 250, false)
 
             if (hit != null) {
                 if (hit.collider.collisionGroups() == 0x00010007) {
@@ -61,6 +69,9 @@ export class LocalPlayer extends Actor {
                 else {
                     console.log("no jump")
                 }
+            }
+            else{
+                console.log("it's so over")
             }
         }
 
@@ -128,7 +139,7 @@ export class LocalPlayer extends Actor {
 
 
 
-        if (engine.input.keyboard.isHeld(Keys.R)) {
+        if (engine.input.keyboard.wasPressed(Keys.R)) {
             Inventory.Reload()
         }
 
@@ -143,6 +154,24 @@ export class LocalPlayer extends Actor {
             }
         }else{
             this.shooting = false;
+        }
+
+        //switch gun hotkeys!!
+        if (engine.input.keyboard.wasPressed(Keys.Key1)) {
+            Inventory.ChangeGun(new Pistol)
+            console.log("gun changed to pistol")
+        }
+        if (engine.input.keyboard.wasPressed(Keys.Key2)) {
+            Inventory.ChangeGun(new Rifle)
+            console.log("gun changed to rifle")
+        }
+        if (engine.input.keyboard.wasPressed(Keys.Key3)) {
+            Inventory.ChangeGun(new Shotgun)
+            console.log("gun changed to shotgun")
+        }
+        if (engine.input.keyboard.wasPressed(Keys.Key4)) {
+            Inventory.ChangeGun(new Sniper)
+            console.log("gun changed to sniper")
         }
 
         Networking.client.room?.send(C2SPacket.Move, { x: this.pos.x, y: this.pos.y })

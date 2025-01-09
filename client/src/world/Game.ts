@@ -44,6 +44,9 @@ export class Game extends Scene {
 
 
         engine.add(this.createGroundShape(0, 0, new Color(50, 50, 50), 100, 2))
+        engine.add(this.createGroundShape(20, 150, new Color(20, 20, 20), undefined, undefined, 5))
+        engine.add(this.createGroundShape(0, 0, new Color(90, 0, 10), undefined, undefined, undefined, new Vector(-40, 2), new Vector(-20, 2), new Vector(-40, 20)))
+
 
         Networking.client.room!.state.players.onAdd((player: any, id: string) => {
             if (Networking.client.clientId != id) {
