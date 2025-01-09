@@ -14,6 +14,7 @@ export class Gun {
     constructor(name: String = "ERROR", damage: number = 10, fireRate: number = 0.5, timeToReload: number = 1, magSize: number = 10, spread: number = 0, bulletsPerShot: number = 1, automatic: boolean = false) {
         if(name == "ERROR"){
             console.error("GUN HAS NO NAME YO, FIX IT")
+            console.error("yeah that's facts")
         }
         this.name = name
         this.damage = damage
