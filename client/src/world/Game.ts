@@ -1,4 +1,4 @@
-import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic, vec, Circle } from "excalibur";
+import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic, vec, Circle, SceneActivationContext } from "excalibur";
 import { engine } from "..";
 import { createOtherPlayerEntity, OtherPlayerComponent, OtherPlayerMoveSystem } from "../game/Entities/OtherPlayer";
 import { LocalPlayer } from "../game/LocalPlayer";
@@ -7,15 +7,17 @@ import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsCompone
 import { Ball, ColliderDesc, RigidBodyDesc, RigidBodyType } from "@dimforge/rapier2d-compat";
 import { createTransformComponent, Vector2 } from "../util";
 import { Networking } from "../networking/Networking";
-import { BulletMoveSystem, createBullet } from "../game/Entities/Bullet";
+import { BulletComponent, BulletMoveSystem, createBullet } from "../game/Entities/Bullet";
 import { CreateGrappleLine, GrappleLineSystem } from "../game/Entities/GrappleLine";
 
-//export var PlayerEntities: Entity<any>[] = [];
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
+export var BulletEntities: Map<String, Entity<BulletComponent>> = new Map();
+export var LocalPlayerInstance: LocalPlayer;
 
 export class Game extends Scene {
 
     private playButton: Actor | undefined;
+
 
 
 
@@ -27,12 +29,21 @@ export class Game extends Scene {
         this.world.systemManager.addSystem(BulletMoveSystem);
 
 
+        this.camera.pos = Vector.Zero
 
-        let localPlayer = new LocalPlayer(0, 300);
-        engine.add(localPlayer)
+       
 
 
-        engine.add(this.createGroundRect(0, 0, new Color(50, 50, 50), 100, 2))
+    }
+
+    onActivate(context: SceneActivationContext<unknown>): void {
+
+        LocalPlayerInstance = new LocalPlayer(0, 300);
+        this.add(LocalPlayerInstance)
+
+
+
+        this.add(this.createGroundRect(0, 0, new Color(50, 50, 50), 100, 2))
 
         Networking.client.room!.state.players.onAdd((player: any, id: string) => {
             if (Networking.client.clientId != id) {
@@ -47,33 +58,31 @@ export class Game extends Scene {
                     let playerData = me.get(OtherPlayerComponent);
 
                     if (value) {
-                        let grapple = CreateGrappleLine(me, Vector2.new(player.grappleX,player.grappleY))
+                        let grapple = CreateGrappleLine(me, Vector2.new(player.grappleX, player.grappleY))
                         this.add(grapple);
                         playerData.grappleLine = grapple;
                     } else {
                         playerData.grappleLine?.kill()
-                        
+
                     }
                 })
 
             }
         })
-        
+
         Networking.client.room!.state.players.onRemove((player: any, id: string) => {
             PlayerEntities.get(id)?.kill()
         })
 
         Networking.client.room!.state.bullets.onAdd((bullet: any, id: string) => {
-            let bulletEntity = createBullet(bullet.angle, vec(bullet.position.x, bullet.position.y),id,"a")
+            let bulletEntity = createBullet(bullet.angle, vec(bullet.position.x, bullet.position.y), id, "a")
+            BulletEntities.set(id, bulletEntity)
             this.add(bulletEntity)
         })
 
-        /*
-        Networking.client.room!.onMessage(S2CPackets.BulletSpawn, (message) => {
-            let bullet = createBullet("a", message.angle, vec(message.position.x, message.position.y))
-            this.add(bullet)
-        })*/
-
+        Networking.client.room!.state.bullets.onRemove((bullet: any, id: string) => {
+            BulletEntities.get(id)?.kill()
+        })
 
         this.playButton = new Actor({
             width: 50,
@@ -83,49 +92,53 @@ export class Game extends Scene {
             anchor: Vector.Half
         })
 
-        this.camera.pos = Vector.Zero
-
         this.playButton.on("pointerdown", function () {
             Networking.client.room?.leave();
             engine.goToScene("mainMenu");
         })
 
         this.add(this.playButton)
-        //this.add(createOtherPlayerEntity("test", vec(0, -20)))
-
 
     }
+
+    onDeactivate(): void {
+        LocalPlayerInstance.kill()
+        this.entities.forEach((entity) => {
+            entity.kill()
+        })
+    }
+
 
     public createGroundRect(x: number, y: number, color: Color, width?: number, height?: number, radius?: number): Entity {
         let sprite: Graphic
         let floor = new Entity
-        if(width != undefined && height != undefined){
+        if (width != undefined && height != undefined) {
             let colliderDesc = ColliderDesc.cuboid(width, height).setCollisionGroups(0x00010007)
             floor
                 .addComponent(createTransformComponent(new Vector(x, y)))
                 .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
                 .addComponent(new ColliderComponent(colliderDesc))
-    
+
             sprite = new Rectangle({ width: width * 20, height: height * 20, color: color })
 
             let graphics = new GraphicsComponent();
             graphics.add(sprite);
-    
+
             floor.addComponent(graphics)
-    
+
         }
-        if(radius != undefined){
+        if (radius != undefined) {
             let colliderDesc = ColliderDesc.ball(radius).setCollisionGroups(0x00010007)
             floor
                 .addComponent(createTransformComponent(new Vector(x, y)))
                 .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
                 .addComponent(new ColliderComponent(colliderDesc))
-    
+
             sprite = new Circle({ radius: radius * 20, color: color })
 
             let graphics = new GraphicsComponent();
             graphics.add(sprite);
-    
+
             floor.addComponent(graphics)
 
         }

@@ -6,7 +6,7 @@ export const Guns: Map<string, Gun> = new Map()
 
 export function registerGun(target: typeof Gun) {
     let gun = new target();
-    console.log("registered gun", gun)
+    //console.log("registered gun", gun)
     Guns.set(target.name, gun)
 }
 

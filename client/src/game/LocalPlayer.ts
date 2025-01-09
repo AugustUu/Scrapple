@@ -1,4 +1,4 @@
-import { Actor, Color, Engine, Entity, Keys, Vector } from "excalibur";
+import { Actor, Color, Engine, Entity, Keys, Scene, Vector } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -18,7 +18,7 @@ export class LocalPlayer extends Actor {
     speed: number
 
     constructor(x: number, y: number) {
-        super({ x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
+        super({name:"localplayer", x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
         this.jumpHeight = 60 + (Inventory.GetUpgrade("Jump").level * 20)
         this.speed = 4 + Inventory.GetUpgrade("Speed").level
 
@@ -26,6 +26,8 @@ export class LocalPlayer extends Actor {
         this.addComponent(rigidBody)
 
         this.addComponent(new ColliderComponent(RAPIER.ColliderDesc.ball(2).setCollisionGroups(0x00020007), rigidBody.body))
+
+        console.log("new", rigidBody)
 
         this.shooting = false
 
@@ -70,6 +72,10 @@ export class LocalPlayer extends Actor {
     private grapple(engine: Engine, delta: number) {
         let rigidBody = this.get(RigidBodyComponent).body;
 
+        if(this.get(RigidBodyComponent).killed){
+            debugger
+        }
+
         if (this.joint == null) { // this is so stupid
             this.joint = PhysicsSystem.physicsWorld.createImpulseJoint(JointData.revolute({ x: 0.0, y: 0.0 }, { x: 0.0, y: 0.0 }), rigidBody, rigidBody, true)
             PhysicsSystem.physicsWorld.removeImpulseJoint(this.joint, true)
@@ -108,7 +114,14 @@ export class LocalPlayer extends Actor {
         }
     }
 
+
     public update(engine: Engine, delta: number) {
+
+
+
+        if(Networking.client.room == null || this.isKilled()){ // who ever designed it so it rarely will update even when killed is a dumbass
+            return
+        }
 
         this.move(engine, delta)
         this.grapple(engine, delta)
