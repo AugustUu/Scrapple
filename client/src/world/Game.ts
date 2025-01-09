@@ -1,4 +1,4 @@
-import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic, vec, Circle, SceneActivationContext } from "excalibur";
+import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic, vec, Circle, Polygon, SceneActivationContext } from "excalibur";
 import { engine } from "..";
 import { createOtherPlayerEntity, OtherPlayerComponent, OtherPlayerMoveSystem } from "../game/Entities/OtherPlayer";
 import { LocalPlayer } from "../game/LocalPlayer";
@@ -43,7 +43,7 @@ export class Game extends Scene {
 
 
 
-        this.add(this.createGroundRect(0, 0, new Color(50, 50, 50), 100, 2))
+        engine.add(this.createGroundShape(0, 0, new Color(50, 50, 50), 100, 2))
 
         Networking.client.room!.state.players.onAdd((player: any, id: string) => {
             if (Networking.client.clientId != id) {
@@ -98,18 +98,12 @@ export class Game extends Scene {
         })
 
         this.add(this.playButton)
+        //this.add(createOtherPlayerEntity("test", vec(0, -20)))
+
 
     }
 
-    onDeactivate(): void {
-        LocalPlayerInstance.kill()
-        this.entities.forEach((entity) => {
-            entity.kill()
-        })
-    }
-
-
-    public createGroundRect(x: number, y: number, color: Color, width?: number, height?: number, radius?: number): Entity {
+    public createGroundShape(x: number, y: number, color: Color, width?: number, height?: number, radius?: number, vector1?: Vector, vector2?: Vector, vector3?: Vector): Entity {
         let sprite: Graphic
         let floor = new Entity
         if (width != undefined && height != undefined) {
@@ -133,8 +127,24 @@ export class Game extends Scene {
                 .addComponent(createTransformComponent(new Vector(x, y)))
                 .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
                 .addComponent(new ColliderComponent(colliderDesc))
+    
+            sprite = new Circle({ radius: radius * 10, color: color })
 
-            sprite = new Circle({ radius: radius * 20, color: color })
+            let graphics = new GraphicsComponent();
+            graphics.add(sprite);
+    
+            floor.addComponent(graphics)
+
+        }
+
+        if(vector1 != undefined && vector2 != undefined && vector3 != undefined){
+            let colliderDesc = ColliderDesc.triangle(vector1, vector2, vector3).setCollisionGroups(0x00010007)
+            floor
+                .addComponent(createTransformComponent(new Vector(x, y)))
+                .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
+                .addComponent(new ColliderComponent(colliderDesc))
+    
+            //sprite = new Polygon({ points: vector1, color: color })
 
             let graphics = new GraphicsComponent();
             graphics.add(sprite);
@@ -144,6 +154,8 @@ export class Game extends Scene {
         }
 
         return floor
+
+        
 
     }
 
