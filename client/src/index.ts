@@ -1,61 +1,43 @@
-import { Application, Assets, Container, Graphics, Sprite, Texture } from 'pixi.js';
-import RAPIER from '@dimforge/rapier2d-compat';
-import { GameState, StateSystem } from './util/StateSystem';
-import { EventSystem } from './util/EventSystem';
-import { InputSystem } from './util/InputSystem';
+import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering,  } from 'excalibur';
+import { Game } from './world/Game';
+
 import { MainMenu } from './ui/MainMenu';
-import { World as World } from './physics/World';
-import { player } from './game/Player';
-import { Room } from './game/Room';
+import RAPIER from '@dimforge/rapier2d-compat';
+import { MouseInput } from './util';
+import { Inventory } from './game/Inventory';
 
 
-
-export const app = new Application();
+export const engine = new Engine({
+    backgroundColor: Color.Gray,
+    fixedUpdateFps: 60,
+    width: 1920,
+    height: 1080,
+    displayMode: DisplayMode.FitScreenAndFill,
+    canvasElementId: 'game',
+    antialiasing: {
+        pixelArtSampler: true, // turns on the sub-pixel shader for pixel art
+        nativeContextAntialiasing: false, // turns off canvas aa
+        multiSampleAntialiasing: true, // turns on msaa which smooths quad boundaries
+        filtering: ImageFiltering.Blended, // hints the image loader to use blended filtering
+        canvasImageRendering: 'auto' // applies the 'auto'-matic css to the canvas CSS image-rendering
+      },
+    scenes: {
+        mainMenu: MainMenu,
+        game: Game,
+    }
+});
 
 async function init() {
-
-
-    await app.init({
-        backgroundColor: 0x777777,
-        resizeTo: window
-    });
-
+   
     await RAPIER.init();
 
-    document.body.appendChild(app.canvas);
-    const container = new Container();
-    app.stage.addChild(container);
-
-
-    MainMenu.init();
-
-    InputSystem.init();
-    Room.init();
-    World.init();
-    StateSystem.changeState(GameState.inRoom);
-
-
-
-
-    let lines = new Graphics();
-    lines.x = window.innerWidth / 2;
-    lines.y = window.innerHeight / 2;
-    app.stage.addChild(lines);
-
-    app.ticker.add(() => {
-        const { vertices, colors } = World.world.debugRender();
-        lines.clear();
-
-        for (let i = 0; i < vertices.length / 4; i += 1) {
-            //lines.lineStyle(1.0, color, colors[i * 8 + 3], 0.5, true);
-            
-            lines.moveTo(vertices[i * 4] * 10, -vertices[i * 4 + 1] * 10).lineTo(vertices[i * 4 + 2] * 10, -vertices[i * 4 + 3] * 10).stroke({ width: 1, color: 0xff0000 });
-        }
-    });
-
-
+    engine.start();
+    engine.toggleDebug();
+    engine.goToScene("mainMenu");
+    
+    MouseInput.init();
+    Inventory.init()
+        
 }
 
 init()
-
-console.log("starting game?")

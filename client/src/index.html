@@ -15,11 +15,22 @@ body {
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test</title>
 </head>
 
 <body oncontextmenu="return false">
+    <main>
+        <div id="menu" style="position: absolute; z-index: 1999; display: none;">
+            <div style="left: 50%;top: 50%;position: fixed;">
+                <input id="serverInput" type="text">
+                <button id="joinButton">Join or create</button>
+            </div>
+        </div>
+
+        <canvas id="game"></canvas>
+
+    </main>
 </body>
+
 
 </html>

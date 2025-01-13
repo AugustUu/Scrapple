@@ -1,10 +1,11 @@
 {
     "compilerOptions": {
-      "target": "ESNext",
-      "module": "commonjs",
+      "target": "ES6",
+      "module": "ESNext",
       "outDir": "./dist",
       "rootDir": "./src",
-      "declaration": true
+      "declaration": true,
+      "experimentalDecorators": true,
     },
     "include": ["src/**/*"]
   }

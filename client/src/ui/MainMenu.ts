@@ -1,78 +1,54 @@
-import { Button, ButtonContainer, Input, } from "@pixi/ui";
-import { GameState, StateSystem } from "../util/StateSystem";
-import { Container, Graphics, Sprite, Text } from "pixi.js";
-import { app } from "..";
-import { Network } from "../network/Network";
-import { join } from "path";
-
-export class MainMenu {
-
-    static init() {
-        var container: Container;
-
-        StateSystem.onEnter(GameState.menu, (old_state) => {
+import { Actor, Color, Scene, SceneActivationContext, Vector } from "excalibur";
+import { engine } from "..";
+import { Game } from "../world/Game";
+import { Networking } from "../networking/Networking";
+import { Inventory } from "../game/Inventory";
 
 
-            container = new Container();
-            app.stage.addChild(container);
+export class MainMenu extends Scene {
 
-            let [serverId, joinButton, createButton] = this.setupButtons()
-            container.addChild(serverId, joinButton, createButton);
+    private playButton: Actor | undefined;
+    private rootElement!: HTMLElement;
+    private inputElement!: HTMLInputElement;
+    private createOrJoin!: HTMLElement;
 
-
-
-            joinButton.on('pointerdown', text => {
-                Network.connect(serverId.value)
-            })
-            createButton.on('pointerdown', text => {
-                console.log("yo")
-                Network.create()
-            })
-
-
-
+    public onInitialize() {
+        this.playButton = new Actor({
+            width: 50,
+            height: 50,
+            color: Color.Red,
+            pos: new Vector(100, 100)
         })
 
-        StateSystem.onExit(GameState.menu, (old_state) => {
-            container.destroy(true);
+        this.rootElement = document.getElementById('menu')!;
+        this.inputElement = document.getElementById('serverInput')! as HTMLInputElement;
+        this.createOrJoin = document.getElementById('joinButton')!;
+
+        
+
+        this.playButton.on("pointerdown",function(){
+            //engine.goToScene("game");
+            Inventory.LevelUpgrade("ReloadBurst") // debug
         })
+
+        this.createOrJoin.addEventListener("click",()=>{
+            if(this.inputElement.value == ""){
+                Networking.create("jorbis" + Math.random())
+            }else{
+                Networking.connect(this.inputElement.value,"jorbis" + Math.random())
+            }
+        })
+        
+
+        this.add(this.playButton)
     }
 
-    private static setupButtons(): [Input, Graphics, Graphics] {
-        let joinId = new Input({
-            bg: new Graphics().rect(0, 0, 500, 30).fill(0x999999),
-        });
+    public onActivate(context: SceneActivationContext<unknown>): void {
+        this.rootElement.style.display = "";
+    }
 
-
-        let joinButton = new Graphics()
-            .rect(0, 0, 50, 30)
-            .fill(0x888877)
-
-        let createButton = new Graphics()
-            .rect(0, 0, 80, 30)
-            .fill(0x888877)
-
-
-        joinButton.addChild(new Text({ text: 'Join' }))
-        createButton.addChild(new Text({ text: 'Create' }))
-
-
-
-
-        joinId.position._x = window.innerWidth / 2
-        joinId.position._y = window.innerHeight / 2 + 100
-
-        joinButton.position._x = joinId.position._x + joinId.width
-        joinButton.position._y = joinId.position._y
-        joinButton.eventMode = "static"
-
-        createButton.position._x = joinId.position._x + joinId.width
-        createButton.position._y = joinId.position._y + joinId.height
-        createButton.eventMode = "static"
-
-
-
-        return [joinId, joinButton, createButton]
+    public onDeactivate(context: SceneActivationContext): void {
+        this.rootElement.style.display = "none";
     }
 
 }
