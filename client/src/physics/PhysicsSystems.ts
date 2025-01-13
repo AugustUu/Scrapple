@@ -7,7 +7,7 @@ import { Networking } from "../networking/Networking";
 export class PhysicsSystem extends System {
     public systemType = SystemType.Update;
 
-    private static gravity = { x: 0.0, y: -98 };
+    private static gravity = { x: 0.0, y: -130 };
     public static physicsWorld: RAPIER.World;
 
     rigidBodyQuery: Query<typeof RigidBodyComponent | typeof TransformComponent>;

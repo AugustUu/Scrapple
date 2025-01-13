@@ -16,6 +16,7 @@ export class LocalPlayer extends Actor {
     public health: number = 100;
     joint!: ImpulseJoint;
     shooting: boolean
+    grappling: boolean
     line!: Entity
     jumpHeight: number
     speed: number
@@ -26,16 +27,19 @@ export class LocalPlayer extends Actor {
     constructor(x: number, y: number) {
         super({name:"localplayer", x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
         this.jumpHeight = 60 + (Inventory.GetUpgrade("Jump").level * 20)
-        this.speed = 4 + Inventory.GetUpgrade("Speed").level
+        this.speed = 10 + Inventory.GetUpgrade("Speed").level
+
 
         let rigidBody = new RigidBodyComponent(RigidBodyType.Dynamic);
         this.addComponent(rigidBody)
-
+        
         this.addComponent(new ColliderComponent(RAPIER.ColliderDesc.ball(2).setCollisionGroups(0x00020007), rigidBody.body))
+        
 
         console.log("new", rigidBody)
 
         this.shooting = false
+        this.grappling = false
 
         let gun = new Rifle
         Inventory.ChangeGun(gun)
@@ -53,7 +57,7 @@ export class LocalPlayer extends Actor {
             rigidBody.setLinvel({ x: rigidBody.linvel().x + this.speed, y: rigidBody.linvel().y }, true);
         }
         if (engine.input.keyboard.isHeld(Keys.S)) {
-            rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, -75) }, true);
+            rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, -50) }, true);
         }
         if (engine.input.keyboard.wasPressed(Keys.W)) {
             let jumpRay = new Ray(rigidBody.translation(), { x: 0, y: -1 })
@@ -74,10 +78,33 @@ export class LocalPlayer extends Actor {
                 console.log("it's so over")
             }
         }
+        if (engine.input.keyboard.wasReleased(Keys.W)){
+            rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, rigidBody.linvel().y * 0.25) }, true);
+        }
+
+        
+
+        let damping: number
+        if(this.grappling){
+            damping = 1
+        }
+        else{
+            rigidBody.setLinvel({x: MathUtils.clamp(rigidBody.linvel().x, -80, 80), y: rigidBody.linvel().y}, true)
+            if(!(engine.input.keyboard.isHeld(Keys.A) || engine.input.keyboard.isHeld(Keys.D))){
+                damping = 0.8
+            }
+            else{
+                damping = 0.95
+            }
+        }
+        
+
+        rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: rigidBody.linvel().y}, true)
 
         if (engine.input.keyboard.wasPressed(Keys.E)) { // just testing, make upgrade later ?
             rigidBody.setLinvel({ x: rigidBody.linvel().x * -0.75, y: rigidBody.linvel().y * -0.75 }, true);
         }
+        
     }
 
     private grapple(engine: Engine, delta: number) {
@@ -109,6 +136,7 @@ export class LocalPlayer extends Actor {
                         this.joint = newJoint
                         let endPoint = MathUtils.rapierToExc(hit_point);
                         this.line = CreateGrappleLine(this, endPoint)
+                        this.grappling = true
                         engine.add(this.line)
                         Networking.client.room?.send(C2SPacket.Grapple, { x: endPoint.x, y: endPoint.y })
                     }
@@ -120,6 +148,7 @@ export class LocalPlayer extends Actor {
 
         if (this.joint.isValid() && engine.input.keyboard.wasReleased(Keys.Space)) { // this feels dumb? but i can't think of another way to do it so w/e
             this.line.kill() // nice code
+            this.grappling = false
             PhysicsSystem.physicsWorld.removeImpulseJoint(this.joint, true)
             Networking.client.room?.send(C2SPacket.EndGrapple, {})
         }

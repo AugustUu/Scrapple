@@ -111,7 +111,7 @@ export class Game extends Scene {
         let sprite: Graphic
         let floor = new Entity
         if (width != undefined && height != undefined) {
-            let colliderDesc = ColliderDesc.cuboid(width, height).setCollisionGroups(0x00010007)
+            let colliderDesc = ColliderDesc.cuboid(width, height).setCollisionGroups(0x00010007).setFriction(0.5)
             floor
                 .addComponent(createTransformComponent(new Vector(x, y)))
                 .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
@@ -126,7 +126,7 @@ export class Game extends Scene {
 
         }
         if (radius != undefined) {
-            let colliderDesc = ColliderDesc.ball(radius).setCollisionGroups(0x00010007)
+            let colliderDesc = ColliderDesc.ball(radius).setCollisionGroups(0x00010007).setFriction(0.5)
             floor
                 .addComponent(createTransformComponent(new Vector(x, y)))
                 .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
@@ -142,7 +142,7 @@ export class Game extends Scene {
         }
 
         if(vector1 != undefined && vector2 != undefined && vector3 != undefined){
-            let colliderDesc = ColliderDesc.triangle(vector1, vector2, vector3).setCollisionGroups(0x00010007)
+            let colliderDesc = ColliderDesc.triangle(vector1, vector2, vector3).setCollisionGroups(0x00010007).setFriction(0.5)
             floor
                 .addComponent(createTransformComponent(new Vector(x, y)))
                 .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
