@@ -12,7 +12,7 @@ export class GameRoom extends Room<State> {
     onCreate(options: any) {
         this.setState(new State());
         this.setPatchRate(15.625)
-        
+
 
 
         this.onMessage(C2SPacket.Ping, (client, message) => {
@@ -27,7 +27,7 @@ export class GameRoom extends Room<State> {
 
         this.onMessage(C2SPacket.Shoot, (client, message) => {
             let player = this.state.players.get(client.sessionId)
-            this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y,message.angle))
+            this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, message.angle, client.id))
         })
 
         this.onMessage(C2SPacket.Grapple, (client, message) => {
@@ -48,18 +48,29 @@ export class GameRoom extends Room<State> {
 
     }
 
-    onBeforePatch(){
+    onBeforePatch() {
         this.state.bullets.forEach((bullet) => {
             bullet.position.x += Math.cos(bullet.angle)
             bullet.position.y += Math.sin(bullet.angle)
         })
+
+        this.state.players.forEach((player) => {
+            this.state.bullets.forEach((bullet, key) => {
+                if(bullet.shotById != player.id){
+                    if (Math.hypot(player.position.x - bullet.position.x, player.position.y - bullet.position.y) <= (bullet.radius + player.radius)) {
+                        player.health -= 10;
+                        this.state.bullets.delete(key);
+                    }
+                }
+            })
+        })
     }
 
-    
+
     onJoin(client: Client, options: any) {
         console.log(client.sessionId, "joined!", options);
         if (options && options.name) {
-            this.state.players.set(client.sessionId, new Player(options.name));
+            this.state.players.set(client.sessionId, new Player(options.name,client.id));
         }
     }
 

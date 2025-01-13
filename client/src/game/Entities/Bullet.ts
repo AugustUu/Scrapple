@@ -63,6 +63,7 @@ export class BulletMoveSystem extends System {
                 //entity.get(TransformComponent).pos.x -= Math.cos(bullet.angle)
                 //entity.get(TransformComponent).pos.y -= Math.sin(bullet.angle)
 
+
                 entity.get(TransformComponent).pos.x = lerp(entity.get(TransformComponent).pos.x, state.position.x, elapsedMs / 50)
                 entity.get(TransformComponent).pos.y = lerp(entity.get(TransformComponent).pos.y, state.position.y, elapsedMs / 50)
             }

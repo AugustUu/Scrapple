@@ -40,14 +40,15 @@ export function createOtherPlayerEntity(name: string, id: string, position: Vect
 
     entity.addComponent(transform);
 
-    let nameTag = new Text({ text: name, font: new Font({ size: 30, textAlign: TextAlign.Center }) })
+    let nameTag = new Text({ text: name, font: new Font({ size: 15, textAlign: TextAlign.Left }) })
     let nameTagGraphics = new GraphicsComponent();
-    nameTagGraphics.anchor = vec(0.5, 0.5)
     nameTagGraphics.use(nameTag)
+    let nameTagTransform = new TransformComponent();
+    nameTagTransform.pos.y -= 30
 
     let nameTagEntity = new Entity();
     nameTagEntity.addComponent(nameTagGraphics)
-    nameTagEntity.addComponent(new TransformComponent())
+    nameTagEntity.addComponent(nameTagTransform)
     entity.addChild(nameTagEntity)
 
     return entity

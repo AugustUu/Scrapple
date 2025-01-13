@@ -9,6 +9,7 @@ import { createTransformComponent, Vector2 } from "../util";
 import { Networking } from "../networking/Networking";
 import { BulletComponent, BulletMoveSystem, createBullet } from "../game/Entities/Bullet";
 import { CreateGrappleLine, GrappleLineSystem } from "../game/Entities/GrappleLine";
+import { Bullet } from "server/src/State";
 
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
 export var BulletEntities: Map<String, Entity<BulletComponent>> = new Map();
@@ -77,8 +78,8 @@ export class Game extends Scene {
             PlayerEntities.get(id)?.kill()
         })
 
-        Networking.client.room!.state.bullets.onAdd((bullet: any, id: string) => {
-            let bulletEntity = createBullet(bullet.angle, vec(bullet.position.x, bullet.position.y), id, "a")
+        Networking.client.room!.state.bullets.onAdd((bullet: Bullet, id: string) => {
+            let bulletEntity = createBullet(bullet.angle, vec(bullet.position.x, bullet.position.y), id, bullet.shotById)
             BulletEntities.set(id, bulletEntity)
             this.add(bulletEntity)
         })
