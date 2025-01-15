@@ -7,6 +7,7 @@ import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./Entities/GrappleLine";
 import { Inventory } from "./Inventory";
+import { Game } from "../world/Game";
 import { Pistol} from "shared/src/game/GunManager/Guns/Pistol";
 import { Rifle } from "shared/src/game/GunManager/Guns/Rifle";
 import { Shotgun } from "shared/src/game/GunManager/Guns/Shotgun";
@@ -159,7 +160,6 @@ export class LocalPlayer extends Actor {
 
 
     public update(engine: Engine, delta: number) {
-
 
 
         if(Networking.client.room == null || this.isKilled()){ // who ever designed it so it rarely will update even when killed is a dumbass
