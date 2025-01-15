@@ -1,6 +1,6 @@
 import { Actor, Color, Engine, Entity, Keys, Scene, Vector } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
-import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball } from '@dimforge/rapier2d-compat';
+import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
 import { MathUtils, generateRevoluteJoint as generateRevoluteJoint, MouseInput } from "../util"
 import { Networking } from "../networking/Networking";
@@ -20,14 +20,16 @@ export class LocalPlayer extends Actor {
     line!: Entity
     jumpHeight: number
     speed: number
-    radius:  number
-    x: number
-    y: number
+    radius: number
+    grounded: boolean
+    lastTimeGrounded: number
 
     constructor(x: number, y: number) {
         super({name:"localplayer", x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
         this.jumpHeight = 60 + (Inventory.GetUpgrade("Jump").level * 20)
-        this.speed = 10 + Inventory.GetUpgrade("Speed").level
+        this.speed = 8 + Inventory.GetUpgrade("Speed").level
+        this.radius = 20
+        this.grounded = false
 
 
         let rigidBody = new RigidBodyComponent(RigidBodyType.Dynamic);
@@ -48,7 +50,30 @@ export class LocalPlayer extends Actor {
 
     private move(engine: Engine, delta: number) {
         let rigidBody = this.get(RigidBodyComponent).body;
-        //let col = this.get(ColliderComponent).collider;
+        let col = this.get(ColliderComponent).collider;
+
+        let shape = new Ball(this.radius / 12)
+        let hit = PhysicsSystem.physicsWorld.castShape(rigidBody.translation(), rigidBody.rotation(), {x: 0, y: -1}, shape, 0, 0.5, false, undefined, 0x00020007, col)
+        if (hit != null) {
+            if (hit.collider.collisionGroups() == 0x00010007) {
+                if(!this.grounded){
+                    this.grounded = true
+                }
+            }
+            else {
+                console.log("wrong collisiongroup")
+                if(this.grounded){
+                    this.grounded = false
+                    this.lastTimeGrounded = Date.now()
+                }
+            }
+        }
+        else{
+            if(this.grounded){
+                this.grounded = false
+                this.lastTimeGrounded = Date.now()
+            }
+        }
 
         if (engine.input.keyboard.isHeld(Keys.A)) {
             rigidBody.setLinvel({ x: rigidBody.linvel().x - this.speed, y: rigidBody.linvel().y }, true);
@@ -60,25 +85,9 @@ export class LocalPlayer extends Actor {
             rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, -50) }, true);
         }
         if (engine.input.keyboard.wasPressed(Keys.W)) {
-            let jumpRay = new Ray(rigidBody.translation(), { x: 0, y: -1 })
-            //let shape = new Ball(this.radius * 10)
-            
-            
-            //doesn't actually touch the ground but gets close enough
-            let hit = PhysicsSystem.physicsWorld.castRay(jumpRay, 2, true, undefined, undefined, undefined, rigidBody);
-            //let hit = PhysicsSystem.physicsWorld.castShape(rigidBody.translation(), rigidBody.rotation(), {x: 0, y: -1}, shape, 0, 250, false, undefined, 0x00020007)
-
-            if (hit != null) {
-                if (hit.collider.collisionGroups() == 0x00010007) {
-                    rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
-                }
-                else {
-                    console.log("no jump")
-                }
-            }
-            else{
-                console.log("it's so over")
-            }
+            if(this.grounded || Date.now() - this.lastTimeGrounded < 100){
+                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
+            }   
         }
         if (engine.input.keyboard.wasReleased(Keys.W)){
             rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, rigidBody.linvel().y * 0.25) }, true);
@@ -91,9 +100,9 @@ export class LocalPlayer extends Actor {
             damping = 1
         }
         else{
-            rigidBody.setLinvel({x: MathUtils.clamp(rigidBody.linvel().x, -80, 80), y: rigidBody.linvel().y}, true)
+            //rigidBody.setLinvel({x: MathUtils.clamp(rigidBody.linvel().x, -80, 80), y: rigidBody.linvel().y}, true)
             if(!(engine.input.keyboard.isHeld(Keys.A) || engine.input.keyboard.isHeld(Keys.D))){
-                damping = 0.8
+                damping = 0.7
             }
             else{
                 damping = 0.95
