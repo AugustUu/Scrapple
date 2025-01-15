@@ -3,6 +3,7 @@ import { Room, Client } from "@colyseus/core";
 import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 import { randomBytes } from "crypto"
 import { State, Bullet, Player } from "../State"
+import { Guns } from "shared/src/game/GunManager/GunManager"
 
 
 export class GameRoom extends Room<State> {
@@ -12,7 +13,6 @@ export class GameRoom extends Room<State> {
     onCreate(options: any) {
         this.setState(new State());
         this.setPatchRate(15.625)
-
 
 
         this.onMessage(C2SPacket.Ping, (client, message) => {
@@ -50,8 +50,10 @@ export class GameRoom extends Room<State> {
 
     onBeforePatch() {
         this.state.bullets.forEach((bullet) => {
-            bullet.position.x += Math.cos(bullet.angle)
-            bullet.position.y += Math.sin(bullet.angle)
+            let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun)
+            bullet.position.x += Math.cos(bullet.angle) * gunInfo.bulletSpeedMultiplier
+            bullet.position.y += Math.sin(bullet.angle) * gunInfo.bulletSpeedMultiplier
+            
         })
 
         this.state.players.forEach((player) => {
@@ -64,13 +66,15 @@ export class GameRoom extends Room<State> {
                 }
             })
         })
+
     }
 
 
     onJoin(client: Client, options: any) {
         console.log(client.sessionId, "joined!", options);
         if (options && options.name) {
-            this.state.players.set(client.sessionId, new Player(options.name,client.id));
+            this.state.players.set(client.sessionId, new Player(options.name,client.id, Guns.keys().next().value));
+            console.log(Guns.keys().next().value)
         }
     }
 

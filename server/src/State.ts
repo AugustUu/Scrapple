@@ -18,16 +18,19 @@ export class Player extends Schema {
     @type("number") health: number = 100;
     @type(Position) position: Position;
 
+    @type("string") gun: string;
+
     @type("boolean") grappling: boolean;
     @type("number") grappleX: number;
     @type("number") grappleY: number;
 
     @type("number") radius: number = 20;
 
-    constructor(name: string, id: string) {
+    constructor(name: string, id: string, gun: string) {
         super();
         this.name = name
         this.id = id;
+        this.gun = gun;
         this.position = new Position(0, 0)
     }
 }
