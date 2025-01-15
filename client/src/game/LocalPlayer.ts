@@ -11,6 +11,7 @@ import { Pistol} from "shared/src/game/GunManager/Guns/Pistol";
 import { Rifle } from "shared/src/game/GunManager/Guns/Rifle";
 import { Shotgun } from "shared/src/game/GunManager/Guns/Shotgun";
 import { Sniper } from "shared/src/game/GunManager/Guns/Sniper";
+import { Minigun } from "shared/src/game/GunManager/Guns/Minigun"
 
 export class LocalPlayer extends Actor {
     public health: number = 100;
@@ -203,6 +204,10 @@ export class LocalPlayer extends Actor {
         if (engine.input.keyboard.wasPressed(Keys.Key4)) {
             Inventory.ChangeGun(new Sniper)
             console.log("gun changed to sniper")
+        }
+        if (engine.input.keyboard.wasPressed(Keys.Key5)) {
+            Inventory.ChangeGun(new Minigun)
+            console.log("gun changed to minigun")
         }
 
         Networking.client.room?.send(C2SPacket.Move, { x: this.pos.x, y: this.pos.y })
