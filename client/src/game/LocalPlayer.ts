@@ -57,12 +57,12 @@ export class LocalPlayer extends Actor {
         }
         if (engine.input.keyboard.wasPressed(Keys.W)) {
             let jumpRay = new Ray(rigidBody.translation(), { x: 0, y: -1 })
-            let shape = new Ball(this.radius * 10)
+            //let shape = new Ball(this.radius * 10)
             
             
             //doesn't actually touch the ground but gets close enough
-            //let hit = PhysicsSystem.physicsWorld.castRay(jumpRay, 2, true, undefined, undefined, undefined, rigidBody);
-            let hit = PhysicsSystem.physicsWorld.castShape(rigidBody.translation(), rigidBody.rotation(), {x: 0, y: -1}, shape, 0, 250, false, undefined, 0x00020007)
+            let hit = PhysicsSystem.physicsWorld.castRay(jumpRay, 2, true, undefined, undefined, undefined, rigidBody);
+            //let hit = PhysicsSystem.physicsWorld.castShape(rigidBody.translation(), rigidBody.rotation(), {x: 0, y: -1}, shape, 0, 250, false, undefined, 0x00020007)
 
             if (hit != null) {
                 if (hit.collider.collisionGroups() == 0x00010007) {
