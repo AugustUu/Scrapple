@@ -12,6 +12,7 @@ import { Rifle } from "shared/src/game/GunManager/Guns/Rifle";
 import { Shotgun } from "shared/src/game/GunManager/Guns/Shotgun";
 import { Sniper } from "shared/src/game/GunManager/Guns/Sniper";
 import { Minigun } from "shared/src/game/GunManager/Guns/Minigun"
+import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 
 export class LocalPlayer extends Actor {
     public health: number = 100;
@@ -44,8 +45,7 @@ export class LocalPlayer extends Actor {
         this.shooting = false
         this.grappling = false
 
-        let gun = new Rifle
-        Inventory.ChangeGun(gun)
+        Inventory.gun = new Pistol()
 
     }
 
@@ -169,8 +169,6 @@ export class LocalPlayer extends Actor {
 
     public update(engine: Engine, delta: number) {
 
-
-
         if(Networking.client.room == null || this.isKilled()){ // who ever designed it so it rarely will update even when killed is a dumbass
             return
         }
@@ -183,6 +181,7 @@ export class LocalPlayer extends Actor {
         if (engine.input.keyboard.wasPressed(Keys.R)) {
             Inventory.Reload()
         }
+
 
         if (MouseInput.mouseButtons.left) {
             if (Inventory.GetGun().automatic) {
@@ -199,24 +198,19 @@ export class LocalPlayer extends Actor {
 
         //switch gun hotkeys!!
         if (engine.input.keyboard.wasPressed(Keys.Key1)) {
-            Inventory.ChangeGun(new Pistol)
-            console.log("gun changed to pistol")
+            Inventory.ChangeGun(idList[0]) 
         }
         if (engine.input.keyboard.wasPressed(Keys.Key2)) {
-            Inventory.ChangeGun(new Rifle)
-            console.log("gun changed to rifle")
+            Inventory.ChangeGun(idList[1])
         }
         if (engine.input.keyboard.wasPressed(Keys.Key3)) {
-            Inventory.ChangeGun(new Shotgun)
-            console.log("gun changed to shotgun")
+            Inventory.ChangeGun(idList[2])
         }
         if (engine.input.keyboard.wasPressed(Keys.Key4)) {
-            Inventory.ChangeGun(new Sniper)
-            console.log("gun changed to sniper")
+            Inventory.ChangeGun(idList[3])
         }
         if (engine.input.keyboard.wasPressed(Keys.Key5)) {
-            Inventory.ChangeGun(new Minigun)
-            console.log("gun changed to minigun")
+            Inventory.ChangeGun(idList[4])
         }
 
         Networking.client.room?.send(C2SPacket.Move, { x: this.pos.x, y: this.pos.y })

@@ -5,6 +5,7 @@ export var C2SPacket = {
     Move: "move",
     Shoot: "shoot",
     Reload: "reload",
+    SwapGun: "swapgun",
     Grapple: "grapple",
     EndGrapple: "endgrapple",
 }

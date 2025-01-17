@@ -4,6 +4,7 @@ import { Upgrades } from "shared/src/game//UpgradeManager/UpgradeManager"
 import { Networking } from "../networking/Networking"
 import { C2SPacket } from "shared/src/networking/Packet"
 import { Random } from "excalibur"
+import { Guns } from "shared/src/game/GunManager/GunManager"
 
 export class Inventory {
     static gun: Gun
@@ -36,8 +37,7 @@ export class Inventory {
                 this.Reload()
             }
         }*/
-        console.log("SHOOT")
-        Networking.client.room?.send(C2SPacket.Shoot, { angle: (angle - Math.PI) * (Math.PI / 180)})
+        Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI })
     }
 
     static Reload() {
@@ -59,24 +59,26 @@ export class Inventory {
         else {
             return
         }*/
-        Networking.client.room?.send(C2SPacket.Reload, { })
+        Networking.client.room?.send(C2SPacket.Reload, {})
     }
 
     static GetGun() {
-        return Inventory.gun
+        let id = Networking.client.room.state.players.get(Networking.client.clientId).gun.gunID
+        return Guns.get(id)
     }
 
     static GetUpgrade(upgrade: string) {
         return Inventory.upgrades.get(upgrade)
     }
 
-    static ChangeGun(newGun: Gun) {
-        Inventory.gun = newGun
+    static ChangeGun(gunID: string) {
+        Networking.client.room?.send(C2SPacket.SwapGun, { id: gunID })
+        //Inventory.gun = newGun
     }
 
     static LevelUpgrade(upgradeName: string) {
         let upgrade = Inventory.upgrades.get(upgradeName)
-        if(upgrade.level < upgrade.max){
+        if (upgrade.level < upgrade.max) {
             upgrade.level += 1
             console.log("upgraded " + upgradeName + " to " + (upgrade.level))
         }
