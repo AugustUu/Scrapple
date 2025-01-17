@@ -20,8 +20,6 @@ export class Game extends Scene {
     private playButton: Actor | undefined;
 
 
-
-
     public onInitialize() {
         this.world.systemManager.addSystem(PhysicsSystem);
         this.world.systemManager.addSystem(PhysicsSystemDebug);
@@ -31,6 +29,7 @@ export class Game extends Scene {
 
 
         this.camera.pos = Vector.Zero
+        this.camera.zoom = 1
 
        
 
@@ -44,9 +43,13 @@ export class Game extends Scene {
 
 
 
-        engine.add(this.createGroundShape(0, 0, new Color(50, 50, 50), 100, 2))
-        engine.add(this.createGroundShape(20, 150, new Color(20, 20, 20), undefined, undefined, 5))
-        engine.add(this.createGroundShape(0, 0, new Color(90, 0, 10), undefined, undefined, undefined, new Vector(-40, 2), new Vector(-20, 2), new Vector(-40, 20)))
+        engine.add(this.createGroundShape(0, -300, new Color(50, 50, 50), 100, 2))
+        engine.add(this.createGroundShape(0, 400, new Color(20, 20, 20), undefined, undefined, 5))
+        engine.add(this.createGroundShape(-600, 300, new Color(20, 20, 20), undefined, undefined, 5))
+        engine.add(this.createGroundShape(600, 300, new Color(20, 20, 20), undefined, undefined, 5))
+
+
+        engine.add(this.createGroundShape(-300, -280, new Color(90, 0, 10), undefined, undefined, undefined, new Vector(-20, 0), new Vector(0, 20), new Vector(20, 0)))
 
 
         Networking.client.room!.state.players.onAdd((player: any, id: string) => {

@@ -1,8 +1,10 @@
 import { Gun } from "./Gun";
+import("./Guns/Minigun")
 import("./Guns/Pistol")
 import("./Guns/Rifle")
 import("./Guns/Shotgun")
 import("./Guns/Sniper")
+
 
 
 export const Guns: Map<string, Gun> = new Map()
