@@ -2,7 +2,7 @@ import { Actor, Color, Engine, Entity, Keys, Scene, Vector } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
-import { MathUtils, generateRevoluteJoint as generateRevoluteJoint, MouseInput } from "../util"
+import { MathUtils, generateRevoluteJoint as generateRevoluteJoint, MouseInput, Vector2 } from "../util"
 import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./Entities/GrappleLine";
@@ -24,11 +24,13 @@ export class LocalPlayer extends Actor {
     radius: number
     grounded: boolean
     lastTimeGrounded: number
+    maxGrappleSpeed: number
 
     constructor(x: number, y: number) {
         super({name:"localplayer", x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
         this.jumpHeight = 60 + (Inventory.GetUpgrade("Jump").level * 20)
         this.speed = 8 + Inventory.GetUpgrade("Speed").level
+        this.maxGrappleSpeed = 175
         this.radius = 20
         this.grounded = false
 
@@ -103,7 +105,7 @@ export class LocalPlayer extends Actor {
         else{
             //rigidBody.setLinvel({x: MathUtils.clamp(rigidBody.linvel().x, -80, 80), y: rigidBody.linvel().y}, true)
             if(!(engine.input.keyboard.isHeld(Keys.A) || engine.input.keyboard.isHeld(Keys.D))){
-                damping = 0.7
+                damping = 0.9
             }
             else{
                 damping = 0.95
@@ -116,6 +118,16 @@ export class LocalPlayer extends Actor {
         if (engine.input.keyboard.wasPressed(Keys.E)) { // just testing, make upgrade later ?
             rigidBody.setLinvel({ x: rigidBody.linvel().x * -0.75, y: rigidBody.linvel().y * -0.75 }, true);
         }
+
+        if(this.grappling){
+            let linvel = new Vector2(rigidBody.linvel())
+            if(linvel.magnitude() > this.maxGrappleSpeed){
+                rigidBody.setLinvel(linvel.scale((this.maxGrappleSpeed / 2 / linvel.magnitude()) + 0.5), true) // half max speed damping
+            }
+
+            console.log(new Vector2(rigidBody.linvel()).magnitude())
+        }
+        
         
     }
 

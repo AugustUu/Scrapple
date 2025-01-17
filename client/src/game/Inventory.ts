@@ -8,12 +8,38 @@ import { Random } from "excalibur"
 export class Inventory {
     static gun: Gun
     static upgrades: Map<string, Upgrade>
+    static usableUpgrades: Map<string, Upgrade>
     static random: Random;
     static reloading: boolean;
 
     static init() {
         Inventory.upgrades = Upgrades
         this.random = new Random;
+    }
+
+    static updateUsableUpgrades(){
+        this.usableUpgrades = this.upgrades
+        for(let upgrade of this.upgrades){
+            if(upgrade[1].upgradeDep == undefined){
+                this.usableUpgrades.delete(upgrade[0])
+                continue
+            }
+            else{
+                let dep = upgrade[1].upgradeDep
+                if(Inventory.upgrades.get(dep.upgrade).level < dep.level){
+                    this.usableUpgrades.delete(upgrade[0])
+                    continue
+                }
+            }
+            if(upgrade[1].gunDep == undefined){
+                this.usableUpgrades.delete(upgrade[0])
+                continue
+            }
+            else{
+                let dep = upgrade[1].gunDep
+                
+            }
+        }
     }
 
     static Shoot(angle: number) {

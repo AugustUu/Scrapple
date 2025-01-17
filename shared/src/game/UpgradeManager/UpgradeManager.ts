@@ -3,7 +3,7 @@ import { Upgrade } from "./Upgrade";
 export const Upgrades: Map<string,Upgrade> = new Map()
 import("./Upgrades/Jump")
 import("./Upgrades/ReloadSpeed")
-import("./Upgrades/ReloadSpeed copy")
+import("./Upgrades/ReloadBurst")
 import("./Upgrades/ShootSpeed")
 import("./Upgrades/Speed")
 
