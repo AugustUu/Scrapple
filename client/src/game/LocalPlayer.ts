@@ -1,4 +1,4 @@
-import { Actor, Color, Engine, Entity, Keys, Scene, Vector } from "excalibur";
+import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -7,6 +7,7 @@ import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./Entities/GrappleLine";
 import { Inventory } from "./Inventory";
+import { Game } from "../world/Game";
 import { Pistol} from "shared/src/game/GunManager/Guns/Pistol";
 import { Rifle } from "shared/src/game/GunManager/Guns/Rifle";
 import { Shotgun } from "shared/src/game/GunManager/Guns/Shotgun";
@@ -48,6 +49,8 @@ export class LocalPlayer extends Actor {
 
         let gun = new Rifle
         Inventory.ChangeGun(gun)
+
+        
 
     }
 
@@ -181,7 +184,7 @@ export class LocalPlayer extends Actor {
 
     public update(engine: Engine, delta: number) {
 
-
+        //engine.currentScene.camera.pos = this.pos
 
         if(Networking.client.room == null || this.isKilled()){ // who ever designed it so it rarely will update even when killed is a dumbass
             return
