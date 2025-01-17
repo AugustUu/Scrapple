@@ -17,6 +17,7 @@ export class Inventory {
     }
 
     static Shoot(angle: number) {
+        /*
         let gun = this.gun;
         if(!this.reloading){
                 if (gun.shotsSinceLastReload < gun.magSize){
@@ -34,10 +35,13 @@ export class Inventory {
             else{
                 this.Reload()
             }
-        }
+        }*/
+        console.log("SHOOT")
+        Networking.client.room?.send(C2SPacket.Shoot, { angle: (angle - Math.PI) * (Math.PI / 180)})
     }
 
     static Reload() {
+        /*
         if (!this.reloading && this.gun.shotsSinceLastReload > 0) {
             this.reloading = true;
             console.log("reloading...")
@@ -54,8 +58,8 @@ export class Inventory {
         }
         else {
             return
-        }
-
+        }*/
+        Networking.client.room?.send(C2SPacket.Reload, { })
     }
 
     static GetGun() {

@@ -27,7 +27,28 @@ export class GameRoom extends Room<State> {
 
         this.onMessage(C2SPacket.Shoot, (client, message) => {
             let player = this.state.players.get(client.sessionId)
-            this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, message.angle, client.id))
+            let gunInfo = Guns.get(player.gun.gunID)
+
+            if (player.gun.ammo > 0 && (player.gun.lastTimeShot + player.gun.fireDelay) < Date.now() && (player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()) {
+                player.gun.ammo -= 1;
+
+                for (let i = 0; i < player.gun.bulletsPerShot; i++) {
+                    this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, message.angle, client.id))
+                }
+
+                player.gun.lastTimeShot = Date.now()
+
+            }
+        })
+
+        this.onMessage(C2SPacket.Reload, (client, message) => {
+            let player = this.state.players.get(client.sessionId)
+            let gunInfo = Guns.get(player.gun.gunID)
+
+            if((player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()){
+                player.gun.lastTimeReloaded = Date.now();
+                player.gun.ammo = gunInfo.magSize
+            }
         })
 
         this.onMessage(C2SPacket.Grapple, (client, message) => {
@@ -50,15 +71,15 @@ export class GameRoom extends Room<State> {
 
     onBeforePatch() {
         this.state.bullets.forEach((bullet) => {
-            let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun)
+            let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
             bullet.position.x += Math.cos(bullet.angle) * gunInfo.bulletSpeedMultiplier
             bullet.position.y += Math.sin(bullet.angle) * gunInfo.bulletSpeedMultiplier
-            
+
         })
 
         this.state.players.forEach((player) => {
             this.state.bullets.forEach((bullet, key) => {
-                if(bullet.shotById != player.id){
+                if (bullet.shotById != player.id) {
                     if (Math.hypot(player.position.x - bullet.position.x, player.position.y - bullet.position.y) <= (bullet.radius + player.radius)) {
                         player.health -= 10;
                         this.state.bullets.delete(key);
@@ -73,7 +94,7 @@ export class GameRoom extends Room<State> {
     onJoin(client: Client, options: any) {
         console.log(client.sessionId, "joined!", options);
         if (options && options.name) {
-            this.state.players.set(client.sessionId, new Player(options.name,client.id, Guns.keys().next().value));
+            this.state.players.set(client.sessionId, new Player(options.name, client.id, Guns.keys().next().value));
             console.log(Guns.keys().next().value)
         }
     }
