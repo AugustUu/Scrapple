@@ -5,7 +5,7 @@ import { Network } from "inspector/promises";
 import { Networking } from "../networking/Networking";
 
 export class PhysicsSystem extends System {
-    public systemType = SystemType.Update;
+    public systemType = SystemType.Draw;
 
     private static gravity = { x: 0.0, y: -130 };
     public static physicsWorld: RAPIER.World;

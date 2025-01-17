@@ -2,8 +2,12 @@ import { Room, Client } from "@colyseus/core";
 //import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 import { randomBytes } from "crypto"
-import { State, Bullet, Player } from "../State"
-import { Guns } from "shared/src/game/GunManager/GunManager"
+import { State, Bullet, Player, GunState } from "../State"
+import { Guns, idList } from "shared/src/game/GunManager/GunManager";
+
+const getRandomNumber = (min: number, max: number) => {
+    return Math.random() * (max - min) + min
+}
 
 
 export class GameRoom extends Room<State> {
@@ -28,12 +32,16 @@ export class GameRoom extends Room<State> {
         this.onMessage(C2SPacket.Shoot, (client, message) => {
             let player = this.state.players.get(client.sessionId)
             let gunInfo = Guns.get(player.gun.gunID)
+            //console.log(JSON.stringify(player.gun))
 
             if (player.gun.ammo > 0 && (player.gun.lastTimeShot + player.gun.fireDelay) < Date.now() && (player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()) {
                 player.gun.ammo -= 1;
 
                 for (let i = 0; i < player.gun.bulletsPerShot; i++) {
-                    this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, message.angle, client.id))
+                    
+                    let angle = message.angle + (getRandomNumber(gunInfo.spread * -1, gunInfo.spread + 1) * (Math.PI / 180))
+                    this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, angle, client.id))
+                    console.log(message.angle)
                 }
 
                 player.gun.lastTimeShot = Date.now()
@@ -45,7 +53,7 @@ export class GameRoom extends Room<State> {
             let player = this.state.players.get(client.sessionId)
             let gunInfo = Guns.get(player.gun.gunID)
 
-            if((player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()){
+            if ((player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()) {
                 player.gun.lastTimeReloaded = Date.now();
                 player.gun.ammo = gunInfo.magSize
             }
@@ -63,6 +71,14 @@ export class GameRoom extends Room<State> {
             let player = this.state.players.get(client.sessionId)
             if (player.grappling) {
                 player.grappling = false
+            }
+        })
+
+        this.onMessage(C2SPacket.SwapGun, (client, message) => {
+            let player = this.state.players.get(client.sessionId)
+            if(Guns.has(message.id)){
+                player.gun = new GunState(message.id);
+                console.log(client.id,message.id,JSON.stringify(player.gun))
             }
         })
 
@@ -94,8 +110,7 @@ export class GameRoom extends Room<State> {
     onJoin(client: Client, options: any) {
         console.log(client.sessionId, "joined!", options);
         if (options && options.name) {
-            this.state.players.set(client.sessionId, new Player(options.name, client.id, Guns.keys().next().value));
-            console.log(Guns.keys().next().value)
+            this.state.players.set(client.sessionId, new Player(options.name, client.id, idList[0]));
         }
     }
 
