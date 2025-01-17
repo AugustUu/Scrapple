@@ -29,7 +29,7 @@ export class Game extends Scene {
 
 
         this.camera.pos = Vector.Zero
-        this.camera.zoom = 0.8
+        this.camera.zoom = 1
 
        
 
