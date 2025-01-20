@@ -1,5 +1,6 @@
 import { Circle, Color, Component, CoordPlane, Entity, Font, GraphicsComponent, GraphicsGroup, Query, Rectangle, System, SystemType, Text, TextAlign, TransformComponent, vec, Vector, World } from "excalibur";
 import { Networking } from "../../networking/Networking";
+import { lerp } from "../../util";
 
 export class OtherPlayerComponent extends Component {
     public name: string = 'jorbis';
@@ -73,7 +74,6 @@ export class OtherPlayerMoveSystem extends System {
             let state = Networking.client.room!.state.players.get(player.id)
             if (state) {
 
-                const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
 
                 entity.get(TransformComponent).pos.x = lerp(entity.get(TransformComponent).pos.x, state.position.x, elapsedMs / 50)
                 entity.get(TransformComponent).pos.y = lerp(entity.get(TransformComponent).pos.y, state.position.y, elapsedMs / 50)

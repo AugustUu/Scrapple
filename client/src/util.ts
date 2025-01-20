@@ -100,3 +100,7 @@ export class MouseInput { // USELESS CODE!!!!!!!!!!!!!!!!!!!!
         })
     }
 }
+
+export function lerp(x: number, y: number, a: number){
+    return x * (1 - a) + y * a;
+}
