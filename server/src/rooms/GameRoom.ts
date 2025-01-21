@@ -2,7 +2,12 @@ import { Room, Client } from "@colyseus/core";
 //import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 import { randomBytes } from "crypto"
-import { State, Bullet, Player } from "../State"
+import { State, Bullet, Player, GunState } from "../State"
+import { Guns, idList } from "shared/src/game/GunManager/GunManager";
+
+const getRandomNumber = (min: number, max: number) => {
+    return Math.random() * (max - min) + min
+}
 
 
 export class GameRoom extends Room<State> {
@@ -12,7 +17,6 @@ export class GameRoom extends Room<State> {
     onCreate(options: any) {
         this.setState(new State());
         this.setPatchRate(15.625)
-
 
 
         this.onMessage(C2SPacket.Ping, (client, message) => {
@@ -27,7 +31,32 @@ export class GameRoom extends Room<State> {
 
         this.onMessage(C2SPacket.Shoot, (client, message) => {
             let player = this.state.players.get(client.sessionId)
-            this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, message.angle, client.id))
+            let gunInfo = Guns.get(player.gun.gunID)
+            //console.log(JSON.stringify(player.gun))
+
+            if (player.gun.ammo > 0 && (player.gun.lastTimeShot + player.gun.fireDelay) < Date.now() && (player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()) {
+                player.gun.ammo -= 1;
+
+                for (let i = 0; i < player.gun.bulletsPerShot; i++) {
+                    
+                    let angle = message.angle + (getRandomNumber(gunInfo.spread * -1, gunInfo.spread + 1) * (Math.PI / 180))
+                    this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, angle, client.id))
+                    console.log(message.angle)
+                }
+
+                player.gun.lastTimeShot = Date.now()
+
+            }
+        })
+
+        this.onMessage(C2SPacket.Reload, (client, message) => {
+            let player = this.state.players.get(client.sessionId)
+            let gunInfo = Guns.get(player.gun.gunID)
+
+            if ((player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()) {
+                player.gun.lastTimeReloaded = Date.now();
+                player.gun.ammo = gunInfo.magSize
+            }
         })
 
         this.onMessage(C2SPacket.Grapple, (client, message) => {
@@ -45,18 +74,28 @@ export class GameRoom extends Room<State> {
             }
         })
 
+        this.onMessage(C2SPacket.SwapGun, (client, message) => {
+            let player = this.state.players.get(client.sessionId)
+            if(Guns.has(message.id)){
+                player.gun = new GunState(message.id);
+                console.log(client.id,message.id,JSON.stringify(player.gun))
+            }
+        })
+
 
     }
 
     onBeforePatch() {
         this.state.bullets.forEach((bullet) => {
-            bullet.position.x += Math.cos(bullet.angle)
-            bullet.position.y += Math.sin(bullet.angle)
+            let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
+            bullet.position.x += Math.cos(bullet.angle) * gunInfo.bulletSpeedMultiplier
+            bullet.position.y += Math.sin(bullet.angle) * gunInfo.bulletSpeedMultiplier
+
         })
 
         this.state.players.forEach((player) => {
             this.state.bullets.forEach((bullet, key) => {
-                if(bullet.shotById != player.id){
+                if (bullet.shotById != player.id) {
                     if (Math.hypot(player.position.x - bullet.position.x, player.position.y - bullet.position.y) <= (bullet.radius + player.radius)) {
                         player.health -= 10;
                         this.state.bullets.delete(key);
@@ -64,13 +103,14 @@ export class GameRoom extends Room<State> {
                 }
             })
         })
+
     }
 
 
     onJoin(client: Client, options: any) {
         console.log(client.sessionId, "joined!", options);
         if (options && options.name) {
-            this.state.players.set(client.sessionId, new Player(options.name,client.id));
+            this.state.players.set(client.sessionId, new Player(options.name, client.id, idList[0]));
         }
     }
 

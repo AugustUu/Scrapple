@@ -2,7 +2,7 @@ import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, Transfor
 import { engine } from "..";
 import { createOtherPlayerEntity, OtherPlayerComponent, OtherPlayerMoveSystem } from "../game/Entities/OtherPlayer";
 import { LocalPlayer } from "../game/LocalPlayer";
-import { PhysicsSystem, PhysicsSystemDebug } from "../physics/PhysicsSystems";
+import { PhysicsObjectRenderSystem, PhysicsSystem, PhysicsSystemDebug } from "../physics/PhysicsSystems";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import { Ball, ColliderDesc, RigidBodyDesc, RigidBodyType } from "@dimforge/rapier2d-compat";
 import { createTransformComponent, Vector2 } from "../util";
@@ -20,10 +20,9 @@ export class Game extends Scene {
     private playButton: Actor | undefined;
 
 
-
-
     public onInitialize() {
         this.world.systemManager.addSystem(PhysicsSystem);
+        this.world.systemManager.addSystem(PhysicsObjectRenderSystem);
         this.world.systemManager.addSystem(PhysicsSystemDebug);
         this.world.systemManager.addSystem(GrappleLineSystem)
         this.world.systemManager.addSystem(OtherPlayerMoveSystem);
@@ -31,6 +30,7 @@ export class Game extends Scene {
 
 
         this.camera.pos = Vector.Zero
+        this.camera.zoom = 1
 
        
 
@@ -44,10 +44,13 @@ export class Game extends Scene {
 
 
 
-        engine.add(this.createGroundShape(0, 0, new Color(50, 50, 50), 100, 2))
-        engine.add(this.createGroundShape(20, 150, new Color(20, 20, 20), undefined, undefined, 5))
-        engine.add(this.createGroundShape(0, 0, new Color(90, 0, 10), undefined, undefined, undefined, new Vector(-40, 2), new Vector(-20, 2), new Vector(-40, 20)))
+        engine.add(this.createGroundShape(0, 500, new Color(50, 50, 50), 100, 2))
+        
+        engine.add(this.createGroundShape(-600, -300, new Color(20, 20, 20), undefined, undefined, 5))
 
+/*
+        engine.add(this.createGroundShape(-300, -280, new Color(90, 0, 10), undefined, undefined, undefined, new Vector(-20, 0), new Vector(0, 20), new Vector(20, 0)))
+        */
 
         Networking.client.room!.state.players.onAdd((player: any, id: string) => {
             if (Networking.client.clientId != id) {
@@ -111,7 +114,7 @@ export class Game extends Scene {
         let sprite: Graphic
         let floor = new Entity
         if (width != undefined && height != undefined) {
-            let colliderDesc = ColliderDesc.cuboid(width, height).setCollisionGroups(0x00010007)
+            let colliderDesc = ColliderDesc.cuboid(width, height).setCollisionGroups(0x00010007).setFriction(0.5)
             floor
                 .addComponent(createTransformComponent(new Vector(x, y)))
                 .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
@@ -126,7 +129,7 @@ export class Game extends Scene {
 
         }
         if (radius != undefined) {
-            let colliderDesc = ColliderDesc.ball(radius).setCollisionGroups(0x00010007)
+            let colliderDesc = ColliderDesc.ball(radius).setCollisionGroups(0x00010007).setFriction(0.5)
             floor
                 .addComponent(createTransformComponent(new Vector(x, y)))
                 .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
@@ -142,7 +145,7 @@ export class Game extends Scene {
         }
 
         if(vector1 != undefined && vector2 != undefined && vector3 != undefined){
-            let colliderDesc = ColliderDesc.triangle(vector1, vector2, vector3).setCollisionGroups(0x00010007)
+            let colliderDesc = ColliderDesc.triangle(vector1, vector2, vector3).setCollisionGroups(0x00010007).setFriction(0.5)
             floor
                 .addComponent(createTransformComponent(new Vector(x, y)))
                 .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))

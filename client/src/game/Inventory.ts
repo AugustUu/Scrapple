@@ -4,10 +4,12 @@ import { Upgrades } from "shared/src/game//UpgradeManager/UpgradeManager"
 import { Networking } from "../networking/Networking"
 import { C2SPacket } from "shared/src/networking/Packet"
 import { Random } from "excalibur"
+import { Guns } from "shared/src/game/GunManager/GunManager"
 
 export class Inventory {
     static gun: Gun
     static upgrades: Map<string, Upgrade>
+    static usableUpgrades: Map<string, Upgrade>
     static random: Random;
     static reloading: boolean;
 
@@ -16,7 +18,40 @@ export class Inventory {
         this.random = new Random;
     }
 
+    static updateUsableUpgrades(){
+        this.usableUpgrades = new Map(this.upgrades)
+        for(let upgrade of this.upgrades){
+            if(upgrade[1].level >= upgrade[1].max){
+                this.usableUpgrades.delete(upgrade[0])
+                continue
+            }
+            if(upgrade[1].upgradeDep == undefined){
+                this.usableUpgrades.delete(upgrade[0])
+                continue
+            }
+            else{
+                let dep = upgrade[1].upgradeDep
+                if(Inventory.upgrades.get(dep.upgrade).level < dep.level){
+                    this.usableUpgrades.delete(upgrade[0])
+                    continue
+                }
+            }
+            if(upgrade[1].gunDep == undefined){
+                this.usableUpgrades.delete(upgrade[0])
+                continue
+            }
+            else{
+                let dep = upgrade[1].gunDep
+                if(Inventory.GetGun().name != dep){
+                    this.usableUpgrades.delete(upgrade[0])
+                    continue
+                }
+            }
+        }
+    }
+
     static Shoot(angle: number) {
+        /*
         let gun = this.gun;
         if(!this.reloading){
                 if (gun.shotsSinceLastReload < gun.magSize){
@@ -34,10 +69,12 @@ export class Inventory {
             else{
                 this.Reload()
             }
-        }
+        }*/
+        Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI })
     }
 
     static Reload() {
+        /*
         if (!this.reloading && this.gun.shotsSinceLastReload > 0) {
             this.reloading = true;
             console.log("reloading...")
@@ -54,25 +91,27 @@ export class Inventory {
         }
         else {
             return
-        }
-
+        }*/
+        Networking.client.room?.send(C2SPacket.Reload, {})
     }
 
     static GetGun() {
-        return Inventory.gun
+        let id = Networking.client.room.state.players.get(Networking.client.clientId).gun.gunID
+        return Guns.get(id)
     }
 
     static GetUpgrade(upgrade: string) {
         return Inventory.upgrades.get(upgrade)
     }
 
-    static ChangeGun(newGun: Gun) {
-        Inventory.gun = newGun
+    static ChangeGun(gunID: string) {
+        Networking.client.room?.send(C2SPacket.SwapGun, { id: gunID })
+        //Inventory.gun = newGun
     }
 
     static LevelUpgrade(upgradeName: string) {
         let upgrade = Inventory.upgrades.get(upgradeName)
-        if(upgrade.level < upgrade.max){
+        if (upgrade.level < upgrade.max) {
             upgrade.level += 1
             console.log("upgraded " + upgradeName + " to " + (upgrade.level))
         }

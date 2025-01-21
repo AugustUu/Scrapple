@@ -60,6 +60,10 @@ export class MathUtils {
     static rapierToExc(pos: {x: number, y: number}){
         return new Vector2({x:pos.x * 10, y:pos.y * -10})
     }
+
+    static clamp(num: number, min: number, max: number){
+        return Math.max(Math.min(num, max), min)
+    }
 }
 
 export function generateRevoluteJoint(target: RigidBody | null, rb: RigidBody, hitPoint: {x:number, y:number}) {
@@ -95,4 +99,8 @@ export class MouseInput { // USELESS CODE!!!!!!!!!!!!!!!!!!!!
             }
         })
     }
+}
+
+export function lerp(x: number, y: number, a: number){
+    return x * (1 - a) + y * a;
 }

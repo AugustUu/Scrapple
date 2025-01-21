@@ -1,5 +1,6 @@
 import { Circle, Color, Component, CoordPlane, Entity, GraphicsComponent, Query, System, SystemType, TransformComponent, Vector, World } from "excalibur";
 import { Networking } from "../../networking/Networking";
+import { lerp } from "../../util";
 
 
 
@@ -57,7 +58,6 @@ export class BulletMoveSystem extends System {
 
             let state = Networking.client.room!.state.bullets.get(bullet.id)
             if (state) {
-                const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
 
 
                 //entity.get(TransformComponent).pos.x -= Math.cos(bullet.angle)

@@ -4,6 +4,8 @@ export var C2SPacket = {
     Spawn: "spawn",
     Move: "move",
     Shoot: "shoot",
+    Reload: "reload",
+    SwapGun: "swapgun",
     Grapple: "grapple",
     EndGrapple: "endgrapple",
 }

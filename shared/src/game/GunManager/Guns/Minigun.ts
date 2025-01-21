@@ -2,9 +2,9 @@ import { Gun } from "../Gun";
 import { registerGun } from "../GunManager";
 
 @registerGun
-export class Pistol extends Gun {
+export class Minigun extends Gun {
 
     constructor(){
-        super("pistol", 20, 0.3, 1, 6, 0, 1, false, 10)
+        super("minigun", 1, 0.1, 3, 80, 1, 1, true, 30)
     }
 }
