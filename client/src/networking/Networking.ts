@@ -5,7 +5,7 @@ import * as NeworkEvents from "./NetworkEvents";
 
 export class Networking {
 
-    private static colyClient: Client = new Client("ws://localhost:2567/");
+    private static colyClient: Client = new Client("ws://10.176.33.243:2567/");
     static client: NetworkClient = new NetworkClient();
     static events = new EventEmitter<NeworkEvents.Events>();
 
