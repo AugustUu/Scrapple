@@ -50,14 +50,12 @@ export class GameRoom extends Room<State> {
         })
 
         this.onMessage(C2SPacket.Reload, (client, message) => {
-            console.log("reloading...")
             let player = this.state.players.get(client.sessionId)
             let gunInfo = Guns.get(player.gun.gunID)
 
             if ((player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()) {
                 player.gun.lastTimeReloaded = Date.now();
                 player.gun.ammo = gunInfo.magSize
-                console.log("reloaded")
             }
         })
 
