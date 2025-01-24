@@ -46,9 +46,9 @@ export class Game extends Scene {
 
         engine.add(this.createGroundShape(0, 500, new Color(50, 50, 50), 40, 10))
 
-        engine.add(this.createGroundShape(700, 100, new Color(100, 50, 50), 20, 5))
+        engine.add(this.createGroundShape(700, 100, new Color(0, 100, 0), 20, 5))
 
-        engine.add(this.createGroundShape(-700, 100, new Color(80, 50, 50), 20, 5))
+        engine.add(this.createGroundShape(-700, 100, new Color(0, 100, 0), 20, 5))
         
         engine.add(this.createGroundShape(-200, -300, new Color(20, 20, 20), undefined, undefined, 5))
         engine.add(this.createGroundShape(200, -300, new Color(20, 20, 20), undefined, undefined, 5))
