@@ -226,6 +226,8 @@ export class LocalPlayer extends Actor {
         }
         if (engine.input.keyboard.wasPressed(Keys.Key5)) {
             Inventory.ChangeGun(idList[4])
+        }        if (engine.input.keyboard.wasPressed(Keys.Key6)) {
+            Inventory.ChangeGun(idList[5])
         }
 
         Networking.client.room?.send(C2SPacket.Move, { x: this.pos.x, y: this.pos.y })
