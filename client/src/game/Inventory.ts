@@ -19,28 +19,20 @@ export class Inventory {
     }
 
     static updateUsableUpgrades(){
-        this.usableUpgrades = new Map(this.upgrades)
+        Inventory.usableUpgrades = new Map(this.upgrades)
         for(let upgrade of this.upgrades){
             if(upgrade[1].level >= upgrade[1].max){
                 this.usableUpgrades.delete(upgrade[0])
                 continue
             }
-            if(upgrade[1].upgradeDep == undefined){
-                this.usableUpgrades.delete(upgrade[0])
-                continue
-            }
-            else{
+            if(upgrade[1].upgradeDep != undefined){
                 let dep = upgrade[1].upgradeDep
                 if(Inventory.upgrades.get(dep.upgrade).level < dep.level){
                     this.usableUpgrades.delete(upgrade[0])
                     continue
                 }
             }
-            if(upgrade[1].gunDep == undefined){
-                this.usableUpgrades.delete(upgrade[0])
-                continue
-            }
-            else{
+            if(upgrade[1].gunDep != undefined){
                 let dep = upgrade[1].gunDep
                 if(Inventory.GetGun().name != dep){
                     this.usableUpgrades.delete(upgrade[0])

@@ -127,8 +127,6 @@ export class LocalPlayer extends Actor {
             if(linvel.magnitude() > this.maxGrappleSpeed){
                 rigidBody.setLinvel(linvel.scale((this.maxGrappleSpeed / 2 / linvel.magnitude()) + 0.5), true) // half max speed damping
             }
-
-            console.log(new Vector2(rigidBody.linvel()).magnitude())
         }
         
         
