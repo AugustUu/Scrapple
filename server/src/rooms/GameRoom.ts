@@ -90,7 +90,7 @@ export class GameRoom extends Room<State> {
 
     onBeforePatch() {
         this.state.bullets.forEach((bullet) => {
-            let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
+            var gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
             bullet.position.x += Math.cos(bullet.angle) * bullet.speed
             bullet.position.y += Math.sin(bullet.angle) * bullet.speed
 
@@ -100,8 +100,9 @@ export class GameRoom extends Room<State> {
             this.state.bullets.forEach((bullet, key) => {
                 if (bullet.shotById != player.id) {
                     if (Math.hypot(player.position.x - bullet.position.x, player.position.y - bullet.position.y) <= (bullet.radius + player.radius)) {
-                        player.health -= 10;
+                        player.health -= Guns.get(this.state.players.get(bullet.shotById).gun.gunID).damage
                         this.state.bullets.delete(key);
+                        console.log("player health is " + player.health)
                     }
                 }
             })
