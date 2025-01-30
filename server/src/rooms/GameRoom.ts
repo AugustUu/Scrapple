@@ -41,7 +41,7 @@ export class GameRoom extends Room<State> {
                     for (let i = 0; i < player.gun.bulletsPerShot; i++) {
                         
                         let angle = message.angle + (getRandomNumber(gunInfo.spread * -1, gunInfo.spread + 1) * (Math.PI / 180))
-                        this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, angle, client.id))
+                        this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, angle, client.id, gunInfo.bulletSpeedMultiplier))
                         console.log(message.angle)
                     }
 
@@ -91,8 +91,8 @@ export class GameRoom extends Room<State> {
     onBeforePatch() {
         this.state.bullets.forEach((bullet) => {
             let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
-            bullet.position.x += Math.cos(bullet.angle) * gunInfo.bulletSpeedMultiplier
-            bullet.position.y += Math.sin(bullet.angle) * gunInfo.bulletSpeedMultiplier
+            bullet.position.x += Math.cos(bullet.angle) * bullet.speed
+            bullet.position.y += Math.sin(bullet.angle) * bullet.speed
 
         })
 
