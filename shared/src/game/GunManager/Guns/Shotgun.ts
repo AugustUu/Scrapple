@@ -5,6 +5,6 @@ import { registerGun } from "../GunManager";
 export class Shotgun extends Gun {
 
     constructor(){
-        super("shotgun", 20, 0.8, 3, 6, 15, 5, false, 5)
+        super("shotgun", 20, 1, 2, 6, 12, 5, false, 7)
     }
 }
