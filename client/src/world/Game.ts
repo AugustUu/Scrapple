@@ -10,6 +10,7 @@ import { Networking } from "../networking/Networking";
 import { BulletComponent, BulletMoveSystem, createBullet } from "../game/Entities/Bullet";
 import { CreateGrappleLine, GrappleLineSystem } from "../game/Entities/GrappleLine";
 import { Bullet } from "server/src/State";
+import { debug } from "console";
 
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
 export var BulletEntities: Map<String, Entity<BulletComponent>> = new Map();
@@ -18,7 +19,7 @@ export var LocalPlayerInstance: LocalPlayer;
 export class Game extends Scene {
 
     private playButton: Actor | undefined;
-
+    private hudElement!: HTMLElement;
 
     public onInitialize() {
         this.world.systemManager.addSystem(PhysicsSystem);
@@ -32,15 +33,14 @@ export class Game extends Scene {
         this.camera.pos = Vector.Zero
         this.camera.zoom = 1
 
-       
+        this.hudElement = document.getElementById('hud')!;
 
 
     }
 
-    onActivate(context: SceneActivationContext<unknown>): void {
+    public onActivate(context: SceneActivationContext<unknown>): void {
 
-        LocalPlayerInstance = new LocalPlayer(0, 300);
-        this.add(LocalPlayerInstance)
+        this.hudElement.style.display = "";
 
 
 
@@ -79,6 +79,9 @@ export class Game extends Scene {
                     }
                 })
 
+            }else{
+                LocalPlayerInstance = new LocalPlayer(0, 300); // dumb fix maybe fix at some point
+                this.add(LocalPlayerInstance)
             }
         })
 
@@ -113,6 +116,10 @@ export class Game extends Scene {
         //this.add(createOtherPlayerEntity("test", vec(0, -20)))
 
 
+    }
+
+    public onDeactivate(context: SceneActivationContext): void {
+        this.hudElement.style.display = "none";
     }
 
     public createGroundShape(x: number, y: number, color: Color, width?: number, height?: number, radius?: number, vector1?: Vector, vector2?: Vector, vector3?: Vector): Entity {

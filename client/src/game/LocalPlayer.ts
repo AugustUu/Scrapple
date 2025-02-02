@@ -28,10 +28,14 @@ export class LocalPlayer extends Actor {
     lastTimeGrounded: number
     maxGrappleSpeed: number
 
+    inventory: Inventory
+
+
     constructor(x: number, y: number) {
         super({name:"localplayer", x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
-        this.jumpHeight = 60 + (Inventory.GetUpgrade("Jump").level * 20)
-        this.speed = 8 + Inventory.GetUpgrade("Speed").level
+        this.inventory = new Inventory()
+        this.jumpHeight = 60 + (this.inventory.GetUpgrade("Jump").level * 20)
+        this.speed = 8 + this.inventory.GetUpgrade("Speed").level
         this.maxGrappleSpeed = 175
         this.radius = 20
         this.grounded = false
@@ -48,7 +52,7 @@ export class LocalPlayer extends Actor {
         this.shooting = false
         this.grappling = false
 
-        Inventory.gun = new Pistol()
+        //this.inventory.gun = new Pistol()
 
         
 
@@ -194,17 +198,17 @@ export class LocalPlayer extends Actor {
 
 
         if (engine.input.keyboard.wasPressed(Keys.R)) {
-            Inventory.Reload()
+            this.inventory.Reload()
         }
 
 
         if (MouseInput.mouseButtons.left) {
-            if (Inventory.GetGun().automatic) {
+            if (this.inventory.GetGun().automatic) {
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                Inventory.Shoot(angle)
+                this.inventory.Shoot(angle)
             } else if (this.shooting == false) {
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                Inventory.Shoot(angle)
+                this.inventory.Shoot(angle)
                 this.shooting = true;
             }
         }else{
@@ -213,21 +217,21 @@ export class LocalPlayer extends Actor {
 
         //switch gun hotkeys!!
         if (engine.input.keyboard.wasPressed(Keys.Key1)) {
-            Inventory.ChangeGun(idList[0]) 
+            this.inventory.ChangeGun(idList[0]) 
         }
         if (engine.input.keyboard.wasPressed(Keys.Key2)) {
-            Inventory.ChangeGun(idList[1])
+            this.inventory.ChangeGun(idList[1])
         }
         if (engine.input.keyboard.wasPressed(Keys.Key3)) {
-            Inventory.ChangeGun(idList[2])
+            this.inventory.ChangeGun(idList[2])
         }
         if (engine.input.keyboard.wasPressed(Keys.Key4)) {
-            Inventory.ChangeGun(idList[3])
+            this.inventory.ChangeGun(idList[3])
         }
         if (engine.input.keyboard.wasPressed(Keys.Key5)) {
-            Inventory.ChangeGun(idList[4])
+            this.inventory.ChangeGun(idList[4])
         }        if (engine.input.keyboard.wasPressed(Keys.Key6)) {
-            Inventory.ChangeGun(idList[5])
+            this.inventory.ChangeGun(idList[5])
         }
 
         Networking.client.room?.send(C2SPacket.Move, { x: this.pos.x, y: this.pos.y })

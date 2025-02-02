@@ -2,15 +2,16 @@
 <html lang="en">
 
 <style>
-body { 
-    margin: 0; overflow: hidden; 
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
+    body {
+        margin: 0;
+        overflow: hidden;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
 </style>
 
 <head>
@@ -24,6 +25,18 @@ body {
             <div style="left: 50%;top: 50%;position: fixed;">
                 <input id="serverInput" type="text">
                 <button id="joinButton">Join or create</button>
+            </div>
+        </div>
+
+        <div id="hud" style="position: absolute; z-index: 1999; display: none;">
+            <div id="gunInfo"
+                style="left: 90%; top: 90%; position: fixed; color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-size: 16px; text-align: right;">
+                <div id="weaponDisplay" style="font-weight: bold;">
+                    Weapon: M4A1
+                </div>
+                <div id="ammoCounter">
+                    Ammo: 30/120
+                </div>
             </div>
         </div>
 

@@ -1,5 +1,5 @@
 import { Color, Debug, FrameStats, Query, System, SystemType, TransformComponent, Vector, World } from "excalibur";
-import RAPIER, { RigidBody, RigidBodyDesc, Vector2 } from '@dimforge/rapier2d-compat';
+import RAPIER, { IntegrationParameters, RigidBody, RigidBodyDesc, Vector2 } from '@dimforge/rapier2d-compat';
 import { ColliderComponent, RigidBodyComponent } from "./PhysicsComponents";
 import { Network } from "inspector/promises";
 import { Networking } from "../networking/Networking";
@@ -21,7 +21,9 @@ export class PhysicsSystem extends System {
         super();
         // this.query = world.query([RigidBodyComponent, ColliderComponent, TransformComponent]);
         PhysicsSystem.physicsWorld = new RAPIER.World(PhysicsSystem.gravity);
-        PhysicsSystem.physicsWorld.lengthUnit = 10;
+        PhysicsSystem.physicsWorld.integrationParameters.lengthUnit = 10;
+        PhysicsSystem.physicsWorld.integrationParameters.maxCcdSubsteps=4
+        PhysicsSystem.physicsWorld.timestep = 1/120
 
         this.rigidBodyQuery = world.query([RigidBodyComponent, TransformComponent]);
 
@@ -30,8 +32,6 @@ export class PhysicsSystem extends System {
             let description = new RigidBodyDesc(rigidBody.rigidBodyType);
             description.setCcdEnabled(true)
             let pos = entity.get(TransformComponent).pos
-            console.log("??", entity, pos)
-
 
             description.setTranslation(pos.x / 10, -(pos.y / 10))
             rigidBody.body = PhysicsSystem.physicsWorld.createRigidBody(description);
