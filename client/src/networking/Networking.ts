@@ -19,12 +19,22 @@ export class Networking {
         });
     }
 
+    static quickPlay(playerName: string) {
+        fetch("http://localhost:2567/quickplay",{ mode: 'cors',}).then((resp) => {
+            if(resp.ok){
+                resp.json().then((server) => {
+                    Networking.connect(server.id,playerName)
+                })
+            }
+        })
+    }
+
     static disconect() {
         Networking.client.room?.leave()
     }
 
     static create(playerName: string) {
-        Networking.colyClient.create("GameRoom",{ name: playerName }).then((room) => {
+        Networking.colyClient.create("GameRoom", { name: playerName }).then((room) => {
             this.events.emit("connected", new NeworkEvents.ServerConnected(room));
             this.client.onJoin(room)
         }).catch(e => {

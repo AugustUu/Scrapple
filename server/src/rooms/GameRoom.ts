@@ -98,10 +98,12 @@ export class GameRoom extends Room<State> {
     }
 
     onBeforePatch() {
-        this.state.bullets.forEach((bullet, bkey) => {
-            var gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
-            bullet.position.x += Math.cos(bullet.angle) * bullet.speed
-            bullet.position.y += Math.sin(bullet.angle) * bullet.speed
+        this.state.bullets.forEach((bullet,bkey) => {
+            if(this.state.players.has(bullet.shotById)){
+                let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
+                bullet.position.x += Math.cos(bullet.angle) * gunInfo.bulletSpeedMultiplier
+                bullet.position.y += Math.sin(bullet.angle) * gunInfo.bulletSpeedMultiplier
+            }
 
             this.state.colliders.forEach((collider, key) => {
                 if (collider instanceof RectangleCollider) {
