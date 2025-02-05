@@ -2,7 +2,7 @@ import { Room, Client } from "@colyseus/core";
 //import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 import { randomBytes } from "crypto"
-import { State, Bullet, Player, GunState } from "../State"
+import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider } from "../State"
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 
 const getRandomNumber = (min: number, max: number) => {
@@ -18,6 +18,11 @@ export class GameRoom extends Room<State> {
         this.setState(new State());
         this.setPatchRate(15.625)
 
+        this.state.colliders.push(new RectangleCollider(0, 500, 50, 5))
+        this.state.colliders.push(new RectangleCollider(700, 100, 20, 5))
+        this.state.colliders.push(new RectangleCollider(-700, 100, 20, 5))
+        this.state.colliders.push(new CircleCollider(-200, -300, 5))
+        this.state.colliders.push(new CircleCollider(200, -300, 5))
 
         this.onMessage(C2SPacket.Ping, (client, message) => {
             client.send(S2CPackets.Pong, {})
@@ -35,19 +40,18 @@ export class GameRoom extends Room<State> {
             //console.log(JSON.stringify(player.gun))
 
             if ((player.gun.lastTimeShot + player.gun.fireDelay) < Date.now() && (player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()) {
-                if(player.gun.ammo > 0){
+                if (player.gun.ammo > 0) {
                     player.gun.ammo -= 1;
 
                     for (let i = 0; i < player.gun.bulletsPerShot; i++) {
-                        
+
                         let angle = message.angle + (getRandomNumber(gunInfo.spread * -1, gunInfo.spread + 1) * (Math.PI / 180))
-                        this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, angle, client.id))
-                        console.log(message.angle)
+                        this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, angle, client.id, gunInfo.bulletSpeedMultiplier * getRandomNumber(0.9, 1.1)))
                     }
 
                     player.gun.lastTimeShot = Date.now()
                 }
-                else{
+                else {
                     if ((player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()) {
                         player.gun.lastTimeReloaded = Date.now();
                         player.gun.ammo = gunInfo.magSize
@@ -61,8 +65,8 @@ export class GameRoom extends Room<State> {
             let player = this.state.players.get(client.sessionId)
             let gunInfo = Guns.get(player.gun.gunID)
 
-            if((player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()){ // makes shure you arent reloading
-                player.gun.lastTimeReloaded = Date.now(); // delay b4 you can shoot again
+            if ((player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()) {
+                player.gun.lastTimeReloaded = Date.now();
                 player.gun.ammo = gunInfo.magSize
             }
         })
@@ -84,9 +88,9 @@ export class GameRoom extends Room<State> {
 
         this.onMessage(C2SPacket.SwapGun, (client, message) => {
             let player = this.state.players.get(client.sessionId)
-            if(Guns.has(message.id)){
+            if (Guns.has(message.id)) {
                 player.gun = new GunState(message.id);
-                console.log(client.id,message.id,JSON.stringify(player.gun))
+                console.log(client.id, message.id, JSON.stringify(player.gun))
             }
         })
 
@@ -94,21 +98,35 @@ export class GameRoom extends Room<State> {
     }
 
     onBeforePatch() {
-        this.state.bullets.forEach((bullet) => {
+        this.state.bullets.forEach((bullet,bkey) => {
             if(this.state.players.has(bullet.shotById)){
                 let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
                 bullet.position.x += Math.cos(bullet.angle) * gunInfo.bulletSpeedMultiplier
                 bullet.position.y += Math.sin(bullet.angle) * gunInfo.bulletSpeedMultiplier
             }
 
+            this.state.colliders.forEach((collider, key) => {
+                if(collider instanceof RectangleCollider){
+                    // todo
+                }
+
+                if(collider instanceof CircleCollider){
+                    if(Math.hypot(collider.position.x - bullet.position.x, collider.position.y - bullet.position.y) <= (bullet.radius + collider.radius*10)){
+                        //console.log("HIT CIRCLE")
+                        this.state.bullets.delete(bkey);
+                    }
+                }
+            })
         })
+
 
         this.state.players.forEach((player) => {
             this.state.bullets.forEach((bullet, key) => {
                 if (bullet.shotById != player.id) {
                     if (Math.hypot(player.position.x - bullet.position.x, player.position.y - bullet.position.y) <= (bullet.radius + player.radius)) {
-                        player.health -= 10;
+                        player.health -= Guns.get(this.state.players.get(bullet.shotById).gun.gunID).damage
                         this.state.bullets.delete(key);
+                        console.log("player health is " + player.health)
                     }
                 }
             })

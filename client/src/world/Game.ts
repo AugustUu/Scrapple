@@ -1,15 +1,13 @@
-import { Actor, Canvas, Color, Debug, Entity, GraphicsComponent, Scene, TransformComponent, Vector, Rectangle, Graphic, vec, Circle, Polygon, SceneActivationContext } from "excalibur";
+import { Actor, Color, Entity, Scene, Vector, vec, SceneActivationContext } from "excalibur";
 import { engine } from "..";
 import { createOtherPlayerEntity, OtherPlayerComponent, OtherPlayerMoveSystem } from "../game/Entities/OtherPlayer";
 import { LocalPlayer } from "../game/LocalPlayer";
 import { PhysicsObjectRenderSystem, PhysicsSystem, PhysicsSystemDebug } from "../physics/PhysicsSystems";
-import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
-import { Ball, ColliderDesc, RigidBodyDesc, RigidBodyType } from "@dimforge/rapier2d-compat";
-import { createTransformComponent, Vector2 } from "../util";
+import { createGroundShape } from "../util";
 import { Networking } from "../networking/Networking";
 import { BulletComponent, BulletMoveSystem, createBullet } from "../game/Entities/Bullet";
-import { CreateGrappleLine, GrappleLineSystem } from "../game/Entities/GrappleLine";
-import { Bullet } from "server/src/State";
+import { GrappleLineSystem } from "../game/Entities/GrappleLine";
+import { Bullet, CircleCollider, Collider, Player, RectangleCollider } from "server/src/State";
 
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
 export var BulletEntities: Map<String, Entity<BulletComponent>> = new Map();
@@ -18,7 +16,7 @@ export var LocalPlayerInstance: LocalPlayer;
 export class Game extends Scene {
 
     private playButton: Actor | undefined;
-
+    private hudElement!: HTMLElement;
 
     public onInitialize() {
         this.world.systemManager.addSystem(PhysicsSystem);
@@ -32,53 +30,45 @@ export class Game extends Scene {
         this.camera.pos = Vector.Zero
         this.camera.zoom = 1
 
-       
+        this.hudElement = document.getElementById('hud')!;
 
 
     }
 
-    onActivate(context: SceneActivationContext<unknown>): void {
+    public onActivate(context: SceneActivationContext<unknown>): void {
 
-        LocalPlayerInstance = new LocalPlayer(0, 300);
-        this.add(LocalPlayerInstance)
-
+        this.hudElement.style.display = "";
 
 
-        engine.add(this.createGroundShape(0, 500, new Color(50, 50, 50), 40, 10))
+        /*
+        engine.add(createGroundShape(0, 500, new Color(50, 50, 50), { type: 'Rectangle', height: 5, width: 50 }))
 
-        engine.add(this.createGroundShape(700, 100, new Color(0, 100, 0), 20, 5))
+        engine.add(createGroundShape(700, 100, new Color(0, 100, 0), { type: 'Rectangle', height: 5, width: 20 }))
+        engine.add(createGroundShape(-700, 100, new Color(0, 100, 0), { type: 'Rectangle', height: 5, width: 20 }))
+        engine.add(createGroundShape(-200, -300, new Color(20, 20, 20), { type: 'Circle', radius: 5 }))
+        engine.add(createGroundShape(200, -300, new Color(20, 20, 20), { type: 'Circle', radius: 5 }))
 
-        engine.add(this.createGroundShape(-700, 100, new Color(0, 100, 0), 20, 5))
-        
-        engine.add(this.createGroundShape(-200, -300, new Color(20, 20, 20), undefined, undefined, 5))
-        engine.add(this.createGroundShape(200, -300, new Color(20, 20, 20), undefined, undefined, 5))
-
-/*
-        engine.add(this.createGroundShape(-300, -280, new Color(90, 0, 10), undefined, undefined, undefined, new Vector(-20, 0), new Vector(0, 20), new Vector(20, 0)))
+        engine.add(createGroundShape(0, 300, new Color(20, 30, 20), { type: 'Triangle', point1: new Vector(0, 0), point2: new Vector(10, -10), point3: new Vector(-10, -10) }))
         */
 
-        Networking.client.room!.state.players.onAdd((player: any, id: string) => {
-            if (Networking.client.clientId != id) {
-                let ent = createOtherPlayerEntity(player.name, id, new Vector(0, -60));
+        Networking.client.room!.state.colliders.onAdd((collider: any, key: number) => {
+            if (collider.type == "Circle") {
+                engine.add(createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Circle', radius: collider.radius }))
+            }
+            if (collider.type == "Rectangle") {
+                engine.add(createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Rectangle',  width: collider.width , height: collider.height }))
+            }
+        })
+
+
+        Networking.client.room!.state.players.onAdd((playerState: Player, id: string) => {
+            if (Networking.client.clientId == id) {
+                LocalPlayerInstance = new LocalPlayer(0, 300); // add local player
+                this.add(LocalPlayerInstance)
+            } else {
+                let ent = createOtherPlayerEntity(playerState, id);
                 PlayerEntities.set(id, ent)
                 this.add(ent)
-
-
-
-                player.listen("grappling", (value: boolean, previousValue: boolean) => {
-                    let me = PlayerEntities.get(id)!;
-                    let playerData = me.get(OtherPlayerComponent);
-
-                    if (value) {
-                        let grapple = CreateGrappleLine(me, Vector2.new(player.grappleX, player.grappleY))
-                        this.add(grapple);
-                        playerData.grappleLine = grapple;
-                    } else {
-                        playerData.grappleLine?.kill()
-
-                    }
-                })
-
             }
         })
 
@@ -115,60 +105,10 @@ export class Game extends Scene {
 
     }
 
-    public createGroundShape(x: number, y: number, color: Color, width?: number, height?: number, radius?: number, vector1?: Vector, vector2?: Vector, vector3?: Vector): Entity {
-        let sprite: Graphic
-        let floor = new Entity
-        if (width != undefined && height != undefined) {
-            let colliderDesc = ColliderDesc.cuboid(width, height).setCollisionGroups(0x00010007).setFriction(0.5)
-            floor
-                .addComponent(createTransformComponent(new Vector(x, y)))
-                .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
-                .addComponent(new ColliderComponent(colliderDesc))
-
-            sprite = new Rectangle({ width: width * 20, height: height * 20, color: color })
-
-            let graphics = new GraphicsComponent();
-            graphics.add(sprite);
-
-            floor.addComponent(graphics)
-
-        }
-        if (radius != undefined) {
-            let colliderDesc = ColliderDesc.ball(radius).setCollisionGroups(0x00010007).setFriction(0.5)
-            floor
-                .addComponent(createTransformComponent(new Vector(x, y)))
-                .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
-                .addComponent(new ColliderComponent(colliderDesc))
-    
-            sprite = new Circle({ radius: radius * 10, color: color })
-
-            let graphics = new GraphicsComponent();
-            graphics.add(sprite);
-    
-            floor.addComponent(graphics)
-
-        }
-
-        if(vector1 != undefined && vector2 != undefined && vector3 != undefined){
-            let colliderDesc = ColliderDesc.triangle(vector1, vector2, vector3).setCollisionGroups(0x00010007).setFriction(0.5)
-            floor
-                .addComponent(createTransformComponent(new Vector(x, y)))
-                .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
-                .addComponent(new ColliderComponent(colliderDesc))
-    
-            //sprite = new Polygon({ points: vector1, color: color })
-
-            let graphics = new GraphicsComponent();
-            graphics.add(sprite);
-
-            floor.addComponent(graphics)
-
-        }
-
-        return floor
-
-        
-
+    public onDeactivate(context: SceneActivationContext): void {
+        this.hudElement.style.display = "none";
     }
+
+
 
 }

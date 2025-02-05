@@ -9,7 +9,7 @@ import { Inventory } from './game/Inventory';
 
 export const engine = new Engine({
     backgroundColor: Color.Gray,
-    fixedUpdateFps: 60,
+    fixedUpdateFps: 120,
     width: 1920,
     height: 1080,
     displayMode: DisplayMode.FitScreenAndFill,
@@ -36,7 +36,6 @@ async function init() {
     engine.goToScene("mainMenu");
     
     MouseInput.init();
-    Inventory.init()
         
 }
 

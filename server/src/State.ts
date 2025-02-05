@@ -1,4 +1,4 @@
-import { Schema, MapSchema, type } from "@colyseus/schema";
+import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 import { Guns } from "shared/src/game/GunManager/GunManager";
 
 
@@ -18,11 +18,11 @@ export class GunState extends Schema {
 
     @type("number") ammo: number;
     @type("number") lastTimeReloaded: number;
-    @type("number") reloadDelay: number; 
+    @type("number") reloadDelay: number;
     @type("number") lastTimeShot: number;
-    @type("number") fireDelay: number; 
+    @type("number") fireDelay: number;
     @type("number") bulletsPerShot: number;
-    
+
 
 
     constructor(gunID: string) {
@@ -30,7 +30,7 @@ export class GunState extends Schema {
 
         this.gunID = gunID
         let gunInfo = Guns.get(gunID)
-        
+
         this.ammo = gunInfo.magSize
         this.lastTimeReloaded = 0;
         this.lastTimeShot = 0;
@@ -68,16 +68,49 @@ export class Bullet extends Schema {
     @type("number") angle: number;
     @type("number") radius: number = 4;
     @type("string") shotById: string;
+    @type("number") speed: number;
 
-    constructor(x: number, y: number, angle: number, shotById: string) {
+    constructor(x: number, y: number, angle: number, shotById: string, speed: number) {
         super()
         this.position = new Position(x, y)
         this.angle = angle;
         this.shotById = shotById;
+        this.speed = speed;
+    }
+}
+
+export class Collider extends Schema {
+    @type(Position) position: Position;
+    @type("string") type: string = "none";
+
+    constructor(x: number, y: number, type: string) {
+        super()
+        this.type = type
+        this.position = new Position(x, y)
+    }
+}
+
+export class CircleCollider extends Collider {
+    @type("number") radius: number;
+
+    constructor(x: number, y: number, radius: number) {
+        super(x, y, "Circle")
+        this.radius = radius
+    }
+}
+export class RectangleCollider extends Collider {
+    @type("number") width: number;
+    @type("number") height: number;
+
+    constructor(x: number, y: number, width: number, height: number) {
+        super(x, y, "Rectangle")
+        this.width = width
+        this.height = height
     }
 }
 
 export class State extends Schema {
     @type({ map: Player }) players = new MapSchema<Player>();
     @type({ map: Bullet }) bullets = new MapSchema<Bullet>();
+    @type({ array: Collider }) colliders = new ArraySchema<Collider>();
 }
