@@ -21,7 +21,7 @@ export class Game extends Scene {
     public onInitialize() {
         this.world.systemManager.addSystem(PhysicsSystem);
         this.world.systemManager.addSystem(PhysicsObjectRenderSystem);
-        this.world.systemManager.addSystem(PhysicsSystemDebug);
+        //this.world.systemManager.addSystem(PhysicsSystemDebug);
         this.world.systemManager.addSystem(GrappleLineSystem)
         this.world.systemManager.addSystem(OtherPlayerMoveSystem);
         this.world.systemManager.addSystem(BulletMoveSystem);
@@ -56,7 +56,7 @@ export class Game extends Scene {
                 engine.add(createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Circle', radius: collider.radius }))
             }
             if (collider.type == "Rectangle") {
-                engine.add(createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Rectangle',  width: collider.width , height: collider.height }))
+                engine.add(createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Rectangle',  halfWidth: collider.width , halfHeight: collider.height }))
             }
         })
 
@@ -77,7 +77,7 @@ export class Game extends Scene {
         })
 
         Networking.client.room!.state.bullets.onAdd((bullet: Bullet, id: string) => {
-            let bulletEntity = createBullet(bullet.angle, vec(bullet.position.x, bullet.position.y), id, bullet.shotById)
+            let bulletEntity = createBullet(bullet, id)
             BulletEntities.set(id, bulletEntity)
             this.add(bulletEntity)
         })
