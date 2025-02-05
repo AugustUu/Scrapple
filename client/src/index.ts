@@ -5,6 +5,7 @@ import { MainMenu } from './ui/MainMenu';
 import RAPIER from '@dimforge/rapier2d-compat';
 import { MouseInput } from './util';
 import { Inventory } from './game/Inventory';
+import { StartScreen } from './world/StartScreen';
 
 
 export const engine = new Engine({
@@ -24,6 +25,7 @@ export const engine = new Engine({
     scenes: {
         mainMenu: MainMenu,
         game: Game,
+        startscreen: StartScreen,
     }
 });
 
