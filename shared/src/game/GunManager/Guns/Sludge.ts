@@ -5,6 +5,6 @@ import { registerGun } from "../GunManager";
 export class Sludge extends Gun {
 
     constructor(){
-        super("sludge", 3, 0.05, 3, 8, 20, 4, true, 30)
+        super("sludge", 3, 0.05, 3, 1, 30, 30, true, 30, 4)
     }
 }

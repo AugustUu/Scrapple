@@ -109,8 +109,13 @@ export class RectangleCollider extends Collider {
     }
 }
 
+export class Game extends Schema {
+    @type("boolean") roundStarted: boolean;
+}
+
 export class State extends Schema {
     @type({ map: Player }) players = new MapSchema<Player>();
     @type({ map: Bullet }) bullets = new MapSchema<Bullet>();
     @type({ array: Collider }) colliders = new ArraySchema<Collider>();
+
 }

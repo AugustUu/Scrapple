@@ -40,7 +40,7 @@ export class NetworkClient {
         this.clientId = room.sessionId
 
         console.log("joined",room.id)
-        engine.goToScene("game");
+        engine.goToScene("startscreen");
         Networking.events.emit("joined", new NeworkEvents.Joined(room));
 
         room.onStateChange(this.onStateChange);
