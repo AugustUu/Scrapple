@@ -108,7 +108,7 @@ export function lerp(x: number, y: number, a: number) {
 
 export type Shape =
     | { type: 'Circle', radius: number }
-    | { type: 'Rectangle', width: number, height: number }
+    | { type: 'Rectangle', halfWidth: number, halfHeight: number }
     | { type: 'Triangle', point1: Vector, point2: Vector, point3: Vector };
 
 
@@ -116,13 +116,13 @@ export function createGroundShape(x: number, y: number, color: Color, shape: Sha
     let sprite: Graphic
     let floor = new Entity()
     if (shape.type == "Rectangle") {
-        let colliderDesc = ColliderDesc.cuboid(shape.width, shape.height).setCollisionGroups(0x00010007).setFriction(0.5)
+        let colliderDesc = ColliderDesc.cuboid(shape.halfWidth, shape.halfHeight).setCollisionGroups(0x00010007).setFriction(0.5)
         floor
             .addComponent(createTransformComponent(new Vector(x, y)))
             .addComponent(new RigidBodyComponent(RigidBodyType.KinematicPositionBased))
             .addComponent(new ColliderComponent(colliderDesc))
 
-        sprite = new Rectangle({ width: shape.width * 20, height: shape.height * 20, color: color })
+        sprite = new Rectangle({ width: shape.halfWidth * 20, height: shape.halfHeight * 20, color: color })
 
         let graphics = new GraphicsComponent();
         graphics.add(sprite);
