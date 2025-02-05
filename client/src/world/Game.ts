@@ -23,7 +23,7 @@ export class Game extends Scene {
     public onInitialize() {
         this.world.systemManager.addSystem(PhysicsSystem);
         this.world.systemManager.addSystem(PhysicsObjectRenderSystem);
-        this.world.systemManager.addSystem(PhysicsSystemDebug);
+        //this.world.systemManager.addSystem(PhysicsSystemDebug);
         this.world.systemManager.addSystem(GrappleLineSystem)
         this.world.systemManager.addSystem(OtherPlayerMoveSystem);
         this.world.systemManager.addSystem(BulletMoveSystem);

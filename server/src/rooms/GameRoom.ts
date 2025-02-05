@@ -60,6 +60,11 @@ export class GameRoom extends Room<State> {
         this.onMessage(C2SPacket.Reload, (client, message) => {
             let player = this.state.players.get(client.sessionId)
             let gunInfo = Guns.get(player.gun.gunID)
+
+            if((player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()){ // makes shure you arent reloading
+                player.gun.lastTimeReloaded = Date.now(); // delay b4 you can shoot again
+                player.gun.ammo = gunInfo.magSize
+            }
         })
 
         this.onMessage(C2SPacket.Grapple, (client, message) => {
@@ -90,9 +95,11 @@ export class GameRoom extends Room<State> {
 
     onBeforePatch() {
         this.state.bullets.forEach((bullet) => {
-            let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
-            bullet.position.x += Math.cos(bullet.angle) * gunInfo.bulletSpeedMultiplier
-            bullet.position.y += Math.sin(bullet.angle) * gunInfo.bulletSpeedMultiplier
+            if(this.state.players.has(bullet.shotById)){
+                let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
+                bullet.position.x += Math.cos(bullet.angle) * gunInfo.bulletSpeedMultiplier
+                bullet.position.y += Math.sin(bullet.angle) * gunInfo.bulletSpeedMultiplier
+            }
 
         })
 

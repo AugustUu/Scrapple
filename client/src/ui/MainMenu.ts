@@ -11,6 +11,7 @@ export class MainMenu extends Scene {
     private rootElement!: HTMLElement;
     private inputElement!: HTMLInputElement;
     private createOrJoin!: HTMLElement;
+    private quickPlay: HTMLElement;
 
     public onInitialize() {
         this.playButton = new Actor({
@@ -23,14 +24,18 @@ export class MainMenu extends Scene {
         this.rootElement = document.getElementById('menu')!;
         this.inputElement = document.getElementById('serverInput')! as HTMLInputElement;
         this.createOrJoin = document.getElementById('joinButton')!;
+        this.quickPlay = document.getElementById('quickplay')!;
 
-        
+
 
         this.playButton.on("pointerdown",function(){
             //engine.goToScene("game");
             Inventory.LevelUpgrade("Speed") // debug
             Inventory.updateUsableUpgrades()
             console.log(Inventory.usableUpgrades.get("Speed"))
+        })
+        this.quickPlay.addEventListener("click",()=>{
+            Networking.quickPlay("jorbis" + Math.random())
         })
 
         this.createOrJoin.addEventListener("click",()=>{
