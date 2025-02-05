@@ -101,8 +101,25 @@ export class GameRoom extends Room<State> {
         this.state.bullets.forEach((bullet,bkey) => {
             if(this.state.players.has(bullet.shotById)){
                 let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
-                bullet.position.x += Math.cos(bullet.angle) * gunInfo.bulletSpeedMultiplier
-                bullet.position.y += Math.sin(bullet.angle) * gunInfo.bulletSpeedMultiplier
+                // homing test
+                /*let otherPlayers = new Map(this.state.players)
+                otherPlayers.delete(bullet.shotById)
+                let homingPos:{x:number, y:number}
+                for(var player of otherPlayers.values()){
+                    if(homingPos == undefined){
+                        homingPos = player.position
+                    }
+                    else{
+                        if((player.position.x ^ 2 + player.position.y ^ 2) < (homingPos.x ^ 2 + homingPos.y ^ 2)){ // SO inefficient but idk how else to do it lol
+                            homingPos = player.position
+                        }
+                    }
+                }
+                let homingAngle = Math.atan2(Math.abs(homingPos.y - bullet.position.y), Math.abs(homingPos.x - bullet.position.x)) - bullet.angle
+                homingAngle = homingAngle / 1.2 */
+                let homingAngle = 0
+                bullet.position.x += Math.cos(bullet.angle + homingAngle) * gunInfo.bulletSpeedMultiplier
+                bullet.position.y += Math.sin(bullet.angle + homingAngle) * gunInfo.bulletSpeedMultiplier
             }
 
             this.state.colliders.forEach((collider, key) => {
@@ -158,14 +175,10 @@ export class GameRoom extends Room<State> {
         let scaledRect = {width:rect.width * 10, height:rect.height * 10}
 
         if (circleDistance.x > (scaledRect.width + bullet.radius) || circleDistance.y > (scaledRect.height + bullet.radius)) { return false; } // definitely not touching
-        if (circleDistance.x <= (scaledRect.width) || circleDistance.y <= (scaledRect.height)) { 
-            console.log("inside")
-            return true; } // definitely touching
+        if (circleDistance.x <= (scaledRect.width) || circleDistance.y <= (scaledRect.height)) { return true; } // definitely touching
 
         let cornerDistance = (circleDistance.x - scaledRect.width) ^ 2 + (circleDistance.y - scaledRect.height) ^ 2; // lowkey idk how thismath works but it saves a sqrt so whatever
-        if(cornerDistance <= (bullet.radius ^ 2)){
-            console.log("cornor")
-        }
+        
         return (cornerDistance <= (bullet.radius ^ 2));
     }
 
