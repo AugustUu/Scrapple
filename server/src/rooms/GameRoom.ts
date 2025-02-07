@@ -158,6 +158,8 @@ export class GameRoom extends Room<State> {
 
                         if (player.health <= 0) {
                             this.state.players.delete(player.id);
+                            
+                            //this.send(player.id,S2CPackets.Killed)
                         }
                         this.state.bullets.delete(key);
                         console.log("player health is " + player.health)

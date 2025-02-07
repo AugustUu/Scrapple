@@ -30,8 +30,6 @@ export class Inventory {
 
             }else{
                 this.ammoCounter.innerHTML = `Reloading ...`
-
-
             }
         })
 
