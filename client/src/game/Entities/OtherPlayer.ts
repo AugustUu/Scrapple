@@ -8,7 +8,6 @@ import { CreateGrappleLine } from "./GrappleLine";
 export class OtherPlayerComponent extends Component {
     public name: string = 'jorbis';
     public id: string = "";
-    public health: number = 100;
     public grappleLine?: Entity;
 
     constructor(name: string, id: string) {
@@ -44,12 +43,28 @@ export function createOtherPlayerEntity(playerState: Player, id: string): Entity
     let nameTagGraphics = new GraphicsComponent();
     nameTagGraphics.use(nameTag)
     let nameTagTransform = new TransformComponent();
-    nameTagTransform.pos.y -= 30
+    nameTagTransform.pos.y -= 40
 
-    let nameTagEntity = new Entity();
-    nameTagEntity.addComponent(nameTagGraphics)
-    nameTagEntity.addComponent(nameTagTransform)
+    let nameTagEntity = new Entity()
+    .addComponent(nameTagGraphics)
+    .addComponent(nameTagTransform)
     entity.addChild(nameTagEntity)
+
+    let healthBar = new Rectangle({ width: 50, height: 5, color: new Color(0, 255, 0) })
+    let healthBarBack = new Rectangle({ width: 50, height: 5, color: new Color(255, 0, 0) })
+    let healthBarGraphics = new GraphicsComponent();
+    healthBarGraphics.add(healthBar)
+    //healthBarGraphics.add(healthBarBack)
+    
+    
+    let healthBarTransform = new TransformComponent();
+    healthBarTransform.pos.y -= 28
+    
+    let healthBarEntity = new Entity({name: "healthBar"})
+    .addComponent(healthBarGraphics)
+    .addComponent(healthBarTransform)
+    entity.addChild(healthBarEntity)
+
 
     playerState.listen("grappling", (value: boolean, previousValue: boolean) => {
 
@@ -90,6 +105,10 @@ export class OtherPlayerMoveSystem extends System {
 
                 entity.get(TransformComponent).pos.x = state.position.x //lerp(entity.get(TransformComponent).pos.x, state.position.x, elapsedMs / 120)
                 entity.get(TransformComponent).pos.y = state.position.y //lerp(entity.get(TransformComponent).pos.y, state.position.y, elapsedMs / 120)
+                let sprite = entity.children[1].get(GraphicsComponent)
+                let healthBar = sprite.getGraphic(sprite.getNames()[0]) as Rectangle
+                //console.log(entity.get(OtherPlayerComponent).health)
+                healthBar.scale.x = state.health / 100
             }
         }
     }
