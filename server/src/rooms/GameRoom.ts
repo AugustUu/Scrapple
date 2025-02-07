@@ -2,7 +2,7 @@ import { Room, Client } from "@colyseus/core";
 //import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 import { randomBytes } from "crypto"
-import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider } from "../State"
+import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider, PlayerClient } from "../State"
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 
 const getRandomNumber = (min: number, max: number) => {
@@ -28,10 +28,21 @@ export class GameRoom extends Room<State> {
             client.send(S2CPackets.Pong, {})
         })
 
+        this.onMessage(C2SPacket.StartGame, (client, message) => {
+            if (this.state.clients.get(client.id).host) {
+                this.state.clients.forEach((client2, id) => {
+                    this.state.players.set(id, new Player(client2.name, id, idList[0]));
+                })
+                this.broadcast(S2CPackets.StartGame)
+            }
+        })
+
         this.onMessage(C2SPacket.Move, (client, message) => {
-            let player = this.state.players.get(client.sessionId)
-            player.position.x = message.x
-            player.position.y = message.y
+            if(this.state.players.has(client.sessionId)){
+                let player = this.state.players.get(client.sessionId)
+                player.position.x = message.x
+                player.position.y = message.y
+            }
         })
 
         this.onMessage(C2SPacket.Shoot, (client, message) => {
@@ -98,8 +109,8 @@ export class GameRoom extends Room<State> {
     }
 
     onBeforePatch() {
-        this.state.bullets.forEach((bullet,bkey) => {
-            if(this.state.players.has(bullet.shotById)){
+        this.state.bullets.forEach((bullet, bkey) => {
+            if (this.state.players.has(bullet.shotById)) {
                 let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
                 // homing test
                 /*let otherPlayers = new Map(this.state.players)
@@ -124,7 +135,7 @@ export class GameRoom extends Room<State> {
 
             this.state.colliders.forEach((collider, key) => {
                 if (collider instanceof RectangleCollider) {
-                    if (this.intersectsRect(bullet, collider)){
+                    if (this.intersectsRect(bullet, collider)) {
                         this.state.bullets.delete(bkey);
                     }
                 }
@@ -144,6 +155,10 @@ export class GameRoom extends Room<State> {
                 if (bullet.shotById != player.id) {
                     if (Math.hypot(player.position.x - bullet.position.x, player.position.y - bullet.position.y) <= (bullet.radius + player.radius)) {
                         player.health -= Guns.get(this.state.players.get(bullet.shotById).gun.gunID).damage
+
+                        if (player.health <= 0) {
+                            this.state.players.delete(player.id);
+                        }
                         this.state.bullets.delete(key);
                         console.log("player health is " + player.health)
                     }
@@ -157,13 +172,18 @@ export class GameRoom extends Room<State> {
     onJoin(client: Client, options: any) {
         console.log(client.sessionId, "joined!", options);
         if (options && options.name) {
-            this.state.players.set(client.sessionId, new Player(options.name, client.id, idList[0]));
+            this.state.clients.set(client.sessionId, new PlayerClient(options.name, client.id, this.state.clients.size == 0));
+            client.send(S2CPackets.InitClient, {})
+            //this.state.players.set(client.sessionId, new Player(options.name, client.id, idList[0]));
         }
     }
 
     onLeave(client: Client, consented: boolean) {
         console.log(client.sessionId, "left!");
-        this.state.players.delete(client.sessionId);
+        this.state.clients.delete(client.sessionId);
+        if (this.state.players.has(client.sessionId)) {
+            this.state.players.delete(client.sessionId);
+        }
     }
 
     onDispose() {
@@ -172,13 +192,13 @@ export class GameRoom extends Room<State> {
 
     intersectsRect(bullet: Bullet, rect: RectangleCollider) {
         let circleDistance = { x: Math.abs(bullet.position.x - rect.position.x), y: Math.abs(bullet.position.y - rect.position.y) }
-        let scaledRect = {width:rect.width * 10, height:rect.height * 10}
+        let scaledRect = { width: rect.width * 10, height: rect.height * 10 }
 
         if (circleDistance.x > (scaledRect.width + bullet.radius) || circleDistance.y > (scaledRect.height + bullet.radius)) { return false; } // definitely not touching
         if (circleDistance.x <= (scaledRect.width) || circleDistance.y <= (scaledRect.height)) { return true; } // definitely touching
 
         let cornerDistance = (circleDistance.x - scaledRect.width) ^ 2 + (circleDistance.y - scaledRect.height) ^ 2; // lowkey idk how thismath works but it saves a sqrt so whatever
-        
+
         return (cornerDistance <= (bullet.radius ^ 2));
     }
 
