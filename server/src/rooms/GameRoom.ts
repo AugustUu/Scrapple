@@ -118,8 +118,8 @@ export class GameRoom extends Room<State> {
                 let homingAngle = Math.atan2(Math.abs(homingPos.y - bullet.position.y), Math.abs(homingPos.x - bullet.position.x)) - bullet.angle
                 homingAngle = homingAngle / 1.2 */
                 let homingAngle = 0
-                bullet.position.x += Math.cos(bullet.angle + homingAngle) * gunInfo.bulletSpeedMultiplier
-                bullet.position.y += Math.sin(bullet.angle + homingAngle) * gunInfo.bulletSpeedMultiplier
+                bullet.position.x += Math.cos(bullet.angle + homingAngle) * bullet.speed
+                bullet.position.y += Math.sin(bullet.angle + homingAngle) * bullet.speed
             }
 
             this.state.colliders.forEach((collider, key) => {
