@@ -40,19 +40,25 @@ export class NetworkClient {
         this.clientId = room.sessionId
 
         console.log("joined",room.id)
-        engine.goToScene("startscreen");
+        
         Networking.events.emit("joined", new NeworkEvents.Joined(room));
 
         room.onStateChange(this.onStateChange);
         room.onLeave(this.onLeave);
         room.onError(this.onError);
     
-
         room.onMessage(S2CPackets.Pong,()=>{
             room.send(C2SPacket.Ping,{})
         })
 
 
+        room.onMessage(S2CPackets.InitClient,()=>{
+            engine.goToScene("startscreen");
+        })
+
+        room.onMessage(S2CPackets.StartGame,()=>{
+            engine.goToScene("game");
+        })
 
     }
 

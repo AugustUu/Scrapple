@@ -1,4 +1,5 @@
 import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
+import exp from "constants";
 import { Guns } from "shared/src/game/GunManager/GunManager";
 
 
@@ -109,11 +110,29 @@ export class RectangleCollider extends Collider {
     }
 }
 
-export class Game extends Schema {
-    @type("boolean") roundStarted: boolean;
+export class PlayerClient extends Schema {
+    @type("string") name: string;
+    @type("string") id: string;
+    @type("boolean") host: boolean;
+
+    constructor(name: string, id: string, host: boolean) {
+        super();
+        this.name = name
+        this.id = id;
+        this.host = host
+    }
 }
 
+export class Game extends Schema {
+    @type("boolean") inRound: boolean;
+    
+}
+
+
+
 export class State extends Schema {
+    @type({ map: PlayerClient }) clients = new MapSchema<PlayerClient>();
+    
     @type({ map: Player }) players = new MapSchema<Player>();
     @type({ map: Bullet }) bullets = new MapSchema<Bullet>();
     @type({ array: Collider }) colliders = new ArraySchema<Collider>();

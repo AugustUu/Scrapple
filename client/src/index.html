@@ -11,6 +11,8 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+
+        font-family: Arial, sans-serif; 
     }
 </style>
 
@@ -36,10 +38,19 @@
             <div style="left: 50%;top: 80%;position: fixed;">
                 <button id="startButton">Start Game</button>
             </div>
+
+            <div style="left: 50%;top: 10%;position: fixed;  text-align: center;">
+                Players:
+                <ul id="playerList" style="list-style-type: none;">
+                </ul>
+            </div>
+
+        </div>
         </div>
 
         <div id="hud" style="position: absolute; z-index: 1999; display: none;">
-            <div id="gunInfo" style="left: 90%; top: 95%; position: fixed; color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-size: 16px; text-align: right;">
+            <div id="gunInfo"
+                style="left: 90%; top: 95%; position: fixed; color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-size: 16px; text-align: right;">
                 <div id="weaponDisplay" style="font-weight: bold;">
                     Weapon:
                 </div>
@@ -48,7 +59,8 @@
                 </div>
             </div>
 
-            <div id="healthBar" style="left: 5%; top: 95%; position: fixed; color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-size: 16px; text-align: right; font-weight: bold;">
+            <div id="healthBar"
+                style="left: 5%; top: 95%; position: fixed; color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-size: 16px; text-align: right; font-weight: bold;">
                 HP: 100 / 100
             </div>
         </div>
