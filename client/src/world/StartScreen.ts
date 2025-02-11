@@ -1,17 +1,31 @@
 import { Engine, Scene, SceneActivationContext } from "excalibur";
+import { Gun } from "shared/src/game/GunManager/Gun";
+import { Guns } from "shared/src/game/GunManager/GunManager"
+
 import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
 
 export class StartScreen extends Scene {
     private rootElement!: HTMLElement;
-    private pistolButton!: HTMLElement;
+    private gun1Button!: HTMLElement;
+    private gun2Button!: HTMLElement;
+    private gun3Button!: HTMLElement;
+
     private startButton!: HTMLElement;
 
     private playerList!: HTMLElement;
 
     public onInitialize(engine: Engine) {
         this.rootElement = document.getElementById('startscreen')!;
-        this.pistolButton = document.getElementById('pistolButton')!;
+        this.gun1Button = document.getElementById('gun1Button')!;
+        this.gun2Button = document.getElementById('gun2Button')!;
+        this.gun3Button = document.getElementById('gun3Button')!;
+
+        
+
+        this.gun1Button.innerHTML = Array.from(Guns.keys())[Math.round(Math.random() * 6)]
+        this.gun2Button.innerHTML = Array.from(Guns.keys()).toString()
+        
         this.playerList = document.getElementById('playerList')!;
         this.startButton = document.getElementById('startButton')!;
 
