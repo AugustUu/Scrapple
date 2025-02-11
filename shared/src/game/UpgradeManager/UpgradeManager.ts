@@ -6,6 +6,8 @@ import("./Upgrades/ReloadSpeed")
 import("./Upgrades/ReloadBurst")
 import("./Upgrades/ShootSpeed")
 import("./Upgrades/Speed")
+import("./Upgrades/Reversenizer")
+import("./Upgrades/Tank")
 
 export function registerUpgrade(upgradeType: typeof Upgrade) {
     let upgrade = new upgradeType();

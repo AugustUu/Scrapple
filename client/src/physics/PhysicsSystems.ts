@@ -98,7 +98,7 @@ export class PhysicsObjectRenderSystem extends System {
 
             let bodyPosition = body.translation()
 
-
+            /*
             if (body.isMoving()) {
                 let bodyVelocity = body.linvel();
                 //transform.pos.x = lerp(transform.pos.x, bodyPosition.x * 10 + bodyVelocity.x/3, (elapsedMs / 1000) * 16.6)
@@ -111,7 +111,9 @@ export class PhysicsObjectRenderSystem extends System {
             } else {
                 transform.pos.x = bodyPosition.x * 10
                 transform.pos.y = -bodyPosition.y * 10
-            }
+            }*/
+                transform.pos.x = bodyPosition.x * 10
+                transform.pos.y = -bodyPosition.y * 10
             transform.rotation = -body.rotation();
         }
     }
