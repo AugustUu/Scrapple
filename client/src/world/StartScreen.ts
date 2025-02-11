@@ -21,10 +21,26 @@ export class StartScreen extends Scene {
         this.gun2Button = document.getElementById('gun2Button')!;
         this.gun3Button = document.getElementById('gun3Button')!;
 
-        
+        let array = Array.from(Guns.keys())
+        let gunArray = new Array
 
-        this.gun1Button.innerHTML = Array.from(Guns.keys())[Math.round(Math.random() * 6)]
-        this.gun2Button.innerHTML = Array.from(Guns.keys()).toString()
+        for(let i = 0; i < 6; i++){
+            gunArray[i] = array[i]
+        }
+
+        
+        let gunNum = Math.floor(Math.random() * gunArray.length)
+        this.gun1Button.innerHTML = gunArray[gunNum]
+        gunArray.splice(gunNum, 1)
+
+        gunNum = Math.floor(Math.random() * (gunArray.length))
+        this.gun2Button.innerHTML = gunArray[gunNum]
+        gunArray.splice(gunNum, 1)
+
+        gunNum = Math.floor(Math.random() * (gunArray.length))
+        this.gun3Button.innerHTML = gunArray[gunNum]
+        gunArray.splice(gunNum, 1)
+        
         
         this.playerList = document.getElementById('playerList')!;
         this.startButton = document.getElementById('startButton')!;
@@ -37,6 +53,10 @@ export class StartScreen extends Scene {
         } else {
             this.startButton.style.display = "none"
         }
+
+        this.gun1Button.addEventListener("click", () => {
+            console.log()
+         })
     }
 
     public onActivate(context: SceneActivationContext<unknown>): void {
