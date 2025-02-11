@@ -67,15 +67,16 @@ export class Player extends Schema {
 export class Bullet extends Schema {
     @type(Position) position: Position;
     @type("number") angle: number;
-    @type("number") radius: number = 4;
+    @type("number") radius: number;
     @type("string") shotById: string;
     @type("number") speed: number;
 
-    constructor(x: number, y: number, angle: number, shotById: string, speed: number) {
+    constructor(x: number, y: number, angle: number, radius: number, shotById: string, speed: number) {
         super()
         this.position = new Position(x, y)
         this.angle = angle;
         this.shotById = shotById;
+        this.radius = radius;
         this.speed = speed;
     }
 }
