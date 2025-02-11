@@ -9,6 +9,9 @@ const getRandomNumber = (min: number, max: number) => {
     return Math.random() * (max - min) + min
 }
 
+function clamp(num: number, min: number, max: number) {
+    return Math.max(Math.min(num, max), min)
+}
 
 export class GameRoom extends Room<State> {
     maxClients = 8;
@@ -113,6 +116,7 @@ export class GameRoom extends Room<State> {
             if (this.state.players.has(bullet.shotById)) {
                 let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
                 // homing test
+                
                 /*let otherPlayers = new Map(this.state.players)
                 otherPlayers.delete(bullet.shotById)
                 let homingPos:{x:number, y:number}
@@ -126,11 +130,15 @@ export class GameRoom extends Room<State> {
                         }
                     }
                 }
-                let homingAngle = Math.atan2(Math.abs(homingPos.y - bullet.position.y), Math.abs(homingPos.x - bullet.position.x)) - bullet.angle
-                homingAngle = homingAngle / 1.2 */
+                let homingAngle = Math.atan2(homingPos.y - bullet.position.y, homingPos.x - bullet.position.x) - bullet.angle*/
+                
                 let homingAngle = 0
-                bullet.position.x += Math.cos(bullet.angle + homingAngle) * bullet.speed
-                bullet.position.y += Math.sin(bullet.angle + homingAngle) * bullet.speed
+                //homingAngle = (homingAngle % (Math.PI * 2)) / 5
+                bullet.angle += homingAngle
+                //console.log(homingAngle + ", " + bullet.angle)
+                //let homingAngle = 0
+                bullet.position.x += Math.cos(bullet.angle) * bullet.speed
+                bullet.position.y += Math.sin(bullet.angle) * bullet.speed
             }
 
             this.state.colliders.forEach((collider, key) => {
