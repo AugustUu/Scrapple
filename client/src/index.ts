@@ -34,7 +34,7 @@ async function init() {
     await RAPIER.init();
 
     engine.start();
-    engine.toggleDebug();
+    //engine.toggleDebug();
     engine.goToScene("mainMenu");
     
     MouseInput.init();
