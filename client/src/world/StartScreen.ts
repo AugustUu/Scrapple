@@ -30,15 +30,8 @@ export class StartScreen extends Scene {
         this.upgrade1Button = document.getElementById('upgrade1Button')!;
         this.upgrade2Button = document.getElementById('upgrade2Button')!;
         this.upgrade3Button = document.getElementById('upgrade3Button')!;
-
-
         //set gun buttons to be guns
-
-        let gunArray = new Array
-        for(let i = 0; i < 6; i++){
-            gunArray[i] = Array.from(Guns.keys())[i]
-        }
-
+        let gunArray = Array.from(Guns.keys())
         let gunNum = Math.floor(Math.random() * gunArray.length)
         this.gun1Button.innerHTML = gunArray[gunNum]
         gunArray.splice(gunNum, 1)
@@ -50,11 +43,8 @@ export class StartScreen extends Scene {
         gunNum = Math.floor(Math.random() * (gunArray.length))
         this.gun3Button.innerHTML = gunArray[gunNum]
         gunArray.splice(gunNum, 1)
-
+        
         //set ugprade buttons to have upgrades
-        //LocalPlayerInstance.inventory.updateUsableUpgrades()
-        let upgradeArray = new Array
-
 
 
 
