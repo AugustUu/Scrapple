@@ -9,6 +9,9 @@ const getRandomNumber = (min: number, max: number) => {
     return Math.random() * (max - min) + min
 }
 
+function clamp(num: number, min: number, max: number) {
+    return Math.max(Math.min(num, max), min)
+}
 
 export class GameRoom extends Room<State> {
     maxClients = 8;
@@ -60,7 +63,7 @@ export class GameRoom extends Room<State> {
                     for (let i = 0; i < player.gun.bulletsPerShot; i++) {
 
                         let angle = message.angle + (getRandomNumber(gunInfo.spread * -1, gunInfo.spread + 1) * (Math.PI / 180))
-                        this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, angle, client.id, gunInfo.bulletSpeedMultiplier * getRandomNumber(0.9, 1.1)))
+                        this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, angle, gunInfo.bulletSize, client.id, gunInfo.bulletSpeedMultiplier * getRandomNumber(0.9, 1.1)))
                     }
 
                     player.gun.lastTimeShot = Date.now()

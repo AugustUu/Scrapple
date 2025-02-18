@@ -61,6 +61,7 @@ export class Inventory {
                 }
             }
         }
+        return this.usableUpgrades
     }
 
     public Shoot(angle: number) {

@@ -14,9 +14,10 @@ import { Shotgun } from "shared/src/game/GunManager/Guns/Shotgun";
 import { Sniper } from "shared/src/game/GunManager/Guns/Sniper";
 import { Minigun } from "shared/src/game/GunManager/Guns/Minigun"
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
+import { engine } from "..";
 
 export class LocalPlayer extends Actor {
-    public health: number = 100;
+    health: number;
     joint!: ImpulseJoint;
     shooting: boolean
     grappling: boolean
@@ -34,11 +35,16 @@ export class LocalPlayer extends Actor {
     constructor(x: number, y: number) {
         super({name:"localplayer", x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
         this.inventory = new Inventory()
-        this.jumpHeight = 60 + (this.inventory.GetUpgrade("Jump").level * 20)
-        this.speed = 8 + this.inventory.GetUpgrade("Speed").level
+        this.jumpHeight = 60 //+ (this.inventory.GetUpgrade("Jump").level * 20)
+        this.speed = 8 //+ (this.inventory.GetUpgrade("Speed").level)
+        this.speed *= 1 //- 0.25 * this.inventory.GetUpgrade("Tank").level // speed multiply by 0.75 if tank
+        this.health = 100 //+ 50 * this.inventory.GetUpgrade("Tank").level
         this.maxGrappleSpeed = 175
         this.radius = 20
         this.grounded = false
+
+        
+        //engine.currentScene.camera.strategy.elasticToActor(this, 0.1, 0.1)
 
 
         let rigidBody = new RigidBodyComponent(RigidBodyType.Dynamic);
@@ -55,6 +61,8 @@ export class LocalPlayer extends Actor {
         //this.inventory.gun = new Pistol()
 
 
+
+        
 
     }
 
@@ -103,6 +111,10 @@ export class LocalPlayer extends Actor {
             rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, rigidBody.linvel().y * 0.25) }, true);
         }
 
+        if (engine.input.keyboard.wasPressed(Keys.E) && this.inventory.GetUpgrade("Reversenizer").level == 1){
+            rigidBody.setLinvel({ x: rigidBody.linvel().x * -0.75, y: rigidBody.linvel().y * -0.75 }, true);
+        }
+
         
 
         let damping: number
@@ -122,9 +134,8 @@ export class LocalPlayer extends Actor {
 
         rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: rigidBody.linvel().y}, true)
 
-        if (engine.input.keyboard.wasPressed(Keys.E)) { // just testing, make upgrade later ?
-            rigidBody.setLinvel({ x: rigidBody.linvel().x * -0.75, y: rigidBody.linvel().y * -0.75 }, true);
-        }
+
+        
 
         if(this.grappling){
             let linvel = new Vector2(rigidBody.linvel())
@@ -185,6 +196,7 @@ export class LocalPlayer extends Actor {
 
 
     public update(engine: Engine, delta: number) {
+        
 
         //engine.currentScene.camera.pos = this.pos
 
