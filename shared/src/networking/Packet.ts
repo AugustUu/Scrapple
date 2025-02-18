@@ -16,5 +16,6 @@ export var S2CPackets = {
     BulletSpawn: "bulletspawn",
     InitClient: "initclient",
     StartGame: "startgame",
+    EndGame: "endgame",
     Killed: "killed"
 }

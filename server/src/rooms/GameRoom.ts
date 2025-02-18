@@ -1,5 +1,5 @@
 import { Room, Client } from "@colyseus/core";
-//import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
+import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 import { randomBytes } from "crypto"
 import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider, PlayerClient } from "../State"
@@ -18,6 +18,8 @@ export class GameRoom extends Room<State> {
         this.setState(new State());
         this.setPatchRate(15.625)
 
+        this.state.game.inRound = false;
+
         this.state.colliders.push(new RectangleCollider(0, 500, 50, 5))
         this.state.colliders.push(new RectangleCollider(700, 100, 20, 5))
         this.state.colliders.push(new RectangleCollider(-700, 100, 20, 5))
@@ -29,7 +31,8 @@ export class GameRoom extends Room<State> {
         })
 
         this.onMessage(C2SPacket.StartGame, (client, message) => {
-            if (this.state.clients.get(client.id).host) {
+            if (this.state.clients.get(client.id).host && !this.state.game.inRound) {
+                this.state.game.inRound = true;
                 this.state.clients.forEach((client2, id) => {
                     this.state.players.set(id, new Player(client2.name, id, idList[0]));
                 })
@@ -112,25 +115,8 @@ export class GameRoom extends Room<State> {
         this.state.bullets.forEach((bullet, bkey) => {
             if (this.state.players.has(bullet.shotById)) {
                 let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
-                // homing test
-                /*let otherPlayers = new Map(this.state.players)
-                otherPlayers.delete(bullet.shotById)
-                let homingPos:{x:number, y:number}
-                for(var player of otherPlayers.values()){
-                    if(homingPos == undefined){
-                        homingPos = player.position
-                    }
-                    else{
-                        if((player.position.x ^ 2 + player.position.y ^ 2) < (homingPos.x ^ 2 + homingPos.y ^ 2)){ // SO inefficient but idk how else to do it lol
-                            homingPos = player.position
-                        }
-                    }
-                }
-                let homingAngle = Math.atan2(Math.abs(homingPos.y - bullet.position.y), Math.abs(homingPos.x - bullet.position.x)) - bullet.angle
-                homingAngle = homingAngle / 1.2 */
-                let homingAngle = 0
-                bullet.position.x += Math.cos(bullet.angle + homingAngle) * bullet.speed
-                bullet.position.y += Math.sin(bullet.angle + homingAngle) * bullet.speed
+                bullet.position.x += Math.cos(bullet.angle) * bullet.speed      
+                bullet.position.y += Math.sin(bullet.angle) * bullet.speed
             }
 
             this.state.colliders.forEach((collider, key) => {
@@ -149,6 +135,11 @@ export class GameRoom extends Room<State> {
             })
         })
 
+        if(this.state.players.size == 1 && this.state.game.inRound){
+            this.state.game.inRound = false
+            this.state.players = new MapSchema<Player>();
+            this.broadcast(S2CPackets.EndGame)
+        }
 
         this.state.players.forEach((player) => {
             this.state.bullets.forEach((bullet, key) => {
@@ -158,8 +149,7 @@ export class GameRoom extends Room<State> {
 
                         if (player.health <= 0) {
                             this.state.players.delete(player.id);
-                            
-                            //this.send(player.id,S2CPackets.Killed)
+                            this.clients.getById(player.id).send(S2CPackets.Killed,{})
                         }
                         this.state.bullets.delete(key);
                         console.log("player health is " + player.health)

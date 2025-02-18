@@ -137,4 +137,6 @@ export class State extends Schema {
     @type({ map: Bullet }) bullets = new MapSchema<Bullet>();
     @type({ array: Collider }) colliders = new ArraySchema<Collider>();
 
+    @type(Game) game = new Game()
+
 }

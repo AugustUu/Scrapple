@@ -4,7 +4,7 @@ import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayC
 import { PhysicsSystem } from "../physics/PhysicsSystems";
 import { MathUtils, generateRevoluteJoint as generateRevoluteJoint, MouseInput, Vector2 } from "../util"
 import { Networking } from "../networking/Networking";
-import { C2SPacket } from "shared/src/networking/Packet";
+import { C2SPacket, S2CPackets } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./Entities/GrappleLine";
 import { Inventory } from "./Inventory";
 import { Game } from "../world/Game";
@@ -54,7 +54,7 @@ export class LocalPlayer extends Actor {
 
         //this.inventory.gun = new Pistol()
 
-        
+
 
     }
 
@@ -238,5 +238,6 @@ export class LocalPlayer extends Actor {
         super.update(engine, delta);
     }
 
+    
 
 }

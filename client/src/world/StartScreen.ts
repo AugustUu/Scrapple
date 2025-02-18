@@ -41,6 +41,7 @@ export class StartScreen extends Scene {
 
     public onActivate(context: SceneActivationContext<unknown>): void {
         this.rootElement.style.display = "";
+        this.playerList.innerHTML = "";
 
         Networking.client.room!.state.clients.forEach((client) => {
             this.playerList.innerHTML += `<li>${client.name}</li>`
