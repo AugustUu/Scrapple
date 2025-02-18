@@ -35,10 +35,10 @@ export class LocalPlayer extends Actor {
     constructor(x: number, y: number) {
         super({name:"localplayer", x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
         this.inventory = new Inventory()
-        this.jumpHeight = 60 + (this.inventory.GetUpgrade("Jump").level * 20)
-        this.speed = (8 + this.inventory.GetUpgrade("Speed").level)
-        this.speed *= 1 - 0.25 * this.inventory.GetUpgrade("Tank").level // speed multiply by 0.75 if tank
-        this.health = 100 + 50 * this.inventory.GetUpgrade("Tank").level
+        this.jumpHeight = 60 //+ (this.inventory.GetUpgrade("Jump").level * 20)
+        this.speed = 8 //+ (this.inventory.GetUpgrade("Speed").level)
+        this.speed *= 1 //- 0.25 * this.inventory.GetUpgrade("Tank").level // speed multiply by 0.75 if tank
+        this.health = 100 //+ 50 * this.inventory.GetUpgrade("Tank").level
         this.maxGrappleSpeed = 175
         this.radius = 20
         this.grounded = false
