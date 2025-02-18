@@ -37,10 +37,14 @@ export class GameRoom extends Room<State> {
             if (this.state.clients.get(client.id).host && !this.state.game.inRound) {
                 this.state.game.inRound = true;
                 this.state.clients.forEach((client2, id) => {
-                    this.state.players.set(id, new Player(client2.name, id, idList[0]));
+                    this.state.players.set(id, new Player(client2.name, id, client2.gunOptions.options[ client2.gunOptions.picked]));
                 })
                 this.broadcast(S2CPackets.StartGame)
             }
+        })
+
+        this.onMessage(C2SPacket.PickGun, (client, message) => {
+            this.state.clients.get(client.id).gunOptions.picked = message;
         })
 
         this.onMessage(C2SPacket.Move, (client, message) => {
@@ -106,8 +110,8 @@ export class GameRoom extends Room<State> {
         this.onMessage(C2SPacket.SwapGun, (client, message) => {
             let player = this.state.players.get(client.sessionId)
             if (Guns.has(message.id)) {
-                player.gun = new GunState(message.id);
-                console.log(client.id, message.id, JSON.stringify(player.gun))
+                //player.gun = new GunState(message.id);
+                //console.log(client.id, message.id, JSON.stringify(player.gun))
             }
         })
 
@@ -138,9 +142,12 @@ export class GameRoom extends Room<State> {
             })
         })
 
-        if(this.state.players.size == 10 && this.state.game.inRound){
+        if(this.state.players.size == 1 && this.state.game.inRound){
             this.state.game.inRound = false
             this.state.players = new MapSchema<Player>();
+            this.state.clients.forEach((clients)=>{
+                clients.randomiseGunOptions()
+            })
             this.broadcast(S2CPackets.EndGame)
         }
 
