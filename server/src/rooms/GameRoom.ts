@@ -138,7 +138,7 @@ export class GameRoom extends Room<State> {
             })
         })
 
-        if(this.state.players.size == 1 && this.state.game.inRound){
+        if(this.state.players.size == 10 && this.state.game.inRound){
             this.state.game.inRound = false
             this.state.players = new MapSchema<Player>();
             this.broadcast(S2CPackets.EndGame)
