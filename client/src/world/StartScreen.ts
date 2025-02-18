@@ -9,63 +9,52 @@ import { Inventory } from "../game/Inventory";
 
 export class StartScreen extends Scene {
     private rootElement!: HTMLElement;
-    private gun1Button!: HTMLElement;
-    private gun2Button!: HTMLElement;
-    private gun3Button!: HTMLElement;
+
+    private gunButtons!: HTMLElement[]
     private upgrade1Button!: HTMLElement;
     private upgrade2Button!: HTMLElement;
     private upgrade3Button!: HTMLElement;
 
 
     private startButton!: HTMLElement;
-
     private playerList!: HTMLElement;
+
 
     public onInitialize(engine: Engine) {
         this.rootElement = document.getElementById('startscreen')!;
 
-        this.gun1Button = document.getElementById('gun1Button')!;
-        this.gun2Button = document.getElementById('gun2Button')!;
-        this.gun3Button = document.getElementById('gun3Button')!;
+        this.gunButtons = [document.getElementById('gun1Button'), document.getElementById('gun2Button'), document.getElementById('gun3Button')];
+
         this.upgrade1Button = document.getElementById('upgrade1Button')!;
         this.upgrade2Button = document.getElementById('upgrade2Button')!;
         this.upgrade3Button = document.getElementById('upgrade3Button')!;
         //set gun buttons to be guns
-        let gunArray = Array.from(Guns.keys())
-        let gunNum = Math.floor(Math.random() * gunArray.length)
-        this.gun1Button.innerHTML = gunArray[gunNum]
-        gunArray.splice(gunNum, 1)
 
-        gunNum = Math.floor(Math.random() * (gunArray.length))
-        this.gun2Button.innerHTML = gunArray[gunNum]
-        gunArray.splice(gunNum, 1)
 
-        gunNum = Math.floor(Math.random() * (gunArray.length))
-        this.gun3Button.innerHTML = gunArray[gunNum]
-        gunArray.splice(gunNum, 1)
-        
+
+
+
+
         //set ugprade buttons to have upgrades
 
 
 
-        
-        
-        
+
+
+
         this.playerList = document.getElementById('playerList')!;
         this.startButton = document.getElementById('startButton')!;
 
         if (Networking.client.room.state.clients.get(Networking.client.clientId).host) {
             this.startButton.addEventListener("click", () => {
-               // engine.goToScene("game");
-               Networking.client.room.send(C2SPacket.StartGame,{})
+                // engine.goToScene("game");
+                Networking.client.room.send(C2SPacket.StartGame, {})
             })
         } else {
             this.startButton.style.display = "none"
         }
 
-        this.gun1Button.addEventListener("click", () => {
-            console.log()
-         })
+
     }
 
     public onActivate(context: SceneActivationContext<unknown>): void {
@@ -81,6 +70,23 @@ export class StartScreen extends Scene {
             Networking.client.room!.state.clients.forEach((client) => {
                 this.playerList.innerHTML += `<li>${client.name}</li>`
             })
+        })
+
+
+        let options = Networking.client.room.state.clients.get(Networking.client.clientId).gunOptions.options;
+        this.gunButtons.forEach((button, index) => {
+
+            button.innerHTML = options[index]
+
+            button.addEventListener("click", () => {
+                Networking.client.room.send(C2SPacket.PickGun, index)
+                
+                this.gunButtons.forEach((button2) => {
+                    button2.style.backgroundColor = ""
+                })
+                button.style.backgroundColor = "red"
+            })
+
         })
     }
 

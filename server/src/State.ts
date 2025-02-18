@@ -1,5 +1,4 @@
 import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
-import exp from "constants";
 import { Guns } from "shared/src/game/GunManager/GunManager";
 
 
@@ -111,16 +110,44 @@ export class RectangleCollider extends Collider {
     }
 }
 
+class Option extends Schema {
+    @type([ "string" ]) options = new ArraySchema<string>();
+    @type("number") picked: number;
+
+    constructor(args:string[]) {
+        super()
+        this.options = new ArraySchema<string>(...args);
+        this.picked = 0;
+    }
+}
+
 export class PlayerClient extends Schema {
     @type("string") name: string;
     @type("string") id: string;
     @type("boolean") host: boolean;
 
+    @type(Option) gunOptions: Option;
+
     constructor(name: string, id: string, host: boolean) {
         super();
+
+        this.randomiseGunOptions()
+
         this.name = name
         this.id = id;
         this.host = host
+    }
+
+    randomiseGunOptions(){
+        let gunArray = Array.from(Guns.keys())
+        let options = [];
+        for(let i=0;i<3;i++){
+            let gunNum = Math.floor(Math.random() * gunArray.length)
+            options.push(gunArray[gunNum])
+            gunArray.splice(gunNum, 1)
+        }
+
+        this.gunOptions = new Option(options)
     }
 }
 
