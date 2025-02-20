@@ -4,6 +4,7 @@ import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 import { randomBytes } from "crypto"
 import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider, PlayerClient } from "../State"
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
+import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 
 const getRandomNumber = (min: number, max: number) => {
     return Math.random() * (max - min) + min
@@ -112,6 +113,15 @@ export class GameRoom extends Room<State> {
             if (Guns.has(message.id)) {
                 //player.gun = new GunState(message.id);
                 //console.log(client.id, message.id, JSON.stringify(player.gun))
+            }
+        })
+
+        this.onMessage(C2SPacket.LevelUpgrade, (client, message) => {
+            let playerClient = this.state.clients.get(client.sessionId)
+            if (Upgrades.has(message.id)){
+                if(playerClient.upgrades.has(message.id)){
+                    //wip
+                }
             }
         })
 

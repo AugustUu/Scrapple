@@ -1,5 +1,6 @@
 import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 import { Guns } from "shared/src/game/GunManager/GunManager";
+import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 
 
 export class Position extends Schema {
@@ -37,6 +38,16 @@ export class GunState extends Schema {
         this.fireDelay = gunInfo.fireRate * 1000;
         this.reloadDelay = gunInfo.timeToReload * 1000;
         this.bulletsPerShot = gunInfo.bulletsPerShot;
+    }
+}
+
+export class UpgradeState extends Schema {
+    @type("string") upgradeID: string;
+    @type("number") level: number;
+
+    constructor(upgradeID: string){
+        super();
+        this.upgradeID = upgradeID
     }
 }
 
@@ -126,12 +137,16 @@ export class PlayerClient extends Schema {
     @type("string") id: string;
     @type("boolean") host: boolean;
 
+    @type({ map: UpgradeState }) upgrades: MapSchema<UpgradeState>;
+
     @type(Option) gunOptions: Option;
 
     constructor(name: string, id: string, host: boolean) {
         super();
 
         this.randomiseGunOptions()
+
+        this.upgrades = new MapSchema();
 
         this.name = name
         this.id = id;
@@ -148,6 +163,30 @@ export class PlayerClient extends Schema {
         }
 
         this.gunOptions = new Option(options)
+    }
+
+    randomizeUpgradeOptions(){
+        let upgradeMap = new Map(Upgrades)
+        for(let upgrade of this.upgrades){
+            if(upgrade[1].level >= upgradeMap.get(upgrade[0]).max){
+                upgradeMap.delete(upgrade[0])
+                continue
+            }
+            if(upgradeMap.get(upgrade[0]).upgradeDep != undefined){
+                let dep = upgradeMap.get(upgrade[0]).upgradeDep
+                if(this.upgrades.get(dep.upgrade).level < dep.level){
+                    upgradeMap.delete(upgrade[0])
+                    continue
+                }
+            }
+            if(upgradeMap.get(upgrade[0]).gunDep != undefined){
+                let dep = upgradeMap.get(upgrade[0]).gunDep
+                /*if(this.gun != dep){
+                    this.upgradeMap.delete(upgrade[0])
+                    continue
+                }*/ //update to get selected gun for gun dependencies
+            }
+        }
     }
 }
 
