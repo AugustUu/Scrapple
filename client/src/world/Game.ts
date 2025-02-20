@@ -36,6 +36,15 @@ export class Game extends Scene {
 
         Networking.client.room!.onMessage(S2CPackets.EndGame,()=>{
             if(LocalPlayerInstance){
+                if(LocalPlayerInstance.line){
+                    LocalPlayerInstance.line.kill()
+                }
+                PlayerEntities.forEach((player)=>{
+                    let line = player.get(OtherPlayerComponent).grappleLine
+                    if(line){
+                        line.kill()
+                    }
+                })
                 LocalPlayerInstance.kill()
             }
             this.engine.goToScene("startscreen")

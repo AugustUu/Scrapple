@@ -28,38 +28,28 @@ export class StartScreen extends Scene {
         this.upgrade1Button = document.getElementById('upgrade1Button')!;
         this.upgrade2Button = document.getElementById('upgrade2Button')!;
         this.upgrade3Button = document.getElementById('upgrade3Button')!;
-        //set gun buttons to be guns
-
-
-
-
-
-
-        //set ugprade buttons to have upgrades
-
-
-
-
 
 
         this.playerList = document.getElementById('playerList')!;
         this.startButton = document.getElementById('startButton')!;
-
-        if (Networking.client.room.state.clients.get(Networking.client.clientId).host) {
-            this.startButton.addEventListener("click", () => {
-                // engine.goToScene("game");
-                Networking.client.room.send(C2SPacket.StartGame, {})
-            })
-        } else {
-            this.startButton.style.display = "none"
-        }
-
 
     }
 
     public onActivate(context: SceneActivationContext<unknown>): void {
         this.rootElement.style.display = "";
         this.playerList.innerHTML = "";
+
+
+        this.startButton.onclick = null
+        if (Networking.client.room.state.clients.get(Networking.client.clientId).host) {
+            this.startButton.onclick = () => {
+                Networking.client.room.send(C2SPacket.StartGame, {})
+            }
+        } else {
+            this.startButton.style.display = "none"
+        }
+
+
 
         Networking.client.room!.state.clients.forEach((client) => {
             this.playerList.innerHTML += `<li>${client.name}</li>`
@@ -72,6 +62,11 @@ export class StartScreen extends Scene {
             })
         })
 
+        this.gunButtons.forEach((button) => {
+            button.style.backgroundColor = ""
+        })
+
+        this.gunButtons.at(0).style.backgroundColor = "red"
 
         let options = Networking.client.room.state.clients.get(Networking.client.clientId).gunOptions.options;
         this.gunButtons.forEach((button, index) => {

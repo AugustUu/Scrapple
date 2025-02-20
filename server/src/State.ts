@@ -125,6 +125,7 @@ export class PlayerClient extends Schema {
     @type("string") name: string;
     @type("string") id: string;
     @type("boolean") host: boolean;
+    @type("number") wins: number;
 
     @type(Option) gunOptions: Option;
 
@@ -136,6 +137,7 @@ export class PlayerClient extends Schema {
         this.name = name
         this.id = id;
         this.host = host
+        this.wins = 0;
     }
 
     randomiseGunOptions(){
@@ -153,7 +155,7 @@ export class PlayerClient extends Schema {
 
 export class Game extends Schema {
     @type("boolean") inRound: boolean;
-    
+    @type("number") roundsPlayed: number;
 }
 
 
