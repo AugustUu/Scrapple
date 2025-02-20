@@ -9,6 +9,7 @@ export var C2SPacket = {
     Grapple: "grapple",
     EndGrapple: "endgrapple",
     StartGame: "startgame",
+    PickGun: "pickgun",
 }
 
 export var S2CPackets = {
@@ -16,5 +17,6 @@ export var S2CPackets = {
     BulletSpawn: "bulletspawn",
     InitClient: "initclient",
     StartGame: "startgame",
+    EndGame: "endgame",
     Killed: "killed"
 }

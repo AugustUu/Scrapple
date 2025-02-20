@@ -8,6 +8,7 @@ import { Networking } from "../networking/Networking";
 import { BulletComponent, BulletMoveSystem, createBullet } from "../game/Entities/Bullet";
 import { GrappleLineSystem } from "../game/Entities/GrappleLine";
 import { Bullet, CircleCollider, Collider, Player, RectangleCollider } from "server/src/State";
+import { S2CPackets } from "shared/src/networking/Packet";
 
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
 export var BulletEntities: Map<String, Entity<BulletComponent>> = new Map();
@@ -33,23 +34,12 @@ export class Game extends Scene {
         this.hudElement = document.getElementById('hud')!;
 
 
-    }
-
-    public onActivate(context: SceneActivationContext<unknown>): void {
-
-        this.hudElement.style.display = "";
-
-
-        /*
-        engine.add(createGroundShape(0, 500, new Color(50, 50, 50), { type: 'Rectangle', height: 5, width: 50 }))
-
-        engine.add(createGroundShape(700, 100, new Color(0, 100, 0), { type: 'Rectangle', height: 5, width: 20 }))
-        engine.add(createGroundShape(-700, 100, new Color(0, 100, 0), { type: 'Rectangle', height: 5, width: 20 }))
-        engine.add(createGroundShape(-200, -300, new Color(20, 20, 20), { type: 'Circle', radius: 5 }))
-        engine.add(createGroundShape(200, -300, new Color(20, 20, 20), { type: 'Circle', radius: 5 }))
-
-        engine.add(createGroundShape(0, 300, new Color(20, 30, 20), { type: 'Triangle', point1: new Vector(0, 0), point2: new Vector(10, -10), point3: new Vector(-10, -10) }))
-        */
+        Networking.client.room!.onMessage(S2CPackets.EndGame,()=>{
+            if(LocalPlayerInstance){
+                LocalPlayerInstance.kill()
+            }
+            this.engine.goToScene("startscreen")
+        })
 
         Networking.client.room!.state.colliders.onAdd((collider: any, key: number) => {
             if (collider.type == "Circle") {
@@ -85,6 +75,21 @@ export class Game extends Scene {
         Networking.client.room!.state.bullets.onRemove((bullet: any, id: string) => {
             BulletEntities.get(id)?.kill()
         })
+
+        Networking.client.room.onMessage(S2CPackets.Killed,()=>{
+            console.log("killed")
+            if(LocalPlayerInstance){
+                LocalPlayerInstance.kill()
+            }
+        })
+
+    }
+
+    public onActivate(context: SceneActivationContext<unknown>): void {
+
+        this.hudElement.style.display = "";
+
+      
 
         this.playButton = new Actor({
             width: 50,
