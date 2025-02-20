@@ -67,6 +67,14 @@ export class MathUtils {
     }
 }
 
+export const shuffle = (array: any[]) => { 
+    for (let i = array.length - 1; i > 0; i--) { 
+      const j = Math.floor(Math.random() * (i + 1)); 
+      [array[i], array[j]] = [array[j], array[i]]; 
+    } 
+    return array; 
+}
+
 export function generateRevoluteJoint(target: RigidBody | null, rb: RigidBody, hitPoint: { x: number, y: number }) {
     if (target != null) { // should never be null?
         let hit_point_vector = new Vector2(hitPoint)
