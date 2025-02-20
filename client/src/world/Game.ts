@@ -38,7 +38,7 @@ export class Game extends Scene {
             if(LocalPlayerInstance){
                 LocalPlayerInstance.kill()
             }
-            this.engine.goToScene("startscreen")
+            this.engine.goToScene("endRoundScreen")
         })
 
         Networking.client.room!.state.colliders.onAdd((collider: any, key: number) => {

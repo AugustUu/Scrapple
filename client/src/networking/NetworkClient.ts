@@ -53,7 +53,7 @@ export class NetworkClient {
 
 
         room.onMessage(S2CPackets.InitClient,()=>{
-            engine.goToScene("startscreen");
+            engine.goToScene("startScreen");
         })
 
         room.onMessage(S2CPackets.StartGame,()=>{

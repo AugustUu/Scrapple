@@ -1,10 +1,9 @@
 import { Engine, Scene, SceneActivationContext } from "excalibur";
 import { Gun } from "shared/src/game/GunManager/Gun";
 import { Guns } from "shared/src/game/GunManager/GunManager"
-import { Game, LocalPlayerInstance } from "./Game";
+import { Game } from "./Game";
 import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
-import { LocalPlayer } from "../game/LocalPlayer";
 import { Inventory } from "../game/Inventory";
 
 export class StartScreen extends Scene {
@@ -19,28 +18,11 @@ export class StartScreen extends Scene {
     private startButton!: HTMLElement;
     private playerList!: HTMLElement;
 
-
     public onInitialize(engine: Engine) {
-        this.rootElement = document.getElementById('startscreen')!;
-
-        this.gunButtons = [document.getElementById('gun1Button'), document.getElementById('gun2Button'), document.getElementById('gun3Button')];
-
-        this.upgrade1Button = document.getElementById('upgrade1Button')!;
-        this.upgrade2Button = document.getElementById('upgrade2Button')!;
-        this.upgrade3Button = document.getElementById('upgrade3Button')!;
-        //set gun buttons to be guns
+        this.rootElement = document.getElementById('startScreen')!;
 
 
-
-
-
-
-        //set ugprade buttons to have upgrades
-
-
-
-
-
+   
 
         this.playerList = document.getElementById('playerList')!;
         this.startButton = document.getElementById('startButton')!;
@@ -60,6 +42,12 @@ export class StartScreen extends Scene {
     public onActivate(context: SceneActivationContext<unknown>): void {
         this.rootElement.style.display = "";
         this.playerList.innerHTML = "";
+        
+        this.gunButtons = [document.getElementById('gun1Button'), document.getElementById('gun2Button'), document.getElementById('gun3Button')];
+        
+        this.upgrade1Button = document.getElementById('upgrade1Button')!;
+        this.upgrade2Button = document.getElementById('upgrade2Button')!;
+        this.upgrade3Button = document.getElementById('upgrade3Button')!;
 
         Networking.client.room!.state.clients.forEach((client) => {
             this.playerList.innerHTML += `<li>${client.name}</li>`
