@@ -8,6 +8,7 @@ import("./Upgrades/ShootSpeed")
 import("./Upgrades/Speed")
 import("./Upgrades/Reversenizer")
 import("./Upgrades/Tank")
+import("./Upgrades/AntsInYoPants")
 
 export function registerUpgrade(upgradeType: typeof Upgrade) {
     let upgrade = new upgradeType();

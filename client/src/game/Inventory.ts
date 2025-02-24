@@ -38,7 +38,7 @@ export class Inventory {
 
         Networking.client.room!.state.players.get(Networking.client.clientId).onChange(() => {
             let health = Networking.client.room!.state.players.get(Networking.client.clientId).health
-            this.healthBar.innerHTML = `${health} / 100`
+            this.healthBar.innerHTML = `${health} / 100` // needs to change according to max health
         })
     }
 

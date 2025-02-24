@@ -30,6 +30,7 @@ export class LocalPlayer extends Actor {
     maxGrappleSpeed: number
 
     inventory: Inventory
+    doubleJump: boolean
 
 
     constructor(x: number, y: number) {
@@ -58,8 +59,7 @@ export class LocalPlayer extends Actor {
         this.shooting = false
         this.grappling = false
 
-        //this.inventory.gun = new Pistol()
-
+        this.doubleJump = false
 
 
         
@@ -76,6 +76,7 @@ export class LocalPlayer extends Actor {
             if (hit.collider.collisionGroups() == 0x00010007) {
                 if(!this.grounded){
                     this.grounded = true
+                    this.doubleJump = true;
                 }
             }
             else {
@@ -103,9 +104,15 @@ export class LocalPlayer extends Actor {
             rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, -50) }, true);
         }
         if (engine.input.keyboard.wasPressed(Keys.W)) {
+
             if(this.grounded || Date.now() - this.lastTimeGrounded < 100){
                 rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
             }   
+            else if(this.inventory.GetUpgrade("AntsInYoPants").level == 1 && this.doubleJump){
+                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
+                this.doubleJump = false
+            }            
+            
         }
         if (engine.input.keyboard.wasReleased(Keys.W)){
             rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, rigidBody.linvel().y * 0.25) }, true);
@@ -113,6 +120,21 @@ export class LocalPlayer extends Actor {
 
         if (engine.input.keyboard.wasPressed(Keys.E) && this.inventory.GetUpgrade("Reversenizer").level == 1){
             rigidBody.setLinvel({ x: rigidBody.linvel().x * -0.75, y: rigidBody.linvel().y * -0.75 }, true);
+        }
+
+        //dash
+        if(engine.input.keyboard.wasPressed(Keys.Q)){
+            if(rigidBody.linvel().x > 0){
+                rigidBody.setLinvel({ x: rigidBody.linvel().x * 2, y: rigidBody.linvel().y}, true)            }
+            if(rigidBody.linvel().x < 0){
+                rigidBody.setLinvel({ x: rigidBody.linvel().x * 2, y: rigidBody.linvel().y}, true)
+            }
+            if(rigidBody.linvel().y > 0){
+                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: rigidBody.linvel().y * 2}, true)
+            }
+            if(rigidBody.linvel().y < 0){
+                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: rigidBody.linvel().y * 2}, true)
+            }
         }
 
         
@@ -228,7 +250,7 @@ export class LocalPlayer extends Actor {
         }
 
         //switch gun hotkeys!!
-        if (engine.input.keyboard.wasPressed(Keys.Key1)) {
+        /*if (engine.input.keyboard.wasPressed(Keys.Key1)) {
             this.inventory.ChangeGun(idList[0]) 
         }
         if (engine.input.keyboard.wasPressed(Keys.Key2)) {
@@ -244,7 +266,7 @@ export class LocalPlayer extends Actor {
             this.inventory.ChangeGun(idList[4])
         }        if (engine.input.keyboard.wasPressed(Keys.Key6)) {
             this.inventory.ChangeGun(idList[5])
-        }
+        }*/
 
         Networking.client.room?.send(C2SPacket.Move, { x: this.pos.x, y: this.pos.y })
         super.update(engine, delta);

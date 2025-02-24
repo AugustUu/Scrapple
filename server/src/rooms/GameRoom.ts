@@ -2,8 +2,9 @@ import { Room, Client } from "@colyseus/core";
 import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 import { randomBytes } from "crypto"
-import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider, PlayerClient } from "../State"
+import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider, PlayerClient, UpgradeState } from "../State"
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
+import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 
 const getRandomNumber = (min: number, max: number) => {
     return Math.random() * (max - min) + min
@@ -38,6 +39,18 @@ export class GameRoom extends Room<State> {
                 this.state.game.inRound = true;
                 this.state.clients.forEach((client2, id) => {
                     this.state.players.set(id, new Player(client2.name, id, client2.gunOptions.options[ client2.gunOptions.picked]));
+                    let pickedUpgradeID = client2.upgradeOptions.options[client2.upgradeOptions.picked]
+                    if (Upgrades.has(pickedUpgradeID)){
+                        if(client2.upgrades.has(pickedUpgradeID)){
+                            if(client2.upgrades.get(pickedUpgradeID).level < Upgrades.get(pickedUpgradeID).max){
+                                client2.upgrades.get(pickedUpgradeID).level += 1
+                            }
+                        }
+                        else{
+                            client2.upgrades.set(pickedUpgradeID, new UpgradeState(pickedUpgradeID))
+                            console.log(client2.upgrades.get(pickedUpgradeID).level)
+                        }
+                    }
                 })
                 this.broadcast(S2CPackets.StartGame)
             }
@@ -45,6 +58,10 @@ export class GameRoom extends Room<State> {
 
         this.onMessage(C2SPacket.PickGun, (client, message) => {
             this.state.clients.get(client.id).gunOptions.picked = message;
+        })
+
+        this.onMessage(C2SPacket.PickUpgrade, (client, message) => {
+            this.state.clients.get(client.id).upgradeOptions.picked = message;
         })
 
         this.onMessage(C2SPacket.Move, (client, message) => {
@@ -118,6 +135,20 @@ export class GameRoom extends Room<State> {
             }
         })
 
+        this.onMessage(C2SPacket.LevelUpgrade, (client, message) => { // shouldnt be ran realistically
+            let playerClient = this.state.clients.get(client.sessionId)
+            if (Upgrades.has(message.id)){
+                if(playerClient.upgrades.has(message.id)){
+                    if(playerClient.upgrades.get(message.id).level < Upgrades.get(message.id).max){
+                        playerClient.upgrades.get(message.id).level += 1
+                    }
+                }
+                else{
+                    playerClient.upgrades.set(message.id, new UpgradeState(message.id))
+                }
+            }
+        })
+
 
     }
 
@@ -145,14 +176,14 @@ export class GameRoom extends Room<State> {
             })
         })
 
-        if(this.state.players.size == 1 && this.state.game.inRound){
+        if(this.state.players.size == 10 && this.state.game.inRound){
             this.state.game.inRound = false
             
             this.state.clients.get(this.state.players.values().next().value.id).wins += 1
             console.log(JSON.stringify(this.state.clients))
             this.state.players = new MapSchema<Player>();
             this.state.clients.forEach((clients)=>{
-                clients.randomiseGunOptions()
+                clients.randomizeGunOptions()
             })
             this.broadcast(S2CPackets.EndGame)
         }
