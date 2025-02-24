@@ -74,6 +74,9 @@ export class GameRoom extends Room<State> {
 
         this.onMessage(C2SPacket.Shoot, (client, message) => {
             let player = this.state.players.get(client.sessionId)
+            if(player == null){
+                return
+            }
             let gunInfo = Guns.get(player.gun.gunID)
             //console.log(JSON.stringify(player.gun))
 
@@ -175,6 +178,9 @@ export class GameRoom extends Room<State> {
 
         if(this.state.players.size == 10 && this.state.game.inRound){
             this.state.game.inRound = false
+            
+            this.state.clients.get(this.state.players.values().next().value.id).wins += 1
+            console.log(JSON.stringify(this.state.clients))
             this.state.players = new MapSchema<Player>();
             this.state.clients.forEach((clients)=>{
                 clients.randomizeGunOptions()
@@ -186,6 +192,9 @@ export class GameRoom extends Room<State> {
             this.state.bullets.forEach((bullet, key) => {
                 if (bullet.shotById != player.id) {
                     if (Math.hypot(player.position.x - bullet.position.x, player.position.y - bullet.position.y) <= (bullet.radius + player.radius)) {
+                        if(!this.state.players.get(bullet.shotById)){
+                            return
+                        }
                         player.health -= Guns.get(this.state.players.get(bullet.shotById).gun.gunID).damage
 
                         if (player.health <= 0) {
@@ -213,6 +222,9 @@ export class GameRoom extends Room<State> {
 
     onLeave(client: Client, consented: boolean) {
         console.log(client.sessionId, "left!");
+        if(this.state.clients.get((client.sessionId)).host && this.state.clients.size > 1){
+            this.state.clients.values().next().value.host = true;
+        }
         this.state.clients.delete(client.sessionId);
         if (this.state.players.has(client.sessionId)) {
             this.state.players.delete(client.sessionId);

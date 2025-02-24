@@ -6,6 +6,7 @@ import RAPIER from '@dimforge/rapier2d-compat';
 import { MouseInput } from './util';
 import { Inventory } from './game/Inventory';
 import { StartScreen } from './world/StartScreen';
+import { EndRoundScreen } from './world/EndRoundScreen';
 
 
 export const engine = new Engine({
@@ -25,7 +26,9 @@ export const engine = new Engine({
     scenes: {
         mainMenu: MainMenu,
         game: Game,
-        startscreen: StartScreen,
+        startScreen: StartScreen,
+        endRoundScreen: EndRoundScreen
+        
     }
 });
 

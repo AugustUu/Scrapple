@@ -137,6 +137,7 @@ export class PlayerClient extends Schema {
     @type("string") name: string;
     @type("string") id: string;
     @type("boolean") host: boolean;
+    @type("number") wins: number;
 
     @type({ map: UpgradeState }) upgrades: MapSchema<UpgradeState>;
 
@@ -154,6 +155,7 @@ export class PlayerClient extends Schema {
         this.name = name
         this.id = id;
         this.host = host
+        this.wins = 0;
     }
 
     randomizeGunOptions(){
@@ -204,6 +206,8 @@ export class PlayerClient extends Schema {
 
 export class Game extends Schema {
     @type("boolean") inRound: boolean;
+    @type("number") roundsPlayed: number;
+
     
 }
 
