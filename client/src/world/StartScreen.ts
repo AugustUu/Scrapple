@@ -11,10 +11,7 @@ export class StartScreen extends Scene {
     private rootElement!: HTMLElement;
 
     private gunButtons!: HTMLElement[]
-    private upgrade1Button!: HTMLElement;
-    private upgrade2Button!: HTMLElement;
-    private upgrade3Button!: HTMLElement;
-
+    private upgradeButtons!: HTMLElement[]
 
     private startButton!: HTMLElement;
     private playerList!: HTMLElement;
@@ -25,9 +22,7 @@ export class StartScreen extends Scene {
 
         this.gunButtons = [document.getElementById('gun1Button'), document.getElementById('gun2Button'), document.getElementById('gun3Button')];
 
-        this.upgrade1Button = document.getElementById('upgrade1Button')!;
-        this.upgrade2Button = document.getElementById('upgrade2Button')!;
-        this.upgrade3Button = document.getElementById('upgrade3Button')!;
+        this.upgradeButtons = [document.getElementById('upgrade1Button'), document.getElementById('upgrade2Button'), document.getElementById('upgrade3Button')];
         //set gun buttons to be guns
 
 
@@ -73,20 +68,30 @@ export class StartScreen extends Scene {
         })
 
 
-        let options = Networking.client.room.state.clients.get(Networking.client.clientId).gunOptions.options;
+        let gunOptions = Networking.client.room.state.clients.get(Networking.client.clientId).gunOptions.options;
+        let upgradeOptions = Networking.client.room.state.clients.get(Networking.client.clientId).upgradeOptions.options;
         this.gunButtons.forEach((button, index) => {
-
-            button.innerHTML = options[index]
-
+            button.innerHTML = gunOptions[index]
             button.addEventListener("click", () => {
                 Networking.client.room.send(C2SPacket.PickGun, index)
-                
+
                 this.gunButtons.forEach((button2) => {
                     button2.style.backgroundColor = ""
                 })
                 button.style.backgroundColor = "red"
             })
+        })
+        
+        this.upgradeButtons.forEach((button, index) => {
+            button.innerHTML = upgradeOptions[index]
+            button.addEventListener("click", () => {
+                Networking.client.room.send(C2SPacket.PickUpgrade, index)
 
+                this.upgradeButtons.forEach((button2) => {
+                    button2.style.backgroundColor = ""
+                })
+                button.style.backgroundColor = "red"
+            })
         })
     }
 

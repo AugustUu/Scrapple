@@ -10,6 +10,7 @@ export var C2SPacket = {
     EndGrapple: "endgrapple",
     StartGame: "startgame",
     PickGun: "pickgun",
+    PickUpgrade: "pickupgrade",
     LevelUpgrade: "levelupgrade"
 }
 

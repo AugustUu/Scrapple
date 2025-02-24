@@ -48,6 +48,7 @@ export class UpgradeState extends Schema {
     constructor(upgradeID: string){
         super();
         this.upgradeID = upgradeID
+        this.level = 1
     }
 }
 
@@ -140,20 +141,22 @@ export class PlayerClient extends Schema {
     @type({ map: UpgradeState }) upgrades: MapSchema<UpgradeState>;
 
     @type(Option) gunOptions: Option;
+    @type(Option) upgradeOptions: Option;
 
     constructor(name: string, id: string, host: boolean) {
         super();
 
-        this.randomiseGunOptions()
-
         this.upgrades = new MapSchema();
+
+        this.randomizeGunOptions()
+        this.randomizeUpgradeOptions()
 
         this.name = name
         this.id = id;
         this.host = host
     }
 
-    randomiseGunOptions(){
+    randomizeGunOptions(){
         let gunArray = Array.from(Guns.keys())
         let options = [];
         for(let i=0;i<3;i++){
@@ -167,7 +170,7 @@ export class PlayerClient extends Schema {
 
     randomizeUpgradeOptions(){
         let upgradeMap = new Map(Upgrades)
-        for(let upgrade of this.upgrades){
+        for(let upgrade of this.upgrades.entries()){
             if(upgrade[1].level >= upgradeMap.get(upgrade[0]).max){
                 upgradeMap.delete(upgrade[0])
                 continue
@@ -187,6 +190,15 @@ export class PlayerClient extends Schema {
                 }*/ //update to get selected gun for gun dependencies
             }
         }
+        let options = [];
+        let upgradeKeys = Array.from(upgradeMap.keys())
+        for(let i=0;i<3;i++){
+            let upgradeNum = Math.floor(Math.random() * upgradeKeys.length)
+            options.push(upgradeMap.get(upgradeKeys[upgradeNum]).name)
+            upgradeKeys.splice(upgradeNum, 1)
+        }
+
+        this.upgradeOptions = new Option(options)
     }
 }
 
