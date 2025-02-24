@@ -1,5 +1,6 @@
 import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 import { Guns } from "shared/src/game/GunManager/GunManager";
+import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 
 
 export class Position extends Schema {
@@ -37,6 +38,17 @@ export class GunState extends Schema {
         this.fireDelay = gunInfo.fireRate * 1000;
         this.reloadDelay = gunInfo.timeToReload * 1000;
         this.bulletsPerShot = gunInfo.bulletsPerShot;
+    }
+}
+
+export class UpgradeState extends Schema {
+    @type("string") upgradeID: string;
+    @type("number") level: number;
+
+    constructor(upgradeID: string){
+        super();
+        this.upgradeID = upgradeID
+        this.level = 1
     }
 }
 
@@ -127,12 +139,18 @@ export class PlayerClient extends Schema {
     @type("boolean") host: boolean;
     @type("number") wins: number;
 
+    @type({ map: UpgradeState }) upgrades: MapSchema<UpgradeState>;
+
     @type(Option) gunOptions: Option;
+    @type(Option) upgradeOptions: Option;
 
     constructor(name: string, id: string, host: boolean) {
         super();
 
-        this.randomiseGunOptions()
+        this.upgrades = new MapSchema();
+
+        this.randomizeGunOptions()
+        this.randomizeUpgradeOptions()
 
         this.name = name
         this.id = id;
@@ -140,7 +158,7 @@ export class PlayerClient extends Schema {
         this.wins = 0;
     }
 
-    randomiseGunOptions(){
+    randomizeGunOptions(){
         let gunArray = Array.from(Guns.keys())
         let options = [];
         for(let i=0;i<3;i++){
@@ -151,11 +169,46 @@ export class PlayerClient extends Schema {
 
         this.gunOptions = new Option(options)
     }
+
+    randomizeUpgradeOptions(){
+        let upgradeMap = new Map(Upgrades)
+        for(let upgrade of this.upgrades.entries()){
+            if(upgrade[1].level >= upgradeMap.get(upgrade[0]).max){
+                upgradeMap.delete(upgrade[0])
+                continue
+            }
+            if(upgradeMap.get(upgrade[0]).upgradeDep != undefined){
+                let dep = upgradeMap.get(upgrade[0]).upgradeDep
+                if(this.upgrades.get(dep.upgrade).level < dep.level){
+                    upgradeMap.delete(upgrade[0])
+                    continue
+                }
+            }
+            if(upgradeMap.get(upgrade[0]).gunDep != undefined){
+                let dep = upgradeMap.get(upgrade[0]).gunDep
+                /*if(this.gun != dep){
+                    this.upgradeMap.delete(upgrade[0])
+                    continue
+                }*/ //update to get selected gun for gun dependencies
+            }
+        }
+        let options = [];
+        let upgradeKeys = Array.from(upgradeMap.keys())
+        for(let i=0;i<3;i++){
+            let upgradeNum = Math.floor(Math.random() * upgradeKeys.length)
+            options.push(upgradeMap.get(upgradeKeys[upgradeNum]).name)
+            upgradeKeys.splice(upgradeNum, 1)
+        }
+
+        this.upgradeOptions = new Option(options)
+    }
 }
 
 export class Game extends Schema {
     @type("boolean") inRound: boolean;
     @type("number") roundsPlayed: number;
+
+    
 }
 
 

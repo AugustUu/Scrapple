@@ -2,8 +2,8 @@ import { Upgrade } from "../Upgrade"
 import { registerUpgrade } from "../UpgradeManager"
 
 @registerUpgrade
-export class Reversenizer extends Upgrade {
+export class Tank extends Upgrade {
     constructor() {
-        super("Reversenizer", 1)
+        super("Tank", 1)
     }
 }
