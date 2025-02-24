@@ -182,6 +182,9 @@ export class GameRoom extends Room<State> {
 
     onLeave(client: Client, consented: boolean) {
         console.log(client.sessionId, "left!");
+        if(this.state.clients.get((client.sessionId)).host && this.state.clients.size > 1){
+            this.state.clients.values().next().value.host = true;
+        }
         this.state.clients.delete(client.sessionId);
         if (this.state.players.has(client.sessionId)) {
             this.state.players.delete(client.sessionId);
