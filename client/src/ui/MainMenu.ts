@@ -12,6 +12,7 @@ export class MainMenu extends Scene {
     private inputElement!: HTMLInputElement;
     private createOrJoin!: HTMLElement;
     private quickPlay: HTMLElement;
+    private nameInput: HTMLInputElement; 
 
     public onInitialize() {
         this.playButton = new Actor({
@@ -26,7 +27,9 @@ export class MainMenu extends Scene {
         this.createOrJoin = document.getElementById('joinButton')!;
         this.quickPlay = document.getElementById('quickplay')!;
 
-
+        this.nameInput = document.getElementById('nameInput')! as HTMLInputElement;
+        
+        this.nameInput.value = "jorbis" + Math.random()
 
         this.playButton.on("pointerdown",function(){
             //engine.goToScene("game");
@@ -34,15 +37,17 @@ export class MainMenu extends Scene {
             //Inventory.updateUsableUpgrades()
             //console.log(Inventory.usableUpgrades.get("Speed"))
         })
+
+        
         this.quickPlay.addEventListener("click",()=>{
-            Networking.quickPlay("jorbis" + Math.random())
+            Networking.quickPlay(this.nameInput.value)
         })
 
         this.createOrJoin.addEventListener("click",()=>{
             if(this.inputElement.value == ""){
-                Networking.create("jorbis" + Math.random())
+                Networking.create(this.nameInput.value)
             }else{
-                Networking.connect(this.inputElement.value,"jorbis" + Math.random())
+                Networking.connect(this.inputElement.value,this.nameInput.value)
             }
         })
         

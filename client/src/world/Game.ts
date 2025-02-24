@@ -39,14 +39,19 @@ export class Game extends Scene {
                 if(LocalPlayerInstance.line){
                     LocalPlayerInstance.line.kill()
                 }
-                PlayerEntities.forEach((player)=>{
-                    let line = player.get(OtherPlayerComponent).grappleLine
-                    if(line){
-                        line.kill()
-                    }
-                })
+
                 LocalPlayerInstance.kill()
             }
+            PlayerEntities.forEach((player)=>{
+                let line = player.get(OtherPlayerComponent).grappleLine
+                if(line){
+                    line.kill()
+                }
+            })
+
+            BulletEntities.forEach((bullet)=>{
+                bullet.kill()
+            })
             this.engine.goToScene("endRoundScreen")
         })
 

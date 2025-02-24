@@ -33,7 +33,7 @@ export class LocalPlayer extends Actor {
 
 
     constructor(x: number, y: number) {
-        super({name:"localplayer", x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
+        super({name:"localplayer", x: x, y: y, radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value), anchor: Vector.Half });
         this.inventory = new Inventory()
         this.jumpHeight = 60 //+ (this.inventory.GetUpgrade("Jump").level * 20)
         this.speed = 8 //+ (this.inventory.GetUpgrade("Speed").level)
