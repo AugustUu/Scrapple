@@ -13,6 +13,8 @@ export class NetworkClient {
     public room:Colyseus.Room<State> | null = null;
     public clientId: string = "";
 
+    private playerListHud!: HTMLElement;
+
     onStateChange(state: any): void {
         //console.log("multiPlayerState Changed", state);
 
@@ -37,6 +39,7 @@ export class NetworkClient {
 
     onJoin(room: Room): void {
         this.room = room
+        this.playerListHud = document.getElementById('playerListHud')
         this.clientId = room.sessionId
 
         console.log("joined",room.id)
@@ -60,6 +63,21 @@ export class NetworkClient {
             engine.goToScene("game");
         })
 
+
+        Networking.client.room!.state.clients.onAdd((client)=>{
+            this.playerListHud.innerHTML = ""
+
+            Networking.client.room!.state.clients.forEach((client)=>{
+                this.playerListHud.innerHTML += `<div>${client.name} : ${client.wins}</div>`
+            })
+
+            client.listen("wins",(a)=>{
+                this.playerListHud.innerHTML = ""
+                Networking.client.room!.state.clients.forEach((client)=>{
+                    this.playerListHud.innerHTML += `<div>${client.name} : ${client.wins}</div>`
+                })
+            })
+        })
     }
 
 

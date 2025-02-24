@@ -12,7 +12,8 @@ export class Inventory {
 
     private weaponDisplay!: HTMLElement;
     private ammoCounter!: HTMLElement; 
-    private healthBar!: HTMLElement; 
+    private healthBar!: HTMLElement;
+   
 
     public constructor() {
         this.upgrades = Upgrades
@@ -32,6 +33,8 @@ export class Inventory {
                 this.ammoCounter.innerHTML = `Reloading ...`
             }
         })
+
+
 
         Networking.client.room!.state.players.get(Networking.client.clientId).onChange(() => {
             let health = Networking.client.room!.state.players.get(Networking.client.clientId).health

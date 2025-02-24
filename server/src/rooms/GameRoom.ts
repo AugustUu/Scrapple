@@ -57,6 +57,9 @@ export class GameRoom extends Room<State> {
 
         this.onMessage(C2SPacket.Shoot, (client, message) => {
             let player = this.state.players.get(client.sessionId)
+            if(player == null){
+                return
+            }
             let gunInfo = Guns.get(player.gun.gunID)
             //console.log(JSON.stringify(player.gun))
 
@@ -144,6 +147,9 @@ export class GameRoom extends Room<State> {
 
         if(this.state.players.size == 1 && this.state.game.inRound){
             this.state.game.inRound = false
+            
+            this.state.clients.get(this.state.players.values().next().value.id).wins += 1
+            console.log(JSON.stringify(this.state.clients))
             this.state.players = new MapSchema<Player>();
             this.state.clients.forEach((clients)=>{
                 clients.randomiseGunOptions()
@@ -155,6 +161,9 @@ export class GameRoom extends Room<State> {
             this.state.bullets.forEach((bullet, key) => {
                 if (bullet.shotById != player.id) {
                     if (Math.hypot(player.position.x - bullet.position.x, player.position.y - bullet.position.y) <= (bullet.radius + player.radius)) {
+                        if(!this.state.players.get(bullet.shotById)){
+                            return
+                        }
                         player.health -= Guns.get(this.state.players.get(bullet.shotById).gun.gunID).damage
 
                         if (player.health <= 0) {
