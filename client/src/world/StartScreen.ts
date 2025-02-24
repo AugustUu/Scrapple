@@ -18,7 +18,7 @@ export class StartScreen extends Scene {
 
 
     public onInitialize(engine: Engine) {
-        this.rootElement = document.getElementById('startscreen')!;
+        this.rootElement = document.getElementById('startScreen')!;
 
         this.gunButtons = [document.getElementById('gun1Button'), document.getElementById('gun2Button'), document.getElementById('gun3Button')];
 
