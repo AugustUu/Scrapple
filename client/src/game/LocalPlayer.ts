@@ -122,6 +122,7 @@ export class LocalPlayer extends Actor {
             rigidBody.setLinvel({ x: rigidBody.linvel().x * -0.75, y: rigidBody.linvel().y * -0.75 }, true);
         }
 
+        //dash
         if(engine.input.keyboard.wasPressed(Keys.Q)){
             if(rigidBody.linvel().x > 0){
                 rigidBody.setLinvel({ x: rigidBody.linvel().x * 2, y: rigidBody.linvel().y}, true)            }
