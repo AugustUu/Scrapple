@@ -17,13 +17,14 @@ export class Inventory {
 
     public constructor() {
         this.upgrades = Upgrades
+        
 
         this.weaponDisplay = document.getElementById('weaponDisplay')
         this.ammoCounter = document.getElementById('ammoCounter')
         this.healthBar = document.getElementById('healthBar')
 
-        Networking.client.room!.state.players.get(Networking.client.clientId).gun.onChange(() => {
-            let gun = Networking.client.room!.state.players.get(Networking.client.clientId).gun
+        Networking.getLocalState().gun.onChange(() => {
+            let gun = Networking.getLocalState().gun
             this.weaponDisplay.innerHTML = `Weapon: ${gun.gunID}`
 
             if((gun.lastTimeReloaded + gun.reloadDelay) < Date.now()){
@@ -36,8 +37,8 @@ export class Inventory {
 
 
 
-        Networking.client.room!.state.players.get(Networking.client.clientId).onChange(() => {
-            let health = Networking.client.room!.state.players.get(Networking.client.clientId).health
+        Networking.getLocalState().onChange(() => {
+            let health = Networking.getLocalState().health
             this.healthBar.innerHTML = `${health} / 100` // needs to change according to max health
         })
     }
@@ -76,7 +77,7 @@ export class Inventory {
     }
 
     public GetGun() {
-        let id = Networking.client.room.state.players.get(Networking.client.clientId).gun.gunID
+        let id = Networking.getLocalState().gun.gunID
         return Guns.get(id)
     }
 

@@ -17,7 +17,6 @@ import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 import { engine } from "..";
 
 export class LocalPlayer extends Actor {
-    health: number;
     joint!: ImpulseJoint;
     shooting: boolean
     grappling: boolean
@@ -36,12 +35,29 @@ export class LocalPlayer extends Actor {
     constructor(x: number, y: number) {
         super({name:"localplayer", x: x, y: y, radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value), anchor: Vector.Half });
         this.inventory = new Inventory()
-        this.jumpHeight = 60 //+ (this.inventory.GetUpgrade("Jump").level * 20)
-        this.speed = 8 //+ (this.inventory.GetUpgrade("Speed").level)
-        this.speed *= 1 //- 0.25 * this.inventory.GetUpgrade("Tank").level // speed multiply by 0.75 if tank
-        this.health = 100 //+ 50 * this.inventory.GetUpgrade("Tank").level
+        this.jumpHeight = 60
+        
+        this.speed = 8
+        let speedMult = 1
         this.maxGrappleSpeed = 175
         this.radius = 20
+
+        if(Networking.getLocalClient().upgrades.has("Jump")){
+            this.jumpHeight += Networking.getLocalClient().upgrades.get("Jump").level * 10
+        }
+        if(Networking.getLocalClient().upgrades.has("Speed")){
+            this.speed += Networking.getLocalClient().upgrades.get("Speed").level * 2
+        }
+        if(Networking.getLocalClient().upgrades.has("Tank")){
+            speedMult -= Networking.getLocalClient().upgrades.get("Tank").level * 0.5
+        }
+        
+
+
+
+
+        this.speed *= speedMult // speed multiply by 0.75 if tank
+
         this.grounded = false
 
         
@@ -267,6 +283,9 @@ export class LocalPlayer extends Actor {
         }        if (engine.input.keyboard.wasPressed(Keys.Key6)) {
             this.inventory.ChangeGun(idList[5])
         }*/
+        if (engine.input.keyboard.wasPressed(Keys.Key7)) {
+            Networking.client.room?.send(C2SPacket.LevelUpgrade, { id:"Speed" })
+        }
 
         Networking.client.room?.send(C2SPacket.Move, { x: this.pos.x, y: this.pos.y })
         super.update(engine, delta);
