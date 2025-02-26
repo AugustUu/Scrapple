@@ -12,7 +12,9 @@
     "strictNullChecks": false,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "noImplicitAny": false,
+
   },
   "include": [
     "src"
