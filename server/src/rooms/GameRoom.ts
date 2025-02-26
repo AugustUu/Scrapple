@@ -30,6 +30,12 @@ export class GameRoom extends Room<State> {
         this.state.colliders.push(new CircleCollider(-200, -300, 5))
         this.state.colliders.push(new CircleCollider(200, -300, 5))
 
+
+        /*this.state.colliders.push(new RectangleCollider(0, 100, 50, 5))
+        this.state.colliders.push(new RectangleCollider(-200, 500, 5, 50))
+        this.state.colliders.push(new RectangleCollider(200, 500, 5, 50))
+        */
+       
         this.onMessage(C2SPacket.Ping, (client, message) => {
             client.send(S2CPackets.Pong, {})
         })
