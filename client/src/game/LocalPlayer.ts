@@ -91,7 +91,7 @@ export class LocalPlayer extends Actor {
         if (hit != null) {
             if (hit.collider.collisionGroups() == 0x00010007) {
                 if(!this.grounded){
-                    this.grounded = true
+                    this.grounded = true;
                     this.doubleJump = true;
                 }
             }
@@ -124,7 +124,7 @@ export class LocalPlayer extends Actor {
             if(this.grounded || Date.now() - this.lastTimeGrounded < 100){
                 rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
             }   
-            else if(this.inventory.GetUpgrade("AntsInYoPants").level == 1 && this.doubleJump){
+            else if(/*this.inventory.GetUpgrade("AntsInYoPants").level == 1 &&*/ this.doubleJump){
                 rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
                 this.doubleJump = false
             }            
@@ -140,20 +140,12 @@ export class LocalPlayer extends Actor {
 
         //dash
         if(engine.input.keyboard.wasPressed(Keys.Q)){
-            if(rigidBody.linvel().x > 0){
-                rigidBody.setLinvel({ x: rigidBody.linvel().x * 2, y: rigidBody.linvel().y}, true)            }
-            if(rigidBody.linvel().x < 0){
-                rigidBody.setLinvel({ x: rigidBody.linvel().x * 2, y: rigidBody.linvel().y}, true)
-            }
-            if(rigidBody.linvel().y > 0){
-                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: rigidBody.linvel().y * 2}, true)
-            }
-            if(rigidBody.linvel().y < 0){
-                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: rigidBody.linvel().y * 2}, true)
-            }
+            let dashSpeed = 100
+            let direction = new Vector2({x:this.pos.x - engine.input.pointers.primary.lastWorldPos.x, y:this.pos.y - engine.input.pointers.primary.lastWorldPos.y}).normalized().scale(dashSpeed)
+            rigidBody.setLinvel({x: rigidBody.linvel().x - (direction.x * 3), y: rigidBody.linvel().y + direction.y}, true)
         }
 
-        
+
 
         let damping: number
         if(this.grappling){
