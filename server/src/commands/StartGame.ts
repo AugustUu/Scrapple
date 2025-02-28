@@ -2,7 +2,7 @@ import { Command } from "@colyseus/command";
 import { GameRoom } from "../rooms/GameRoom";
 import { Client } from "colyseus";
 import { S2CPackets } from "shared/src/networking/Packet";
-import { Player, PlayerClient, UpgradeState } from "../State";
+import { Player, UpgradeState } from "../State";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 
 

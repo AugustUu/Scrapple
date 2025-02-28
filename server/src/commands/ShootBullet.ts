@@ -1,8 +1,7 @@
 import { Command } from "@colyseus/command";
 import { GameRoom } from "../rooms/GameRoom";
 import { Client } from "colyseus";
-import { S2CPackets } from "shared/src/networking/Packet";
-import { Bullet, Player, PlayerClient } from "../State";
+import { Bullet  } from "../State";
 import { Guns } from "shared/src/game/GunManager/GunManager";
 import { randomBytes } from "crypto"
 

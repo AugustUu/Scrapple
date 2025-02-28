@@ -1,8 +1,6 @@
 import { Command } from "@colyseus/command";
 import { GameRoom } from "../rooms/GameRoom";
 import { Client } from "colyseus";
-import { S2CPackets } from "shared/src/networking/Packet";
-import { PlayerClient } from "../State";
 
 
 
