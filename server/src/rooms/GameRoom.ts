@@ -17,9 +17,7 @@ import { EndGrappleCommand, StartGrappleCommand } from "../commands/Grapple";
 
 
 
-function clamp(num: number, min: number, max: number) {
-    return Math.max(Math.min(num, max), min)
-}
+
 
 export class GameRoom extends Room<State> {
     maxClients = 8;
