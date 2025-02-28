@@ -4,7 +4,7 @@ import { Upgrades } from "shared/src/game//UpgradeManager/UpgradeManager"
 import { Networking } from "../networking/Networking"
 import { C2SPacket } from "shared/src/networking/Packet"
 import { Guns } from "shared/src/game/GunManager/GunManager"
-import { GunState } from "server/src/State"
+import { GunState, UpgradeState } from "server/src/State"
 
 export class Inventory {
     public upgrades: Map<string, Upgrade>
@@ -13,6 +13,7 @@ export class Inventory {
     private weaponDisplay!: HTMLElement;
     private ammoCounter!: HTMLElement; 
     private healthBar!: HTMLElement;
+    private upgradesList!: HTMLElement;
    
 
     public constructor() {
@@ -22,6 +23,7 @@ export class Inventory {
         this.weaponDisplay = document.getElementById('weaponDisplay')
         this.ammoCounter = document.getElementById('ammoCounter')
         this.healthBar = document.getElementById('healthBar')
+        this.upgradesList = document.getElementById('upgradesList')
 
         Networking.getLocalState().gun.onChange(() => {
             let gun = Networking.getLocalState().gun
@@ -35,37 +37,18 @@ export class Inventory {
             }
         })
 
-
+        debugger
+        Networking.getLocalClient().upgrades.onChange(() => {
+            this.upgradesList.innerHTML = ''
+            for(let upgrade of Networking.getLocalClient().upgrades.values()){
+                this.upgradesList.innerHTML += upgrade.upgradeID + "\n"
+            }
+        })
 
         Networking.getLocalState().onChange(() => {
             let health = Networking.getLocalState().health
             this.healthBar.innerHTML = `${health} / 100` // needs to change according to max health
         })
-    }
-
-    public updateUsableUpgrades(){
-        this.usableUpgrades = new Map(this.upgrades)
-        for(let upgrade of this.upgrades){
-            if(upgrade[1].level >= upgrade[1].max){
-                this.usableUpgrades.delete(upgrade[0])
-                continue
-            }
-            if(upgrade[1].upgradeDep != undefined){
-                let dep = upgrade[1].upgradeDep
-                if(this.upgrades.get(dep.upgrade).level < dep.level){
-                    this.usableUpgrades.delete(upgrade[0])
-                    continue
-                }
-            }
-            if(upgrade[1].gunDep != undefined){
-                let dep = upgrade[1].gunDep
-                if(this.GetGun().name != dep){
-                    this.usableUpgrades.delete(upgrade[0])
-                    continue
-                }
-            }
-        }
-        return this.usableUpgrades
     }
 
     public Shoot(angle: number) {
@@ -88,13 +71,5 @@ export class Inventory {
     public ChangeGun(gunID: string) {
         Networking.client.room?.send(C2SPacket.SwapGun, { id: gunID })
         //this.gun = newGun
-    }
-
-    public LevelUpgrade(upgradeName: string) {
-        let upgrade = this.upgrades.get(upgradeName)
-        if (upgrade.level < upgrade.max) {
-            upgrade.level += 1
-            console.log("upgraded " + upgradeName + " to " + (upgrade.level))
-        }
     }
 }
