@@ -41,4 +41,12 @@ export class Networking {
             console.log("JOIN ERROR", e);
         });
     }
+
+    static getLocalState(){
+        return Networking.client.room.state.players.get(Networking.client.clientId)
+    }
+
+    static getLocalClient(){
+        return Networking.client.room.state.clients.get(Networking.client.clientId)
+    }
 } 
