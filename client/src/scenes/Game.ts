@@ -9,6 +9,7 @@ import { BulletComponent, BulletMoveSystem, createBullet } from "../game/Entitie
 import { GrappleLineSystem } from "../game/Entities/GrappleLine";
 import { Bullet, CircleCollider, Collider, Player, RectangleCollider } from "server/src/State";
 import { S2CPackets } from "shared/src/networking/Packet";
+import { Hud } from "../ui/Hud";
 
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
 export var BulletEntities: Map<String, Entity<BulletComponent>> = new Map();
@@ -17,7 +18,6 @@ export var LocalPlayerInstance: LocalPlayer;
 export class Game extends Scene {
 
     private playButton: Actor | undefined;
-    private hudElement!: HTMLElement;
 
     public onInitialize() {
         this.world.systemManager.addSystem(PhysicsSystem);
@@ -27,11 +27,10 @@ export class Game extends Scene {
         this.world.systemManager.addSystem(OtherPlayerMoveSystem);
         this.world.systemManager.addSystem(BulletMoveSystem);
 
-
         this.camera.pos = Vector.Zero
         this.camera.zoom = 1
 
-        this.hudElement = document.getElementById('hud')!;
+        Hud.initMain()
 
 
         Networking.client.room!.onMessage(S2CPackets.EndGame,()=>{
@@ -39,7 +38,6 @@ export class Game extends Scene {
                 if(LocalPlayerInstance.line){
                     LocalPlayerInstance.line.kill()
                 }
-
                 LocalPlayerInstance.kill()
             }
             PlayerEntities.forEach((player)=>{
@@ -67,6 +65,7 @@ export class Game extends Scene {
 
         Networking.client.room!.state.players.onAdd((playerState: Player, id: string) => {
             if (Networking.client.clientId == id) {
+                Hud.initNetwork()
                 LocalPlayerInstance = new LocalPlayer(0, 300); // add local player
                 this.add(LocalPlayerInstance)
             } else {
@@ -100,10 +99,7 @@ export class Game extends Scene {
     }
 
     public onActivate(context: SceneActivationContext<unknown>): void {
-
-        this.hudElement.style.display = "";
-
-      
+        Hud.enable()
 
         this.playButton = new Actor({
             width: 50,
@@ -125,7 +121,7 @@ export class Game extends Scene {
     }
 
     public onDeactivate(context: SceneActivationContext): void {
-        this.hudElement.style.display = "none";
+        Hud.disable()
     }
 
 

@@ -16,8 +16,6 @@ export class NetworkClient {
     private playerListHud!: HTMLElement;
 
     onStateChange(state: any): void {
-        //console.log("multiPlayerState Changed", state);
-
         Networking.events.emit("stateChanged", new NeworkEvents.StateChanged(state));
     }
 
@@ -64,20 +62,8 @@ export class NetworkClient {
         })
 
 
-        Networking.client.room!.state.clients.onAdd((client)=>{
-            this.playerListHud.innerHTML = ""
+        
 
-            Networking.client.room!.state.clients.forEach((client)=>{
-                this.playerListHud.innerHTML += `<div>${client.name} : ${client.wins}</div>`
-            })
-
-            client.listen("wins",(a)=>{
-                this.playerListHud.innerHTML = ""
-                Networking.client.room!.state.clients.forEach((client)=>{
-                    this.playerListHud.innerHTML += `<div>${client.name} : ${client.wins}</div>`
-                })
-            })
-        })
     }
 
 
