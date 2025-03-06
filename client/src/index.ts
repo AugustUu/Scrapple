@@ -1,12 +1,12 @@
 import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering,  } from 'excalibur';
-import { Game } from './world/Game';
+import { Game } from './scenes/Game';
 
-import { MainMenu } from './ui/MainMenu';
+import { MainMenu } from './scenes/MainMenu';
 import RAPIER from '@dimforge/rapier2d-compat';
 import { MouseInput } from './util';
 import { Inventory } from './game/Inventory';
-import { StartScreen } from './world/StartScreen';
-import { EndRoundScreen } from './world/EndRoundScreen';
+import { StartScreen } from './scenes/StartScreen';
+import { EndRoundScreen } from './scenes/EndRoundScreen';
 
 
 export const engine = new Engine({
@@ -37,7 +37,6 @@ async function init() {
     await RAPIER.init();
 
     engine.start();
-    //engine.toggleDebug();
     engine.goToScene("mainMenu");
     
     MouseInput.init();
