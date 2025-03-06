@@ -6,7 +6,6 @@ import { MathUtils, generateRevoluteJoint as generateRevoluteJoint, MouseInput, 
 import { Networking } from "../networking/Networking";
 import { C2SPacket, S2CPackets } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./Entities/GrappleLine";
-import { Inventory } from "./Inventory";
 import { Game } from "../scenes/Game";
 import { Pistol} from "shared/src/game/GunManager/Guns/Pistol";
 import { Rifle } from "shared/src/game/GunManager/Guns/Rifle";
@@ -31,13 +30,12 @@ export class LocalPlayer extends Actor {
     grappleCooldown = 0.75 // seconds
     timeLastGrappled = 0
 
-    inventory: Inventory
     doubleJump: boolean
+    dash: boolean
 
 
     constructor(x: number, y: number) {
         super({name:"localplayer", x: x, y: y, radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value), anchor: Vector.Half });
-        this.inventory = new Inventory()
         this.jumpHeight = 60
         
         this.speed = 5
@@ -70,6 +68,7 @@ export class LocalPlayer extends Actor {
         this.grappling = false
 
         this.doubleJump = false
+        this.dash = false;
 
 
         
@@ -87,6 +86,7 @@ export class LocalPlayer extends Actor {
                 if(!this.grounded){
                     this.grounded = true;
                     this.doubleJump = true;
+                    this.dash = true;
                 }
             }
             else {
@@ -133,10 +133,11 @@ export class LocalPlayer extends Actor {
         }
 
         //dash
-        if(engine.input.keyboard.wasPressed(Keys.Q)){
+        if(engine.input.keyboard.wasPressed(Keys.Q) && this.dash){
             let dashSpeed = 100
             let direction = new Vector2({x:this.pos.x - engine.input.pointers.primary.lastWorldPos.x, y:this.pos.y - engine.input.pointers.primary.lastWorldPos.y}).normalized().scale(dashSpeed)
             rigidBody.setLinvel({x: rigidBody.linvel().x - (direction.x * 3), y: rigidBody.linvel().y + direction.y}, true)
+            this.dash = false
         }
 
 
@@ -235,17 +236,17 @@ export class LocalPlayer extends Actor {
 
 
         if (engine.input.keyboard.wasPressed(Keys.R)) {
-            this.inventory.Reload()
+            Networking.client.room?.send(C2SPacket.Reload, {})
         }
 
 
         if (MouseInput.mouseButtons.left) {
-            if (this.inventory.GetGun().automatic) {
+            if (Guns.get(NetworkUtils.getLocalState().gun.gunID).automatic) {
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                this.inventory.Shoot(angle)
+                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI })
             } else if (this.shooting == false) {
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                this.inventory.Shoot(angle)
+                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI })
                 this.shooting = true;
             }
         }else{

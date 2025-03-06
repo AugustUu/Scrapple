@@ -2,7 +2,6 @@ import { Actor, Color, Scene, SceneActivationContext, Vector } from "excalibur";
 import { engine } from "..";
 import { Game } from "./Game";
 import { Networking } from "../networking/Networking";
-import { Inventory } from "../game/Inventory";
 
 
 export class MainMenu extends Scene {

@@ -203,9 +203,16 @@ export class PlayerClient extends Schema {
                 }*/ //update to get selected gun for gun dependencies
             }
         }
+
+
+
         let options = [];
         let upgradeKeys = Array.from(upgradeMap.keys())
         for(let i=0;i<3;i++){
+            if(upgradeKeys.length == 0){
+                break
+            }
+            
             let upgradeNum = Math.floor(Math.random() * upgradeKeys.length)
             options.push(upgradeMap.get(upgradeKeys[upgradeNum]).name)
             upgradeKeys.splice(upgradeNum, 1)

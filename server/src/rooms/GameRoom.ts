@@ -1,5 +1,5 @@
 import { Room, Client } from "@colyseus/core";
-import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
+
 import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 
 import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider, PlayerClient, UpgradeState } from "../State"
@@ -14,6 +14,7 @@ import { StartGameCommand } from "../commands/StartGame";
 import { ReloadCommand } from "../commands/Reload";
 import { MoveCommand } from "../commands/Move";
 import { EndGrappleCommand, StartGrappleCommand } from "../commands/Grapple";
+import { EndGameCommand } from "../commands/EndGame";
 
 
 
@@ -42,7 +43,7 @@ export class GameRoom extends Room<State> {
         this.state.colliders.push(new RectangleCollider(-200, 500, 5, 50))
         this.state.colliders.push(new RectangleCollider(200, 500, 5, 50))
         */
-       
+
         this.onMessage(C2SPacket.Ping, (client, message) => {
             client.send(S2CPackets.Pong, {})
         })
@@ -102,7 +103,7 @@ export class GameRoom extends Room<State> {
                 message: message
             });
 
-          
+
         })
 
 
@@ -134,23 +135,13 @@ export class GameRoom extends Room<State> {
 
     onBeforePatch() {
 
-
         this.dispatcher.dispatch(new BulletTickCommand(), {});
 
-
-
         if (this.state.players.size == 1 && this.state.game.inRound) {
-            this.state.game.inRound = false
 
-            this.state.clients.get(this.state.players.values().next().value.id).wins += 1
-            console.log(JSON.stringify(this.state.clients))
-            this.state.players = new MapSchema<Player>();
-            this.state.clients.forEach((clients) => {
-                clients.randomizeGunOptions()
-            })
-            this.broadcast(S2CPackets.EndGame)
+            this.dispatcher.dispatch(new EndGameCommand(), {});
+
         }
-
 
     }
 

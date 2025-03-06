@@ -34,6 +34,8 @@ export class EndRoundScreen extends Scene {
 
         let upgradeOptions = Networking.client.room.state.clients.get(Networking.client.clientId).upgradeOptions.options;
 
+        this.upgradeButtons[0].style.backgroundColor = "red"
+
         this.upgradeButtons.forEach((button, index) => {
             button.innerHTML = upgradeOptions[index]
             button.addEventListener("click", () => {
