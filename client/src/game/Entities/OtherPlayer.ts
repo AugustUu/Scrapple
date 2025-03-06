@@ -26,7 +26,7 @@ export function createOtherPlayerEntity(playerState: Player, id: string): Entity
 
     entity.addComponent(new OtherPlayerComponent(playerState.name, id))
 
-    let sprite = new Circle({ radius: 20, color: Color.Red })
+    let sprite = new Circle({ radius: 20, color: Color.fromHex(Networking.client.room.state.clients.get(id).color) })
 
     let graphics = new GraphicsComponent();
     graphics.use(sprite);

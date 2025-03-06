@@ -11,7 +11,8 @@ export class MainMenu extends Scene {
     private inputElement!: HTMLInputElement;
     private createOrJoin!: HTMLElement;
     private quickPlay: HTMLElement;
-    private nameInput: HTMLInputElement; 
+    private nameInput: HTMLInputElement;
+    private colorInput: HTMLInputElement;
 
     public onInitialize() {
 
@@ -25,18 +26,18 @@ export class MainMenu extends Scene {
         
         this.nameInput.value = "jorbis" + Math.random()
 
-
+        this.colorInput = (document.getElementById('colorpicker') as HTMLInputElement)
 
         
         this.quickPlay.addEventListener("click",()=>{
-            Networking.quickPlay(this.nameInput.value)
+            Networking.quickPlay(this.nameInput.value,this.colorInput.value)
         })
 
         this.createOrJoin.addEventListener("click",()=>{
             if(this.inputElement.value == ""){
-                Networking.create(this.nameInput.value)
+                Networking.create(this.nameInput.value,this.colorInput.value)
             }else{
-                Networking.connect(this.inputElement.value,this.nameInput.value)
+                Networking.connect(this.inputElement.value,this.nameInput.value,this.colorInput.value)
             }
         })
         

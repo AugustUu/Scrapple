@@ -138,13 +138,15 @@ export class PlayerClient extends Schema {
     @type("string") id: string;
     @type("boolean") host: boolean;
     @type("number") wins: number;
+    @type("string") color: string = "ff3300";
+
 
     @type({ map: UpgradeState }) upgrades: MapSchema<UpgradeState>;
 
     @type(Option) gunOptions: Option;
     @type(Option) upgradeOptions: Option;
 
-    constructor(name: string, id: string, host: boolean) {
+    constructor(name: string, id: string, host: boolean,color: string) {
         super();
 
         this.upgrades = new MapSchema();
@@ -156,6 +158,15 @@ export class PlayerClient extends Schema {
         this.id = id;
         this.host = host
         this.wins = 0;
+        this.color = color
+    }
+
+    getUpgradeLevel(upgrade:string){
+        if(this.upgrades.has(upgrade)){
+            return this.upgrades.get(upgrade).level
+        }else{
+            return 0 
+        }
     }
 
     randomizeGunOptions(){
