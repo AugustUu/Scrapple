@@ -23,7 +23,7 @@ export class Inventory {
         this.weaponDisplay = document.getElementById('weaponDisplay')
         this.ammoCounter = document.getElementById('ammoCounter')
         this.healthBar = document.getElementById('healthBar')
-        this.upgradesList = document.getElementById('upgradesList')
+        //this.upgradesList = document.getElementById('upgradesList')
 
         Networking.getLocalState().gun.onChange(() => {
             let gun = Networking.getLocalState().gun
@@ -37,13 +37,13 @@ export class Inventory {
             }
         })
 
-        debugger
+        /*Stuff for upgrades list
         Networking.getLocalClient().upgrades.onChange(() => {
             this.upgradesList.innerHTML = ''
             for(let upgrade of Networking.getLocalClient().upgrades.values()){
                 this.upgradesList.innerHTML += upgrade.upgradeID + "\n"
             }
-        })
+        })*/
 
         Networking.getLocalState().onChange(() => {
             let health = Networking.getLocalState().health
