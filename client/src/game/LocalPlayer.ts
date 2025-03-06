@@ -31,6 +31,7 @@ export class LocalPlayer extends Actor {
     timeLastGrappled = 0
 
     doubleJump: boolean
+    dash: boolean
 
 
     constructor(x: number, y: number) {
@@ -67,6 +68,7 @@ export class LocalPlayer extends Actor {
         this.grappling = false
 
         this.doubleJump = false
+        this.dash = false;
 
 
         
@@ -84,6 +86,7 @@ export class LocalPlayer extends Actor {
                 if(!this.grounded){
                     this.grounded = true;
                     this.doubleJump = true;
+                    this.dash = true;
                 }
             }
             else {
@@ -130,10 +133,11 @@ export class LocalPlayer extends Actor {
         }
 
         //dash
-        if(engine.input.keyboard.wasPressed(Keys.Q)){
+        if(engine.input.keyboard.wasPressed(Keys.Q) && this.dash){
             let dashSpeed = 100
             let direction = new Vector2({x:this.pos.x - engine.input.pointers.primary.lastWorldPos.x, y:this.pos.y - engine.input.pointers.primary.lastWorldPos.y}).normalized().scale(dashSpeed)
             rigidBody.setLinvel({x: rigidBody.linvel().x - (direction.x * 3), y: rigidBody.linvel().y + direction.y}, true)
+            this.dash = false
         }
 
 
