@@ -6,9 +6,11 @@ export class Hud {
     private static ammoCounter: HTMLElement; 
     private static healthBar: HTMLElement;
     private static hudElement: HTMLElement;
+    private static upgradesList: HTMLElement;
 
 
     static initMain(){
+        this.upgradesList = document.getElementById('upgradeList')
         this.weaponDisplay = document.getElementById('weaponDisplay')
         this.ammoCounter = document.getElementById('ammoCounter')
         this.healthBar = document.getElementById('healthBar')
@@ -26,6 +28,14 @@ export class Hud {
 
             }else{
                 this.ammoCounter.innerHTML = `Reloading ...`
+            }
+        })
+
+
+        Networking.getLocalClient().upgrades.onChange(() => {
+            this.upgradesList.innerHTML = ''
+            for(let upgrade of Networking.getLocalClient().upgrades.values()){
+                this.upgradesList.innerHTML += upgrade.upgradeID + '<br>'
             }
         })
 
