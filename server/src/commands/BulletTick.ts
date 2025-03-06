@@ -14,6 +14,25 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
 
             if (this.state.players.has(bullet.shotById)) {
                 let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
+
+                let closestCoord: {x:number, y:number}
+                for(var player of this.state.clients.values()){
+                    if(player.id == bullet.shotById){
+                        continue
+                    }
+                    else{
+                        if(closestCoord == undefined){
+                            closestCoord = this.state.players.get(bullet.shotById).position
+                        }
+                        else{
+                            
+                        }
+                    }
+                }
+
+
+
+
                 bullet.position.x += Math.cos(bullet.angle) * bullet.speed
                 bullet.position.y += Math.sin(bullet.angle) * bullet.speed
             }
