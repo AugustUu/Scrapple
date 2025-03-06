@@ -1,5 +1,6 @@
 import { Guns } from "shared/src/game/GunManager/GunManager";
 import { Networking } from "../networking/Networking"
+import { NetworkUtils } from "../networking/NetworkUtils";
 
 export class Hud {
     private static weaponDisplay: HTMLElement;
@@ -17,8 +18,8 @@ export class Hud {
     }
 
     static initNetwork(){
-        Networking.getLocalState().gun.onChange(() => {
-            let gun = Networking.getLocalState().gun
+        NetworkUtils.getLocalState().gun.onChange(() => {
+            let gun = NetworkUtils.getLocalState().gun
             this.weaponDisplay.innerHTML = `Weapon: ${gun.gunID}`
 
             if((gun.lastTimeReloaded + gun.reloadDelay) < Date.now()){
@@ -29,8 +30,8 @@ export class Hud {
             }
         })
 
-        Networking.getLocalState().onChange(() => {
-            let health = Networking.getLocalState().health
+        NetworkUtils.getLocalState().onChange(() => {
+            let health = NetworkUtils.getLocalState().health
             this.healthBar.innerHTML = `${health} / 100` // needs to change according to max health
         })
     }
