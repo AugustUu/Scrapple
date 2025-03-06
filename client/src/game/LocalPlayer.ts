@@ -7,14 +7,7 @@ import { Networking } from "../networking/Networking";
 import { C2SPacket, S2CPackets } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./Entities/GrappleLine";
 import { Inventory } from "./Inventory";
-import { Game } from "../world/Game";
-import { Pistol} from "shared/src/game/GunManager/Guns/Pistol";
-import { Rifle } from "shared/src/game/GunManager/Guns/Rifle";
-import { Shotgun } from "shared/src/game/GunManager/Guns/Shotgun";
-import { Sniper } from "shared/src/game/GunManager/Guns/Sniper";
-import { Minigun } from "shared/src/game/GunManager/Guns/Minigun"
-import { Guns, idList } from "shared/src/game/GunManager/GunManager";
-import { engine } from "..";
+
 
 export class LocalPlayer extends Actor {
     joint!: ImpulseJoint;
