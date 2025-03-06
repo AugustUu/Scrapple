@@ -10,45 +10,9 @@ export class Inventory {
     public upgrades: Map<string, Upgrade>
     public usableUpgrades: Map<string, Upgrade>
 
-    private weaponDisplay!: HTMLElement;
-    private ammoCounter!: HTMLElement; 
-    private healthBar!: HTMLElement;
-    private upgradesList!: HTMLElement;
-   
 
     public constructor() {
         this.upgrades = Upgrades
-        
-
-        this.weaponDisplay = document.getElementById('weaponDisplay')
-        this.ammoCounter = document.getElementById('ammoCounter')
-        this.healthBar = document.getElementById('healthBar')
-        //this.upgradesList = document.getElementById('upgradesList')
-
-        Networking.getLocalState().gun.onChange(() => {
-            let gun = Networking.getLocalState().gun
-            this.weaponDisplay.innerHTML = `Weapon: ${gun.gunID}`
-
-            if((gun.lastTimeReloaded + gun.reloadDelay) < Date.now()){
-                this.ammoCounter.innerHTML = `Ammo: ${gun.ammo}/${Guns.get(gun.gunID).magSize}`
-
-            }else{
-                this.ammoCounter.innerHTML = `Reloading ...`
-            }
-        })
-
-        /*Stuff for upgrades list
-        Networking.getLocalClient().upgrades.onChange(() => {
-            this.upgradesList.innerHTML = ''
-            for(let upgrade of Networking.getLocalClient().upgrades.values()){
-                this.upgradesList.innerHTML += upgrade.upgradeID + "\n"
-            }
-        })*/
-
-        Networking.getLocalState().onChange(() => {
-            let health = Networking.getLocalState().health
-            this.healthBar.innerHTML = `${health} / 100` // needs to change according to max health
-        })
     }
 
     public Shoot(angle: number) {

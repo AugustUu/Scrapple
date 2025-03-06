@@ -1,138 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<style>
-    body {
-        margin: 0;
-        overflow: hidden;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-
-        font-family: Arial, sans-serif;
-    }
-</style>
-
 <head>
     <meta charset="UTF-8">
     <title>Test</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Positioning Classes */
+        .fixed {
+            position: fixed;
+        }
+
+        .center-x {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .center-y {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .center {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .left-5 {
+            left: 5%;
+        }
+
+        .left-25 {
+            left: 25%;
+        }
+
+        .left-50 {
+            left: 50%;
+        }
+
+        .left-75 {
+            left: 75%;
+        }
+
+        .left-90 {
+            left: 90%;
+        }
+
+        .top-5 {
+            top: 5%;
+        }
+
+        .top-10 {
+            top: 10%;
+        }
+
+        .top-20 {
+            top: 20%;
+        }
+
+        .top-50 {
+            top: 50%;
+        }
+
+        .top-60 {
+            top: 60%;
+        }
+
+        .top-70 {
+            top: 70%;
+        }
+
+        .top-80 {
+            top: 80%;
+        }
+
+        .top-95 {
+            top: 95%;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+
+        #menu {
+            position: absolute;
+            z-index: 1999;
+        }
+
+        #startScreen {
+            position: absolute;
+            z-index: 1999;
+            display: none;
+        }
+
+        #endRoundScreen {
+            position: absolute;
+            z-index: 1999;
+            display: none;
+        }
+
+        #hud {
+            position: absolute;
+            z-index: 1999;
+            display: none;
+        }
+
+        #menuTitle {
+            font-size: 120px;
+        }
+
+        #playerList,
+        #playerList2 {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #gunInfo {
+            color: rgb(0, 0, 0);
+            font-size: 16px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        #healthBar {
+            color: rgb(0, 0, 0);
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        #playerListHud {
+            color: rgb(0, 0, 0);
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        #upgradeList {
+            color: rgb(0, 0, 0);
+            font-size: 16px;
+            text-align: right;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body oncontextmenu="return false">
     <main>
-        <div id="menu" style="position: absolute; z-index: 1999; display: none;">
-
-            <div style="left: 50%;top: 20%; position: fixed; font-size: 120px; text-align: center;">
+        <div id="menu">
+            <div id="menuTitle" class="fixed center-x top-20 text-center">
                 Scrapple
             </div>
 
-            <div style="left: 50%;top: 50%;position: fixed;">
-                <input type="color" id="colorpicker"  value="#e66465" />
+            <div class="fixed center-x top-50">
+                <input type="color" id="colorpicker" value="#e66465" />
                 <input id="nameInput" type="text" placeholder="name">
                 <input id="serverInput" type="text">
                 <button id="joinButton">Join or create</button>
                 <button id="quickplay">Quickplay</button>
-
-
             </div>
         </div>
 
-        <div id="startScreen" style="position: absolute; z-index: 1999; display: none;">
-            <div style="left: 25%;top: 50%;position: fixed;">
-                <button id="gun1Button"> </button>
+        <div id="startScreen">
+            <div class="fixed left-25 top-50">
+                <button id="gun1Button"></button>
             </div>
-            <div style="left: 50%;top: 50%;position: fixed;">
-                <button id="gun2Button"> </button>
+            <div class="fixed left-50 top-50">
+                <button id="gun2Button"></button>
             </div>
-            <div style="left: 75%;top: 50%;position: fixed;">
-                <button id="gun3Button"> </button>
+            <div class="fixed left-75 top-50">
+                <button id="gun3Button"></button>
             </div>
-            <div style="left: 25%;top: 60%;position: fixed;">
-                <button id="upgrade1Button"> </button>
+            <div class="fixed left-25 top-60">
+                <button id="upgrade1Button"></button>
             </div>
-            <div style="left: 50%;top: 60%;position: fixed;">
-                <button id="upgrade2Button"> </button>
+            <div class="fixed left-50 top-60">
+                <button id="upgrade2Button"></button>
             </div>
-            <div style="left: 75%;top: 60%;position: fixed;">
-                <button id="upgrade3Button"> </button>
+            <div class="fixed left-75 top-60">
+                <button id="upgrade3Button"></button>
             </div>
 
-
-            <div style="left: 50%;top: 80%;position: fixed;">
+            <div class="fixed center-x top-80">
                 <button id="startButton">Start Game</button>
             </div>
 
-            <div style="left: 50%;top: 10%;position: fixed;  text-align: center;">
+            <div class="fixed center-x top-10 text-center">
                 Players:
-                <ul id="playerList" style="list-style-type: none;">
-                </ul>
+                <ul id="playerList"></ul>
             </div>
-
         </div>
 
-        <div id="endRoundScreen" style="position: absolute; z-index: 1999; display: none;">
-            
-            <div style="left: 25%;top: 50%;position: fixed;">
-                <button id="upgrade1Button"> </button>
+        <div id="endRoundScreen">
+            <div class="fixed left-25 top-50">
+                <button id="upgrade4Button"></button>
             </div>
-            <div style="left: 50%;top: 50%;position: fixed;">
-                <button id="upgrade2Button"> </button>
+            <div class="fixed left-50 top-50">
+                <button id="upgrade5Button"></button>
             </div>
-            <div style="left: 75%;top: 50%;position: fixed;">
-                <button id="upgrade3Button"> </button>
+            <div class="fixed left-75 top-50">
+                <button id="upgrade6Button"></button>
             </div>
-            
 
-            <div style="left: 50%;top: 80%;position: fixed;">
+            <div class="fixed center-x top-80">
                 <button id="nextRoundButton">Next Round</button>
             </div>
 
-            <div style="left: 50%;top: 10%;position: fixed;  text-align: center;">
+            <div class="fixed center-x top-10 text-center">
                 Players:
-                <ul id="playerList2" style="list-style-type: none;">
-                </ul>
+                <ul id="playerList2"></ul>
             </div>
-
         </div>
 
-        
-
-
-
-        <div id="hud" style="position: absolute; z-index: 1999; display: none;">
-            <div id="gunInfo"
-                style="left: 90%; top: 95%; position: fixed; color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-size: 16px; text-align: right;">
-                <div id="weaponDisplay" style="font-weight: bold;">
-                    Weapon:
-                </div>
-                <div id="ammoCounter">
-                    Ammo:
-                </div>
+        <div id="hud">
+            <div id="gunInfo" class="fixed left-90 top-95">
+                <div id="weaponDisplay" style="font-weight: bold;">Weapon:</div>
+                <div id="ammoCounter">Ammo:</div>
             </div>
 
-            <div id="healthBar"
-                style="left: 5%; top: 95%; position: fixed; color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-size: 16px; text-align: right; font-weight: bold;">
+            <div id="healthBar" class="fixed left-5 top-95">
                 HP: 100 / 100
             </div>
 
-            <div id="playerListHud"
-                style="left: 5%; top: 5%; position: fixed; color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-size: 16px; text-align: right; font-weight: bold;">
-
+            <div id="playerListHud" class="fixed left-5 top-5">
             </div>
 
-            <div id="upgradeList"
-                style="left: 90%; top: 70%; position: fixed; color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-size: 16px; text-align: right; font-weight: bold;"></div>>
-                test
+            <div id="upgradeList" class="fixed left-90 top-70">
             </div>
         </div>
 
         <canvas id="game"></canvas>
-
     </main>
 </body>
-
 
 </html>

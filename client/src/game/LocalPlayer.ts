@@ -7,7 +7,7 @@ import { Networking } from "../networking/Networking";
 import { C2SPacket, S2CPackets } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./Entities/GrappleLine";
 import { Inventory } from "./Inventory";
-import { Game } from "../world/Game";
+import { Game } from "../scenes/Game";
 import { Pistol} from "shared/src/game/GunManager/Guns/Pistol";
 import { Rifle } from "shared/src/game/GunManager/Guns/Rifle";
 import { Shotgun } from "shared/src/game/GunManager/Guns/Shotgun";
@@ -27,6 +27,8 @@ export class LocalPlayer extends Actor {
     grounded: boolean
     lastTimeGrounded: number
     maxGrappleSpeed: number
+    grappleCooldown = 0.75 // seconds
+    timeLastGrappled = 0
 
     inventory: Inventory
     doubleJump: boolean
@@ -37,7 +39,7 @@ export class LocalPlayer extends Actor {
         this.inventory = new Inventory()
         this.jumpHeight = 60
         
-        this.speed = 8
+        this.speed = 5
         let speedMult = 1
         this.maxGrappleSpeed = 175
         this.radius = 20
@@ -149,7 +151,8 @@ export class LocalPlayer extends Actor {
 
         let damping: number
         if(this.grappling){
-            damping = 1
+            damping = 0.97
+            rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: Math.min(rigidBody.linvel().y * damping, rigidBody.linvel().y)}, true)
         }
         else{
             //rigidBody.setLinvel({x: MathUtils.clamp(rigidBody.linvel().x, -80, 80), y: rigidBody.linvel().y}, true)
@@ -159,10 +162,9 @@ export class LocalPlayer extends Actor {
             else{
                 damping = 0.95
             }
+            rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: rigidBody.linvel().y}, true)
         }
         
-
-        rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: rigidBody.linvel().y}, true)
 
 
         
@@ -195,7 +197,7 @@ export class LocalPlayer extends Actor {
 
         if (hit != null) {
             let hit_point = ray.pointAt(hit.timeOfImpact);
-            if (engine.input.keyboard.wasPressed(Keys.Space)) {
+            if (engine.input.keyboard.wasPressed(Keys.Space) && this.timeLastGrappled + this.grappleCooldown * 1000 <= Date.now()) {
 
                 //console.log("Collider", hit.collider, "hit at point", hitPoint); 
                 if (!this.joint.isValid()) {
@@ -219,6 +221,7 @@ export class LocalPlayer extends Actor {
         if (this.joint.isValid() && engine.input.keyboard.wasReleased(Keys.Space)) { // this feels dumb? but i can't think of another way to do it so w/e
             this.line.kill() // nice code
             this.grappling = false
+            this.timeLastGrappled = Date.now()
             PhysicsSystem.physicsWorld.removeImpulseJoint(this.joint, true)
             Networking.client.room?.send(C2SPacket.EndGrapple, {})
         }

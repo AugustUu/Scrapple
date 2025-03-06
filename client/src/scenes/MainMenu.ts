@@ -1,13 +1,12 @@
 import { Actor, Color, Scene, SceneActivationContext, Vector } from "excalibur";
 import { engine } from "..";
-import { Game } from "../world/Game";
+import { Game } from "./Game";
 import { Networking } from "../networking/Networking";
 import { Inventory } from "../game/Inventory";
 
 
 export class MainMenu extends Scene {
 
-    private playButton: Actor | undefined;
     private rootElement!: HTMLElement;
     private inputElement!: HTMLInputElement;
     private createOrJoin!: HTMLElement;
@@ -15,12 +14,7 @@ export class MainMenu extends Scene {
     private nameInput: HTMLInputElement; 
 
     public onInitialize() {
-        this.playButton = new Actor({
-            width: 50,
-            height: 50,
-            color: Color.Red,
-            pos: new Vector(100, 100)
-        })
+
 
         this.rootElement = document.getElementById('menu')!;
         this.inputElement = document.getElementById('serverInput')! as HTMLInputElement;
@@ -31,12 +25,7 @@ export class MainMenu extends Scene {
         
         this.nameInput.value = "jorbis" + Math.random()
 
-        this.playButton.on("pointerdown",function(){
-            //engine.goToScene("game");
-            //Inventory.LevelUpgrade("Speed") // debug
-            //Inventory.updateUsableUpgrades()
-            //console.log(Inventory.usableUpgrades.get("Speed"))
-        })
+
 
         
         this.quickPlay.addEventListener("click",()=>{
@@ -52,7 +41,6 @@ export class MainMenu extends Scene {
         })
         
 
-        this.add(this.playButton)
     }
 
     public onActivate(context: SceneActivationContext<unknown>): void {
