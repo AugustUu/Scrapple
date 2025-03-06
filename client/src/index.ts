@@ -4,7 +4,6 @@ import { Game } from './scenes/Game';
 import { MainMenu } from './scenes/MainMenu';
 import RAPIER from '@dimforge/rapier2d-compat';
 import { MouseInput } from './util';
-import { Inventory } from './game/Inventory';
 import { StartScreen } from './scenes/StartScreen';
 import { EndRoundScreen } from './scenes/EndRoundScreen';
 

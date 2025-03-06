@@ -6,7 +6,6 @@ import { MathUtils, generateRevoluteJoint as generateRevoluteJoint, MouseInput, 
 import { Networking } from "../networking/Networking";
 import { C2SPacket, S2CPackets } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./Entities/GrappleLine";
-import { Inventory } from "./Inventory";
 import { Game } from "../scenes/Game";
 import { Pistol} from "shared/src/game/GunManager/Guns/Pistol";
 import { Rifle } from "shared/src/game/GunManager/Guns/Rifle";
@@ -31,13 +30,11 @@ export class LocalPlayer extends Actor {
     grappleCooldown = 0.75 // seconds
     timeLastGrappled = 0
 
-    inventory: Inventory
     doubleJump: boolean
 
 
     constructor(x: number, y: number) {
         super({name:"localplayer", x: x, y: y, radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value), anchor: Vector.Half });
-        this.inventory = new Inventory()
         this.jumpHeight = 60
         
         this.speed = 5
