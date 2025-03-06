@@ -15,7 +15,7 @@ export class StartGameCommand extends Command<GameRoom, { client: Client}> {
             this.state.game.inRound = true;
 
             this.state.clients.forEach((otherClient, id) => {
-                this.state.players.set(id, new Player(otherClient.name, id, otherClient.gunOptions.options[ otherClient.gunOptions.picked]));
+                this.state.players.set(id, new Player(otherClient.name, id, otherClient.gunOptions.options[otherClient.gunOptions.picked]));
                 
                 let pickedUpgradeID = otherClient.upgradeOptions.options[otherClient.upgradeOptions.picked]
                 if (Upgrades.has(pickedUpgradeID)){

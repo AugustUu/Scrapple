@@ -49,6 +49,10 @@ export class StartScreen extends Scene {
 
         let gunOptions = Networking.client.room.state.clients.get(Networking.client.clientId).gunOptions.options;
         let upgradeOptions = Networking.client.room.state.clients.get(Networking.client.clientId).upgradeOptions.options;
+
+        this.gunButtons[0].style.backgroundColor = "red"
+        this.upgradeButtons[0].style.backgroundColor = "red"
+
         this.gunButtons.forEach((button, index) => {
             button.innerHTML = gunOptions[index]
             button.addEventListener("click", () => {

@@ -1,13 +1,13 @@
 import { Upgrade } from "./Upgrade";
 
 export const Upgrades: Map<string,Upgrade> = new Map()
-import("./Upgrades/Jump")
-import("./Upgrades/ReloadSpeed")
+import("./Upgrades/Universal/Jump")
+import("./Upgrades/Universal/ReloadSpeed")
 import("./Upgrades/ReloadBurst")
-import("./Upgrades/ShootSpeed")
-import("./Upgrades/Speed")
+import("./Upgrades/Universal/ShootSpeed")
+import("./Upgrades/Universal/Speed")
 import("./Upgrades/Reversenizer")
-import("./Upgrades/Tank")
+import("./Upgrades/Universal/Tank")
 import("./Upgrades/AntsInYoPants")
 
 export function registerUpgrade(upgradeType: typeof Upgrade) {
