@@ -9,7 +9,7 @@ export class NetworkUtils {
         return Networking.client.room.state.clients.get(Networking.client.clientId)
     }
 
-    static getUpgrade(upgradeId: string){
+    static getLocalUpgrade(upgradeId: string){
         if(NetworkUtils.getLocalClient().upgrades.has(upgradeId)){
             return NetworkUtils.getLocalClient().upgrades.get(upgradeId).level
         }
