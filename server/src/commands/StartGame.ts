@@ -15,9 +15,12 @@ export class StartGameCommand extends Command<GameRoom, { client: Client}> {
             this.state.game.inRound = true;
 
             this.state.clients.forEach((otherClient, id) => {
-                this.state.players.set(id, new Player(otherClient.name, id, otherClient.gunOptions.options[otherClient.gunOptions.picked]));
+               
                 
                 let pickedUpgradeID = otherClient.upgradeOptions.options[otherClient.upgradeOptions.picked]
+
+                console.log(this.state.clients.get(id).upgradeOptions.options[otherClient.upgradeOptions.picked])
+
                 if (Upgrades.has(pickedUpgradeID)){
                     if(otherClient.upgrades.has(pickedUpgradeID)){
                         if(otherClient.upgrades.get(pickedUpgradeID).level < Upgrades.get(pickedUpgradeID).max){
@@ -26,9 +29,10 @@ export class StartGameCommand extends Command<GameRoom, { client: Client}> {
                     }
                     else{
                         otherClient.upgrades.set(pickedUpgradeID, new UpgradeState(pickedUpgradeID))
-                        console.log(otherClient.upgrades.get(pickedUpgradeID).level)
                     }
                 }
+
+                this.state.players.set(id, new Player(otherClient.name, id, otherClient));
             })
 
             this.room.broadcast(S2CPackets.StartGame)

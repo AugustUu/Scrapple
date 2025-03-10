@@ -15,6 +15,7 @@ import { ReloadCommand } from "../commands/Reload";
 import { MoveCommand } from "../commands/Move";
 import { EndGrappleCommand, StartGrappleCommand } from "../commands/Grapple";
 import { EndGameCommand } from "../commands/EndGame";
+import { UpgradeTickCommand } from "../commands/UpgradeTick";
 
 
 
@@ -57,11 +58,16 @@ export class GameRoom extends Room<State> {
         })
 
         this.onMessage(C2SPacket.PickGun, (client, message) => {
-            this.state.clients.get(client.id).gunOptions.picked = message;
+            if(message < 3  && message > -1){
+                this.state.clients.get(client.id).gunOptions.picked = message;
+            }
         })
 
         this.onMessage(C2SPacket.PickUpgrade, (client, message) => {
-            this.state.clients.get(client.id).upgradeOptions.picked = message;
+            if(message < 3 && message > -1){
+                this.state.clients.get(client.id).upgradeOptions.picked = message;
+                
+            }
         })
 
         this.onMessage(C2SPacket.Move, (client, message) => {
@@ -112,7 +118,7 @@ export class GameRoom extends Room<State> {
         this.onMessage(C2SPacket.SwapGun, (client, message) => {
             let player = this.state.players.get(client.sessionId)
             if (Guns.has(message.id)) {
-                player.gun = new GunState(message.id);
+                //player.gun = new GunState(message.id);
             }
         })
 
@@ -136,6 +142,7 @@ export class GameRoom extends Room<State> {
     onBeforePatch() {
 
         this.dispatcher.dispatch(new BulletTickCommand(), {});
+        this.dispatcher.dispatch(new UpgradeTickCommand(), {})
 
         if (this.state.players.size == 1 && this.state.game.inRound) {
 

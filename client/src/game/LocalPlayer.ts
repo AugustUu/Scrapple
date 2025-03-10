@@ -44,7 +44,7 @@ export class LocalPlayer extends Actor {
         this.radius = 20
 
         
-        this.jumpHeight += NetworkUtils.getUpgrade("Jump") * 10
+        this.jumpHeight += NetworkUtils.getUpgrade("JumpBoost") * 10
         this.speed += NetworkUtils.getUpgrade("Speed") * 2
         speedMult -= NetworkUtils.getUpgrade("Tank") * 0.4
 
