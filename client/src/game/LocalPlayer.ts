@@ -1,4 +1,4 @@
-import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector } from "excalibur";
+import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -32,6 +32,8 @@ export class LocalPlayer extends Actor {
 
     doubleJump: boolean
     dash: boolean
+
+    healthBar: Rectangle
 
 
     constructor(x: number, y: number) {
@@ -70,8 +72,19 @@ export class LocalPlayer extends Actor {
         this.doubleJump = false
         this.dash = false;
 
-
-        
+        this.healthBar = new Rectangle({ width: 50, height: 5, color: new Color(0, 255, 0) })
+        let healthBarBack = new Rectangle({ width: 50, height: 5, color: new Color(255, 0, 0) })
+        let healthBarGraphics = new GraphicsComponent();
+        healthBarGraphics.add(this.healthBar)
+            
+            
+        let healthBarTransform = new TransformComponent();
+        healthBarTransform.pos.y -= 28
+            
+        let healthBarEntity = new Entity({name: "healthBar"})
+        .addComponent(healthBarGraphics)
+        .addComponent(healthBarTransform)
+        this.addChild(healthBarEntity)
 
     }
 
@@ -252,6 +265,8 @@ export class LocalPlayer extends Actor {
         }else{
             this.shooting = false;
         }
+
+        this.healthBar.scale.x = NetworkUtils.getLocalState().health / 100
 
         //switch gun hotkeys!!
         /*if (engine.input.keyboard.wasPressed(Keys.Key1)) {
