@@ -38,13 +38,16 @@ export function createBullet(bullet: Bullet, id: string): Entity {
 
     entity.addComponent(transform);
 
+
     return entity;
 }
+
 
 export class BulletMoveSystem extends System {
     systemType = SystemType.Draw;
 
     query: Query<typeof TransformComponent | typeof BulletComponent>;
+
 
     constructor(world: World) {
         super();
@@ -67,6 +70,9 @@ export class BulletMoveSystem extends System {
                 entity.get(TransformComponent).pos.x = lerp(entity.get(TransformComponent).pos.x, state.position.x, elapsedMs / 50)
                 entity.get(TransformComponent).pos.y = lerp(entity.get(TransformComponent).pos.y, state.position.y, elapsedMs / 50)
             }
+
         }
+
+
     }
 }

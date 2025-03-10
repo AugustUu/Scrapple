@@ -69,6 +69,10 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
                 }
             })
 
+            if(bullet.timeCreated + 8000 < Date.now()){
+                this.state.bullets.delete(BulletID)
+            }
+
 
         })
 
