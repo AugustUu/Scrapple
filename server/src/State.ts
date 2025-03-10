@@ -89,6 +89,7 @@ export class Bullet extends Schema {
     @type("number") radius: number;
     @type("string") shotById: string;
     @type("number") speed: number;
+    @type("number") timeCreated: number;
 
     constructor(x: number, y: number, angle: number, radius: number, shotById: string, speed: number) {
         super()
@@ -97,6 +98,7 @@ export class Bullet extends Schema {
         this.shotById = shotById;
         this.radius = radius;
         this.speed = speed;
+        this.timeCreated = Date.now()
     }
 }
 

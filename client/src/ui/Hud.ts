@@ -5,7 +5,7 @@ import { NetworkUtils } from "../networking/NetworkUtils";
 export class Hud {
     private static weaponDisplay: HTMLElement;
     private static ammoCounter: HTMLElement; 
-    private static healthBar: HTMLElement;
+    //private static healthBar: HTMLElement;
     private static hudElement: HTMLElement;
     private static upgradesList: HTMLElement;
 
@@ -14,7 +14,7 @@ export class Hud {
         this.upgradesList = document.getElementById('upgradeList')
         this.weaponDisplay = document.getElementById('weaponDisplay')
         this.ammoCounter = document.getElementById('ammoCounter')
-        this.healthBar = document.getElementById('healthBar')
+        //this.healthBar = document.getElementById('healthBar')
         this.hudElement = document.getElementById('hud')!;
   
     }
@@ -40,10 +40,10 @@ export class Hud {
             }
         })
 
-        NetworkUtils.getLocalState().onChange(() => {
+        /*NetworkUtils.getLocalState().onChange(() => {
             let health = NetworkUtils.getLocalState().health
             this.healthBar.innerHTML = `${health} / 100` // needs to change according to max health
-        })
+        })*/
     }
 
     static enable(){

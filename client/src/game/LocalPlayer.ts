@@ -1,4 +1,4 @@
-import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector } from "excalibur";
+import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -27,11 +27,13 @@ export class LocalPlayer extends Actor {
     grounded: boolean
     lastTimeGrounded: number
     maxGrappleSpeed: number
-    grappleCooldown = 0.75 // seconds
+    grappleCooldown = 0.25 // seconds
     timeLastGrappled = 0
 
     doubleJump: boolean
     dash: boolean
+
+    healthBar: Rectangle
 
 
     constructor(x: number, y: number) {
@@ -44,9 +46,9 @@ export class LocalPlayer extends Actor {
         this.radius = 20
 
         
-        this.jumpHeight += NetworkUtils.getUpgrade("JumpBoost") * 10
-        this.speed += NetworkUtils.getUpgrade("Speed") * 2
-        speedMult -= NetworkUtils.getUpgrade("Tank") * 0.4
+        this.jumpHeight += NetworkUtils.getLocalUpgrade("Jump") * 10
+        this.speed += NetworkUtils.getLocalUpgrade("Speed") * 2
+        speedMult -= NetworkUtils.getLocalUpgrade("Tank") * 0.4
 
         this.speed *= speedMult // speed multiply by 0.6 if tank
 
@@ -70,8 +72,19 @@ export class LocalPlayer extends Actor {
         this.doubleJump = false
         this.dash = false;
 
-
-        
+        this.healthBar = new Rectangle({ width: 50, height: 5, color: new Color(0, 255, 0) })
+        let healthBarBack = new Rectangle({ width: 50, height: 5, color: new Color(255, 0, 0) })
+        let healthBarGraphics = new GraphicsComponent();
+        healthBarGraphics.add(this.healthBar)
+            
+            
+        let healthBarTransform = new TransformComponent();
+        healthBarTransform.pos.y -= 28
+            
+        let healthBarEntity = new Entity({name: "healthBar"})
+        .addComponent(healthBarGraphics)
+        .addComponent(healthBarTransform)
+        this.addChild(healthBarEntity)
 
     }
 
@@ -103,12 +116,16 @@ export class LocalPlayer extends Actor {
                 this.lastTimeGrounded = Date.now()
             }
         }
+        let moveSpeed = this.speed
+        if(!this.grounded && !this.grappling){
+            moveSpeed /= 6
+        }
 
         if (engine.input.keyboard.isHeld(Keys.A)) {
-            rigidBody.setLinvel({ x: rigidBody.linvel().x - this.speed, y: rigidBody.linvel().y }, true);
+            rigidBody.setLinvel({ x: rigidBody.linvel().x - moveSpeed, y: rigidBody.linvel().y }, true);
         }
         if (engine.input.keyboard.isHeld(Keys.D)) {
-            rigidBody.setLinvel({ x: rigidBody.linvel().x + this.speed, y: rigidBody.linvel().y }, true);
+            rigidBody.setLinvel({ x: rigidBody.linvel().x + moveSpeed, y: rigidBody.linvel().y }, true);
         }
         if (engine.input.keyboard.isHeld(Keys.S)) {
             rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, -50) }, true);
@@ -128,7 +145,7 @@ export class LocalPlayer extends Actor {
             rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, rigidBody.linvel().y * 0.25) }, true);
         }
 
-        if (engine.input.keyboard.wasPressed(Keys.E) && NetworkUtils.getUpgrade("Reversenizer")){
+        if (engine.input.keyboard.wasPressed(Keys.E) && NetworkUtils.getLocalUpgrade("Reversenizer")){
             rigidBody.setLinvel({ x: rigidBody.linvel().x * -0.75, y: rigidBody.linvel().y * -0.75 }, true);
         }
 
@@ -149,11 +166,16 @@ export class LocalPlayer extends Actor {
         }
         else{
             //rigidBody.setLinvel({x: MathUtils.clamp(rigidBody.linvel().x, -80, 80), y: rigidBody.linvel().y}, true)
-            if(!(engine.input.keyboard.isHeld(Keys.A) || engine.input.keyboard.isHeld(Keys.D))){
-                damping = 0.9
+            if(this.grounded){
+                if(!(engine.input.keyboard.isHeld(Keys.A) || engine.input.keyboard.isHeld(Keys.D))){
+                    damping = 0.9
+                }
+                else{
+                    damping = 0.95
+                }
             }
             else{
-                damping = 0.95
+                damping = 0.995
             }
             rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: rigidBody.linvel().y}, true)
         }
@@ -252,6 +274,8 @@ export class LocalPlayer extends Actor {
         }else{
             this.shooting = false;
         }
+
+        this.healthBar.scale.x = NetworkUtils.getLocalState().health / 100
 
         //switch gun hotkeys!!
         /*if (engine.input.keyboard.wasPressed(Keys.Key1)) {

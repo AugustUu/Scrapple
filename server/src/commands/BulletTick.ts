@@ -14,25 +14,33 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
 
             if (this.state.players.has(bullet.shotById)) {
                 let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
+                let homeRadius = 100
+                let homeStrength = 0.05
 
                 let closestCoord: {x:number, y:number}
-                for(var player of this.state.clients.values()){
+                for(var player of this.state.players.values()){
                     if(player.id == bullet.shotById){
                         continue
                     }
                     else{
                         if(closestCoord == undefined){
-                            closestCoord = this.state.players.get(bullet.shotById).position
+                            closestCoord = player.position
                         }
                         else{
-                            
+                            if(Math.pow(player.position.x - bullet.position.x, 2) + Math.pow(player.position.y - bullet.position.y, 2) < Math.pow(closestCoord.x - bullet.position.x, 2) + Math.pow(closestCoord.y - bullet.position.y, 2)){
+                                closestCoord = {x:player.position.x, y:player.position.y}
+                            }
                         }
                     }
                 }
-
-
-
-
+                if(closestCoord != undefined){
+                    if(Math.pow(closestCoord.x - bullet.position.x, 2) + Math.pow(closestCoord.y - bullet.position.y, 2) <= Math.pow(homeRadius + 20, 2)){
+                        console.log("ba")
+                        let changeAngle = -bullet.angle + Math.atan2(closestCoord.y - bullet.position.y, closestCoord.x - bullet.position.x)
+                        changeAngle = (((changeAngle + Math.PI) % (2*Math.PI)) + (2*Math.PI)) % (2*Math.PI) - Math.PI // just moves number between -pi and pi
+                        bullet.angle += Math.min(Math.max(changeAngle, -homeStrength), homeStrength)
+                    }
+                }
                 bullet.position.x += Math.cos(bullet.angle) * bullet.speed
                 bullet.position.y += Math.sin(bullet.angle) * bullet.speed
             }
@@ -68,6 +76,10 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
                     }
                 }
             })
+
+            if(bullet.timeCreated + 8000 < Date.now()){
+                this.state.bullets.delete(BulletID)
+            }
 
 
         })
