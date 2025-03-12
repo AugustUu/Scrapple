@@ -163,7 +163,7 @@ export class PlayerClient extends Schema {
         this.upgrades = new MapSchema();
 
         this.randomizeGunOptions()
-        this.randomizeUpgradeOptions()
+        this.randomizeUpgradeOptions(false)
 
         this.name = name
         this.id = id;
@@ -192,9 +192,9 @@ export class PlayerClient extends Schema {
         this.gunOptions = new Option(options)
     }
 
-    randomizeUpgradeOptions(heldGunId?: string) {
+    randomizeUpgradeOptions(checkGunDep: boolean,heldGunId?: string) {
         let upgradeMap = new Map(Upgrades)
-        for (let upgrade of this.upgrades.entries()) {
+        for (let upgrade of upgradeMap.entries()) {
             if (upgrade[1].level >= upgradeMap.get(upgrade[0]).max) {
                 upgradeMap.delete(upgrade[0])
                 continue
@@ -207,7 +207,7 @@ export class PlayerClient extends Schema {
                 }
             }
             if (upgradeMap.get(upgrade[0]).gunDep != undefined) {
-                if(!heldGunId){
+                if(!checkGunDep){
                     upgradeMap.delete(upgrade[0])
                     continue
                 }
