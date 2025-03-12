@@ -194,11 +194,15 @@ export class PlayerClient extends Schema {
 
     randomizeUpgradeOptions(heldGunId?: string) {
         let upgradeMap = new Map(Upgrades)
-        for (let upgrade of this.upgrades.entries()) {
+
+        for (let upgrade of upgradeMap.entries()) {
+
             if (upgrade[1].level >= upgradeMap.get(upgrade[0]).max) {
                 upgradeMap.delete(upgrade[0])
                 continue
             }
+            
+
             if (upgradeMap.get(upgrade[0]).upgradeDep != undefined) {
                 let dep = upgradeMap.get(upgrade[0]).upgradeDep
                 if (this.upgrades.get(dep.upgrade).level < dep.level) {

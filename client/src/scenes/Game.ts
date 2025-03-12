@@ -10,6 +10,7 @@ import { GrappleLineSystem } from "../game/Entities/GrappleLine";
 import { Bullet, CircleCollider, Collider, Player, RectangleCollider } from "server/src/State";
 import { S2CPackets } from "shared/src/networking/Packet";
 import { Hud } from "../ui/Hud";
+import { NetworkUtils } from "../networking/NetworkUtils";
 
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
 export var BulletEntities: Map<String, Entity<BulletComponent>> = new Map();
@@ -28,7 +29,7 @@ export class Game extends Scene {
         this.world.systemManager.addSystem(BulletMoveSystem);
 
         this.camera.pos = Vector.Zero
-        this.camera.zoom = 1
+        this.camera.zoom = 0.8 - (NetworkUtils.getLocalUpgrade("Scope") * 0.2)
 
         Hud.initMain()
 
@@ -100,6 +101,8 @@ export class Game extends Scene {
 
     public onActivate(context: SceneActivationContext<unknown>): void {
         Hud.enable()
+
+        this.camera.zoom = 0.8 - (NetworkUtils.getLocalUpgrade("Scope") * 0.2)
 
         this.playButton = new Actor({
             width: 50,
