@@ -51,10 +51,8 @@ export function createOtherPlayerEntity(playerState: Player, id: string): Entity
     entity.addChild(nameTagEntity)
 
     let healthBar = new Rectangle({ width: 50, height: 5, color: new Color(0, 255, 0) })
-    let healthBarBack = new Rectangle({ width: 50, height: 5, color: new Color(255, 0, 0) })
     let healthBarGraphics = new GraphicsComponent();
     healthBarGraphics.add(healthBar)
-    //healthBarGraphics.add(healthBarBack)
     
     
     let healthBarTransform = new TransformComponent();

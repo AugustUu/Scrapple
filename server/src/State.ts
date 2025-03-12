@@ -1,4 +1,5 @@
 import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
+import { Gun } from "shared/src/game/GunManager/Gun";
 import { Guns } from "shared/src/game/GunManager/GunManager";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 
@@ -191,7 +192,7 @@ export class PlayerClient extends Schema {
         this.gunOptions = new Option(options)
     }
 
-    randomizeUpgradeOptions() {
+    randomizeUpgradeOptions(heldGunId?: string) {
         let upgradeMap = new Map(Upgrades)
         for (let upgrade of this.upgrades.entries()) {
             if (upgrade[1].level >= upgradeMap.get(upgrade[0]).max) {
@@ -206,15 +207,19 @@ export class PlayerClient extends Schema {
                 }
             }
             if (upgradeMap.get(upgrade[0]).gunDep != undefined) {
-                let dep = upgradeMap.get(upgrade[0]).gunDep
-                /*if(this.gun != dep){
-                    this.upgradeMap.delete(upgrade[0])
+                if(!heldGunId){
+                    upgradeMap.delete(upgrade[0])
                     continue
-                }*/ //update to get selected gun for gun dependencies
+                }
+                else{
+                    let dep = upgradeMap.get(upgrade[0]).gunDep
+                    if(heldGunId != dep){
+                        upgradeMap.delete(upgrade[0])
+                        continue
+                    }
+                }
             }
         }
-
-
 
         let options = [];
         let upgradeKeys = Array.from(upgradeMap.keys())

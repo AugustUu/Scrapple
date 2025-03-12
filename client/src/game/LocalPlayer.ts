@@ -38,15 +38,15 @@ export class LocalPlayer extends Actor {
 
     constructor(x: number, y: number) {
         super({name:"localplayer", x: x, y: y, radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value), anchor: Vector.Half });
-        this.jumpHeight = 60
         
+        this.jumpHeight = 60
         this.speed = 5
         let speedMult = 1
         this.maxGrappleSpeed = 175
         this.radius = 20
 
         
-        this.jumpHeight += NetworkUtils.getLocalUpgrade("Jump") * 10
+        this.jumpHeight += NetworkUtils.getLocalUpgrade("JumpBoost") * 20
         this.speed += NetworkUtils.getLocalUpgrade("Speed") * 2
         speedMult -= NetworkUtils.getLocalUpgrade("Tank") * 0.4
 
@@ -73,7 +73,6 @@ export class LocalPlayer extends Actor {
         this.dash = false;
 
         this.healthBar = new Rectangle({ width: 50, height: 5, color: new Color(0, 255, 0) })
-        let healthBarBack = new Rectangle({ width: 50, height: 5, color: new Color(255, 0, 0) })
         let healthBarGraphics = new GraphicsComponent();
         healthBarGraphics.add(this.healthBar)
             
