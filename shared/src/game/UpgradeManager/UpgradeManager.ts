@@ -17,6 +17,7 @@ import("./Upgrades/Pistol/GlassCannon")
 import("./Upgrades/Sniper/Reversenizer")
 
 import("./Upgrades/Shotgun/ReloadBurst")
+import("./Upgrades/Shotgun/OneForAll")
 
 import("./Upgrades/AntsInYoPants")
 
