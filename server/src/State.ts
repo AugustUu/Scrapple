@@ -199,6 +199,8 @@ export class PlayerClient extends Schema {
                 upgradeMap.delete(upgrade[0])
                 continue
             }
+            
+
             if (upgradeMap.get(upgrade[0]).upgradeDep != undefined) {
                 let dep = upgradeMap.get(upgrade[0]).upgradeDep
                 if (this.upgrades.get(dep.upgrade).level < dep.level) {
