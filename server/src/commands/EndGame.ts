@@ -19,7 +19,7 @@ export class EndGameCommand extends Command<GameRoom, { }> {
 
 
         this.state.clients.forEach((client, id) => {
-            client.randomizeUpgradeOptions(client.gunOptions.options[client.gunOptions.picked])
+            client.randomizeUpgradeOptions(true, client.gunOptions.options[client.gunOptions.picked])
         })
 
         setTimeout(() =>{
