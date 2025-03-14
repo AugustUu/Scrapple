@@ -16,11 +16,16 @@ export class EndGameCommand extends Command<GameRoom, { }> {
         
 
 
-        this.state.players = new MapSchema<Player>();
+
+
         this.state.clients.forEach((client, id) => {
             client.randomizeUpgradeOptions(client.gunOptions.options[client.gunOptions.picked])
         })
-        this.room.broadcast(S2CPackets.EndGame)
+
+        setTimeout(() =>{
+            this.room.broadcast(S2CPackets.EndGame)
+            this.state.players = new MapSchema<Player>();
+        },100)
     }
 
 }

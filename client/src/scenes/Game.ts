@@ -102,7 +102,7 @@ export class Game extends Scene {
     public onActivate(context: SceneActivationContext<unknown>): void {
         Hud.enable()
 
-        this.camera.zoom = 0.8 - (NetworkUtils.getLocalUpgrade("Scope") * 0.2)
+        this.camera.zoom = 0.8 - (NetworkUtils.getLocalUpgrade("Scope") * 0.2)  
 
         this.playButton = new Actor({
             width: 50,
