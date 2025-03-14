@@ -3,7 +3,6 @@ import { Gun } from "shared/src/game/GunManager/Gun";
 import { Guns } from "shared/src/game/GunManager/GunManager";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { OneForAll } from "shared/src/game/UpgradeManager/Upgrades/Shotgun/OneForAll";
-import { Gun } from "shared/src/game/GunManager/Gun";
 
 
 export class Position extends Schema {
