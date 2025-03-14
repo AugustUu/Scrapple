@@ -1,6 +1,7 @@
 import { Engine, Scene, SceneActivationContext } from "excalibur";
 import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
+import { NetworkUtils } from "../networking/NetworkUtils";
 
 // bozo name
 export class EndRoundScreen extends Scene {
@@ -29,11 +30,14 @@ export class EndRoundScreen extends Scene {
         this.rootElement.style.display = "block";
         this.playerList.innerHTML = "";
 
-        this.nextRoundButton.disabled = !Networking.client.room.state.clients.get(Networking.client.clientId).host
+        this.nextRoundButton.disabled = !NetworkUtils.getLocalClient().host
 
 
-        let upgradeOptions = Networking.client.room.state.clients.get(Networking.client.clientId).upgradeOptions.options;
+        let upgradeOptions = NetworkUtils.getLocalClient().upgradeOptions.options;
 
+        this.upgradeButtons.forEach((button2) => {
+            button2.style.backgroundColor = ""
+        })
         this.upgradeButtons[0].style.backgroundColor = "red"
 
         this.upgradeButtons.forEach((button, index) => {

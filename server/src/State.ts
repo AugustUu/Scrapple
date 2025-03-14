@@ -1,4 +1,5 @@
 import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
+import { Gun } from "shared/src/game/GunManager/Gun";
 import { Guns } from "shared/src/game/GunManager/GunManager";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { OneForAll } from "shared/src/game/UpgradeManager/Upgrades/Shotgun/OneForAll";
@@ -171,7 +172,7 @@ export class PlayerClient extends Schema {
         this.upgrades = new MapSchema();
 
         this.randomizeGunOptions()
-        this.randomizeUpgradeOptions()
+        this.randomizeUpgradeOptions(false)
 
         this.name = name
         this.id = id;
@@ -200,13 +201,15 @@ export class PlayerClient extends Schema {
         this.gunOptions = new Option(options)
     }
 
-    randomizeUpgradeOptions() {
+    randomizeUpgradeOptions(checkGunDep: boolean,heldGunId?: string) {
         let upgradeMap = new Map(Upgrades)
-        for (let upgrade of this.upgrades.entries()) {
+        for (let upgrade of upgradeMap.entries()) {
             if (upgrade[1].level >= upgradeMap.get(upgrade[0]).max) {
                 upgradeMap.delete(upgrade[0])
                 continue
             }
+            
+
             if (upgradeMap.get(upgrade[0]).upgradeDep != undefined) {
                 let dep = upgradeMap.get(upgrade[0]).upgradeDep
                 if (this.upgrades.get(dep.upgrade).level < dep.level) {
@@ -215,15 +218,19 @@ export class PlayerClient extends Schema {
                 }
             }
             if (upgradeMap.get(upgrade[0]).gunDep != undefined) {
-                let dep = upgradeMap.get(upgrade[0]).gunDep
-                /*if(this.gun != dep){
-                    this.upgradeMap.delete(upgrade[0])
+                if(!checkGunDep){
+                    upgradeMap.delete(upgrade[0])
                     continue
-                }*/ //update to get selected gun for gun dependencies
+                }
+                else{
+                    let dep = upgradeMap.get(upgrade[0]).gunDep
+                    if(heldGunId != dep){
+                        upgradeMap.delete(upgrade[0])
+                        continue
+                    }
+                }
             }
         }
-
-
 
         let options = [];
         let upgradeKeys = Array.from(upgradeMap.keys())

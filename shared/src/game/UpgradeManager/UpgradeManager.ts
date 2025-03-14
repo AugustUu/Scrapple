@@ -14,9 +14,16 @@ import("./Upgrades/Universal/SprayAndPray")
 import("./Upgrades/Pistol/GlassCannon")
 
 import("./Upgrades/Sniper/Reversenizer")
+import("./Upgrades/Sniper/Scope")
+
 
 import("./Upgrades/Shotgun/ReloadBurst")
 import("./Upgrades/Shotgun/OneForAll")
+import("./Upgrades/Shotgun/BirdShot")
+import("./Upgrades/Shotgun/BuckShot")
+import("./Upgrades/Shotgun/SawedOff")
+
+
 
 import("./Upgrades/AntsInYoPants")
 
