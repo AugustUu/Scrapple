@@ -2,6 +2,7 @@ import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 import { Gun } from "shared/src/game/GunManager/Gun";
 import { Guns } from "shared/src/game/GunManager/GunManager";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
+import { OneForAll } from "shared/src/game/UpgradeManager/Upgrades/Shotgun/OneForAll";
 
 
 export class Position extends Schema {
@@ -31,8 +32,15 @@ export class GunState extends Schema {
     constructor(gunID: string, client: PlayerClient) {
         super();
 
+
         this.gunID = gunID
         let gunInfo = Guns.get(gunID)
+
+        if(this.gunID == "Shotgun" && client.getUpgradeLevel("OneForAll") != 0){
+            console.log("sludge returns!!!")
+            //guninfo is now the part that doesn't work!!
+            gunInfo = new Gun("shotgun", 3, 0.05, 3, 1, 30, 30, true, 10, 8)
+        }
 
         this.ammo = gunInfo.magSize
         this.lastTimeReloaded = 0;

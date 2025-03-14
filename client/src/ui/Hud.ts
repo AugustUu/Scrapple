@@ -36,7 +36,7 @@ export class Hud {
         NetworkUtils.getLocalClient().upgrades.onChange(() => {
             this.upgradesList.innerHTML = ''
             for(let upgrade of NetworkUtils.getLocalClient().upgrades.values()){
-                this.upgradesList.innerHTML += upgrade.upgradeID + '<br>'
+                this.upgradesList.innerHTML += upgrade.upgradeID + " " + upgrade.level + '<br>'
             }
         })
 
