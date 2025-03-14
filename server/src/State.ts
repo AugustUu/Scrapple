@@ -39,7 +39,7 @@ export class GunState extends Schema {
         if(this.gunID == "Shotgun" && client.getUpgradeLevel("OneForAll") != 0){
             console.log("sludge returns!!!")
             //guninfo is now the part that doesn't work!!
-            let gunInfo = new Gun("shotgun", 3, 0.05, 3, 1, 30, 30, true, 10, 8)
+            gunInfo = new Gun("shotgun", 3, 0.05, 3, 1, 30, 30, true, 10, 8)
         }
 
         this.ammo = gunInfo.magSize
