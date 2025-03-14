@@ -21,11 +21,20 @@ export class GunState extends Schema {
 
     @type("number") ammo: number;
     @type("number") lastTimeReloaded: number;
-    @type("number") reloadDelay: number;
     @type("number") lastTimeShot: number;
+
+    @type("number") reloadDelay: number;
     @type("number") fireDelay: number;
     @type("number") bulletsPerShot: number;
     @type("number") spread: number;
+    
+    @type("number") damage: number;
+    @type("number") magSize: number;
+    
+    @type("boolean") automatic: boolean;
+    @type("number") bulletSpeedMultiplier: number;
+    @type("number") bulletSize: number
+
 
 
 
@@ -36,21 +45,21 @@ export class GunState extends Schema {
         this.gunID = gunID
         let gunInfo = Guns.get(gunID)
 
-        if(this.gunID == "Shotgun" && client.getUpgradeLevel("OneForAll") != 0){
-            console.log("sludge returns!!!")
-            //guninfo is now the part that doesn't work!!
-            gunInfo = new Gun("shotgun", 3, 0.05, 3, 1, 30, 30, true, 10, 8)
-        }
-
         this.ammo = gunInfo.magSize
         this.lastTimeReloaded = 0;
         this.lastTimeShot = 0;
-        this.fireDelay = gunInfo.fireRate * 1000;
 
         this.reloadDelay = gunInfo.timeToReload * 1000;
+        this.fireDelay = gunInfo.fireRate * 1000;
         this.bulletsPerShot = gunInfo.bulletsPerShot;
-
         this.spread = gunInfo.spread;
+
+        this.damage = gunInfo.damage;
+        this.magSize = gunInfo.magSize;
+
+        this.automatic = gunInfo.automatic
+        this.bulletSpeedMultiplier = gunInfo.bulletSpeedMultiplier
+        this.bulletSize = gunInfo.bulletSize
 
 
         client.upgrades.forEach((upgrade) => {
