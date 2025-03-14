@@ -1,8 +1,8 @@
-import { Gun } from "../GunManager/Gun";
+import { GunState, Player, State } from "server/src/State"
+import { GameRoom } from "server/src/rooms/GameRoom"
 
 export class Upgrade {
     name: string;
-    level: number
     max: number
     upgradeDep?: { upgrade: string, level: number }
     gunDep?: string
@@ -10,10 +10,21 @@ export class Upgrade {
 
     constructor(name?: string, max?: number, upgradeDep?: { upgrade: string, level: number }, gunDep?: string, description?: string) {
         this.name = name
-        this.level = 0
         this.max = max
         this.upgradeDep = upgradeDep
         this.gunDep = gunDep
         this.description = description;
+    }
+
+    serverOnPlayerConstructed(level: number, player: Player) {
+
+    }
+
+    serverOnGunConstructed(level: number, gun: GunState) {
+
+    }
+
+    serverOnServerTick(level: number, state: State, player: Player) {
+        //state.
     }
 }

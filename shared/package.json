@@ -6,7 +6,8 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^22.10.6",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "server": "file:../server"
   },
   "dependencies": {
     "require.all": "^2.0.5"

@@ -1,3 +1,4 @@
+import { GunState } from "../../../../../../server/src/State";
 import { Upgrade } from "../../Upgrade"
 import { registerUpgrade } from "../../UpgradeManager"
 
@@ -5,5 +6,9 @@ import { registerUpgrade } from "../../UpgradeManager"
 export class ReloadSpeed extends Upgrade {
     constructor() {
         super("ReloadSpeed", 5)
+    }
+
+    serverOnGunConstructed(level: number, gun: GunState) {
+        gun.reloadDelay -= 500 * level;
     }
 }
