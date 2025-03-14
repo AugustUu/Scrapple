@@ -13,9 +13,9 @@ export class NetworkClient {
     public room:Colyseus.Room<State> | null = null;
     public clientId: string = "";
 
-    onStateChange(state: any): void {
-        //console.log("multiPlayerState Changed", state);
+    private playerListHud!: HTMLElement;
 
+    onStateChange(state: any): void {
         Networking.events.emit("stateChanged", new NeworkEvents.StateChanged(state));
     }
 
@@ -37,22 +37,32 @@ export class NetworkClient {
 
     onJoin(room: Room): void {
         this.room = room
+        this.playerListHud = document.getElementById('playerListHud')
         this.clientId = room.sessionId
 
         console.log("joined",room.id)
-        engine.goToScene("game");
+        
         Networking.events.emit("joined", new NeworkEvents.Joined(room));
 
         room.onStateChange(this.onStateChange);
         room.onLeave(this.onLeave);
         room.onError(this.onError);
     
-
         room.onMessage(S2CPackets.Pong,()=>{
             room.send(C2SPacket.Ping,{})
         })
 
 
+        room.onMessage(S2CPackets.InitClient,()=>{
+            engine.goToScene("startScreen");
+        })
+
+        room.onMessage(S2CPackets.StartGame,()=>{
+            engine.goToScene("game");
+        })
+
+
+        
 
     }
 

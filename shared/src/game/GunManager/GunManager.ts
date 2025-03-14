@@ -1,9 +1,10 @@
 import { Gun } from "./Gun";
-import("./Guns/Minigun")
 import("./Guns/Pistol")
 import("./Guns/Rifle")
 import("./Guns/Shotgun")
 import("./Guns/Sniper")
+import("./Guns/Minigun")
+import("./Guns/Sludge")
 
 
 

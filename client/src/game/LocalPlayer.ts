@@ -1,22 +1,22 @@
-import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector } from "excalibur";
+import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
 import { MathUtils, generateRevoluteJoint as generateRevoluteJoint, MouseInput, Vector2 } from "../util"
 import { Networking } from "../networking/Networking";
-import { C2SPacket } from "shared/src/networking/Packet";
+import { C2SPacket, S2CPackets } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./Entities/GrappleLine";
-import { Inventory } from "./Inventory";
-import { Game } from "../world/Game";
+import { Game } from "../scenes/Game";
 import { Pistol} from "shared/src/game/GunManager/Guns/Pistol";
 import { Rifle } from "shared/src/game/GunManager/Guns/Rifle";
 import { Shotgun } from "shared/src/game/GunManager/Guns/Shotgun";
 import { Sniper } from "shared/src/game/GunManager/Guns/Sniper";
 import { Minigun } from "shared/src/game/GunManager/Guns/Minigun"
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
+import { engine } from "..";
+import { NetworkUtils } from "../networking/NetworkUtils";
 
 export class LocalPlayer extends Actor {
-    public health: number = 100;
     joint!: ImpulseJoint;
     shooting: boolean
     grappling: boolean
@@ -27,14 +27,35 @@ export class LocalPlayer extends Actor {
     grounded: boolean
     lastTimeGrounded: number
     maxGrappleSpeed: number
+    grappleCooldown = 0.25 // seconds
+    timeLastGrappled = 0
+
+    doubleJump: boolean
+    dash: boolean
+
+    healthBar: Rectangle
+
 
     constructor(x: number, y: number) {
-        super({name:"localplayer", x: x, y: y, radius: 20, color: new Color(128, 0, 128), anchor: Vector.Half });
-        this.jumpHeight = 60 + (Inventory.GetUpgrade("Jump").level * 20)
-        this.speed = 8 + Inventory.GetUpgrade("Speed").level
+        super({name:"localplayer", x: x, y: y, radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value), anchor: Vector.Half });
+        
+        this.jumpHeight = 60
+        this.speed = 5
+        let speedMult = 1
         this.maxGrappleSpeed = 175
         this.radius = 20
+
+        
+        this.jumpHeight += NetworkUtils.getLocalUpgrade("JumpBoost") * 20
+        this.speed += NetworkUtils.getLocalUpgrade("Speed") * 2
+        speedMult -= NetworkUtils.getLocalUpgrade("Tank") * 0.4
+
+        this.speed *= speedMult // speed multiply by 0.6 if tank
+
         this.grounded = false
+
+        
+        //engine.currentScene.camera.strategy.elasticToActor(this, 0.1, 0.1)
 
 
         let rigidBody = new RigidBodyComponent(RigidBodyType.Dynamic);
@@ -48,9 +69,21 @@ export class LocalPlayer extends Actor {
         this.shooting = false
         this.grappling = false
 
-        Inventory.gun = new Pistol()
+        this.doubleJump = false
+        this.dash = false;
 
-        
+        this.healthBar = new Rectangle({ width: 50, height: 5, color: new Color(0, 255, 0) })
+        let healthBarGraphics = new GraphicsComponent();
+        healthBarGraphics.add(this.healthBar)
+            
+            
+        let healthBarTransform = new TransformComponent();
+        healthBarTransform.pos.y -= 28
+            
+        let healthBarEntity = new Entity({name: "healthBar"})
+        .addComponent(healthBarGraphics)
+        .addComponent(healthBarTransform)
+        this.addChild(healthBarEntity)
 
     }
 
@@ -63,7 +96,9 @@ export class LocalPlayer extends Actor {
         if (hit != null) {
             if (hit.collider.collisionGroups() == 0x00010007) {
                 if(!this.grounded){
-                    this.grounded = true
+                    this.grounded = true;
+                    this.doubleJump = true;
+                    this.dash = true;
                 }
             }
             else {
@@ -80,55 +115,79 @@ export class LocalPlayer extends Actor {
                 this.lastTimeGrounded = Date.now()
             }
         }
+        let moveSpeed = this.speed
+        if(!this.grounded && !this.grappling){
+            moveSpeed /= 6
+        }
 
         if (engine.input.keyboard.isHeld(Keys.A)) {
-            rigidBody.setLinvel({ x: rigidBody.linvel().x - this.speed, y: rigidBody.linvel().y }, true);
+            rigidBody.setLinvel({ x: rigidBody.linvel().x - moveSpeed, y: rigidBody.linvel().y }, true);
         }
         if (engine.input.keyboard.isHeld(Keys.D)) {
-            rigidBody.setLinvel({ x: rigidBody.linvel().x + this.speed, y: rigidBody.linvel().y }, true);
+            rigidBody.setLinvel({ x: rigidBody.linvel().x + moveSpeed, y: rigidBody.linvel().y }, true);
         }
         if (engine.input.keyboard.isHeld(Keys.S)) {
             rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, -50) }, true);
         }
         if (engine.input.keyboard.wasPressed(Keys.W)) {
+
             if(this.grounded || Date.now() - this.lastTimeGrounded < 100){
                 rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
             }   
+            else if(/*NetworkUtils.getUpgrade("AntsInYoPants") &&*/ this.doubleJump){
+                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
+                this.doubleJump = false
+            }            
+            
         }
         if (engine.input.keyboard.wasReleased(Keys.W)){
             rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, rigidBody.linvel().y * 0.25) }, true);
         }
 
-        
+        if (engine.input.keyboard.wasPressed(Keys.E) && NetworkUtils.getLocalUpgrade("Reversenizer")){
+            rigidBody.setLinvel({ x: rigidBody.linvel().x * -0.75, y: rigidBody.linvel().y * -0.75 }, true);
+        }
+
+        //dash
+        if(engine.input.keyboard.wasPressed(Keys.Q) && this.dash){
+            let dashSpeed = 100
+            let direction = new Vector2({x:this.pos.x - engine.input.pointers.primary.lastWorldPos.x, y:this.pos.y - engine.input.pointers.primary.lastWorldPos.y}).normalized().scale(dashSpeed)
+            rigidBody.setLinvel({x: rigidBody.linvel().x - (direction.x * 3), y: rigidBody.linvel().y + direction.y}, true)
+            this.dash = false
+        }
+
+
 
         let damping: number
         if(this.grappling){
-            damping = 1
+            damping = 0.97
+            rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: Math.min(rigidBody.linvel().y * damping, rigidBody.linvel().y)}, true)
         }
         else{
             //rigidBody.setLinvel({x: MathUtils.clamp(rigidBody.linvel().x, -80, 80), y: rigidBody.linvel().y}, true)
-            if(!(engine.input.keyboard.isHeld(Keys.A) || engine.input.keyboard.isHeld(Keys.D))){
-                damping = 0.9
+            if(this.grounded){
+                if(!(engine.input.keyboard.isHeld(Keys.A) || engine.input.keyboard.isHeld(Keys.D))){
+                    damping = 0.9
+                }
+                else{
+                    damping = 0.95
+                }
             }
             else{
-                damping = 0.95
+                damping = 0.995
             }
+            rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: rigidBody.linvel().y}, true)
         }
         
 
-        rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: rigidBody.linvel().y}, true)
 
-        if (engine.input.keyboard.wasPressed(Keys.E)) { // just testing, make upgrade later ?
-            rigidBody.setLinvel({ x: rigidBody.linvel().x * -0.75, y: rigidBody.linvel().y * -0.75 }, true);
-        }
+        
 
         if(this.grappling){
             let linvel = new Vector2(rigidBody.linvel())
             if(linvel.magnitude() > this.maxGrappleSpeed){
                 rigidBody.setLinvel(linvel.scale((this.maxGrappleSpeed / 2 / linvel.magnitude()) + 0.5), true) // half max speed damping
             }
-
-            console.log(new Vector2(rigidBody.linvel()).magnitude())
         }
         
         
@@ -152,7 +211,7 @@ export class LocalPlayer extends Actor {
 
         if (hit != null) {
             let hit_point = ray.pointAt(hit.timeOfImpact);
-            if (engine.input.keyboard.wasPressed(Keys.Space)) {
+            if (engine.input.keyboard.wasPressed(Keys.Space) && this.timeLastGrappled + this.grappleCooldown * 1000 <= Date.now()) {
 
                 //console.log("Collider", hit.collider, "hit at point", hitPoint); 
                 if (!this.joint.isValid()) {
@@ -176,6 +235,7 @@ export class LocalPlayer extends Actor {
         if (this.joint.isValid() && engine.input.keyboard.wasReleased(Keys.Space)) { // this feels dumb? but i can't think of another way to do it so w/e
             this.line.kill() // nice code
             this.grappling = false
+            this.timeLastGrappled = Date.now()
             PhysicsSystem.physicsWorld.removeImpulseJoint(this.joint, true)
             Networking.client.room?.send(C2SPacket.EndGrapple, {})
         }
@@ -183,6 +243,7 @@ export class LocalPlayer extends Actor {
 
 
     public update(engine: Engine, delta: number) {
+        
 
         //engine.currentScene.camera.pos = this.pos
 
@@ -196,43 +257,51 @@ export class LocalPlayer extends Actor {
 
 
         if (engine.input.keyboard.wasPressed(Keys.R)) {
-            Inventory.Reload()
+            Networking.client.room?.send(C2SPacket.Reload, {})
         }
 
 
         if (MouseInput.mouseButtons.left) {
-            if (Inventory.GetGun().automatic) {
+            if (Guns.get(NetworkUtils.getLocalState().gun.gunID).automatic) {
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                Inventory.Shoot(angle)
+                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI })
             } else if (this.shooting == false) {
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                Inventory.Shoot(angle)
+                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI })
                 this.shooting = true;
             }
         }else{
             this.shooting = false;
         }
 
+        this.healthBar.scale.x = NetworkUtils.getLocalState().health / 100
+
         //switch gun hotkeys!!
-        if (engine.input.keyboard.wasPressed(Keys.Key1)) {
-            Inventory.ChangeGun(idList[0]) 
+        /*if (engine.input.keyboard.wasPressed(Keys.Key1)) {
+            this.inventory.ChangeGun(idList[0]) 
         }
         if (engine.input.keyboard.wasPressed(Keys.Key2)) {
-            Inventory.ChangeGun(idList[1])
+            this.inventory.ChangeGun(idList[1])
         }
         if (engine.input.keyboard.wasPressed(Keys.Key3)) {
-            Inventory.ChangeGun(idList[2])
+            this.inventory.ChangeGun(idList[2])
         }
         if (engine.input.keyboard.wasPressed(Keys.Key4)) {
-            Inventory.ChangeGun(idList[3])
+            this.inventory.ChangeGun(idList[3])
         }
         if (engine.input.keyboard.wasPressed(Keys.Key5)) {
-            Inventory.ChangeGun(idList[4])
+            this.inventory.ChangeGun(idList[4])
+        }        if (engine.input.keyboard.wasPressed(Keys.Key6)) {
+            this.inventory.ChangeGun(idList[5])
+        }*/
+        if (engine.input.keyboard.wasPressed(Keys.Key7)) {
+            Networking.client.room?.send(C2SPacket.LevelUpgrade, { id:"Speed" })
         }
 
         Networking.client.room?.send(C2SPacket.Move, { x: this.pos.x, y: this.pos.y })
         super.update(engine, delta);
     }
 
+    
 
 }

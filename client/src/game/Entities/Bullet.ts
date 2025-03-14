@@ -1,7 +1,7 @@
-import { Circle, Color, Component, CoordPlane, Entity, GraphicsComponent, Query, System, SystemType, TransformComponent, Vector, World } from "excalibur";
+import { Circle, Color, Component, CoordPlane, Entity, GraphicsComponent, Query, System, SystemType, TransformComponent, vec, Vector, World } from "excalibur";
 import { Networking } from "../../networking/Networking";
 import { lerp } from "../../util";
-
+import { Bullet, CircleCollider, Collider, Player, RectangleCollider } from "server/src/State";
 
 
 export class BulletComponent extends Component {
@@ -18,14 +18,14 @@ export class BulletComponent extends Component {
     }
 }
 
-export function createBullet(angle: number, position: Vector, id: string, shotBy: string): Entity {
+export function createBullet(bullet: Bullet, id: string): Entity {
     const entity = new Entity({
-        name: shotBy + " Bullet",
+        name: bullet.shotById + " Bullet",
     });
 
-    entity.addComponent(new BulletComponent(angle, id, shotBy))
+    entity.addComponent(new BulletComponent(bullet.angle, id, bullet.shotById))
 
-    let sprite = new Circle({ radius: 4, color: Color.Red })
+    let sprite = new Circle({ radius: bullet.radius, color: Color.Red })
 
     let graphics = new GraphicsComponent();
     graphics.use(sprite);
@@ -34,17 +34,20 @@ export function createBullet(angle: number, position: Vector, id: string, shotBy
 
     let transform = new TransformComponent();
     transform.coordPlane = CoordPlane.World;
-    transform.pos = position;
+    transform.pos = vec(bullet.position.x, bullet.position.y);
 
     entity.addComponent(transform);
 
+
     return entity;
 }
+
 
 export class BulletMoveSystem extends System {
     systemType = SystemType.Draw;
 
     query: Query<typeof TransformComponent | typeof BulletComponent>;
+
 
     constructor(world: World) {
         super();
@@ -67,6 +70,9 @@ export class BulletMoveSystem extends System {
                 entity.get(TransformComponent).pos.x = lerp(entity.get(TransformComponent).pos.x, state.position.x, elapsedMs / 50)
                 entity.get(TransformComponent).pos.y = lerp(entity.get(TransformComponent).pos.y, state.position.y, elapsedMs / 50)
             }
+
         }
+
+
     }
 }
