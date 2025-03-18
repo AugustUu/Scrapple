@@ -7,13 +7,12 @@ import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 
 
-export class EndGameCommand extends Command<GameRoom, { }> {
+export class EndGameCommand extends Command<GameRoom, {}> {
 
-    execute({  } = this.payload) {
+    execute({ } = this.payload) {
         this.state.game.inRound = false
 
         this.state.clients.get(this.state.players.values().next().value.id).wins += 1
-        
 
 
 
@@ -22,10 +21,10 @@ export class EndGameCommand extends Command<GameRoom, { }> {
             client.randomizeUpgradeOptions(true, client.gunOptions.options[client.gunOptions.picked])
         })
 
-        setTimeout(() =>{
+        setTimeout(() => {
             this.room.broadcast(S2CPackets.EndGame)
             this.state.players = new MapSchema<Player>();
-        },100)
+        }, 100)
     }
 
 }

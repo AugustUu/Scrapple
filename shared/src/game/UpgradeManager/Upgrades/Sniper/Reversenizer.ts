@@ -4,6 +4,6 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Reversenizer extends Upgrade {
     constructor() {
-        super("Reversenizer", 1)
+        super("Reversenizer", 1 , null , "Sniper")
     }
 }
