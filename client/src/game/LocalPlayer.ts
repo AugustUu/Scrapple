@@ -40,15 +40,22 @@ export class LocalPlayer extends Actor {
 
 
     constructor(x: number, y: number) {
-        super({name:"localplayer", x: x, y: y, /*radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value),*/ anchor: Vector.Half});
+        super({name:"localplayer", x: x, y: y, radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value), anchor: Vector.Half});
         
         this.jumpHeight = 60
         this.speed = 5
         let speedMult = 1
         this.maxGrappleSpeed = 175
         this.radius = 20
-        this.sprite = new ImageSource("../../../Art/Character").toSprite()
-        this.graphics.add(this.sprite)
+
+        //this.sprite = new ImageSource("../../../Art/Character").toSprite()
+        this.sprite = null
+
+        /*new ImageSource("../../art/Character.png").load().then((tttt)=>{
+            console.log(tttt)
+        })
+
+        this.graphics.add(this.sprite)*/
 
         
         this.jumpHeight += NetworkUtils.getLocalUpgrade("JumpBoost") * 20
