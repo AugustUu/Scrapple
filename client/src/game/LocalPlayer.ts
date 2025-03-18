@@ -1,4 +1,4 @@
-import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent } from "excalibur";
+import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, Circle } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -15,6 +15,7 @@ import { Minigun } from "shared/src/game/GunManager/Guns/Minigun"
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 import { engine } from "..";
 import { NetworkUtils } from "../networking/NetworkUtils";
+import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 
 export class LocalPlayer extends Actor {
     joint!: ImpulseJoint;
@@ -45,8 +46,11 @@ export class LocalPlayer extends Actor {
         this.maxGrappleSpeed = 175
         this.radius = 20
 
+        NetworkUtils.getLocalClient().upgrades.forEach((upgrade) => {
+            Upgrades.get(upgrade.upgradeID).clientOnPlayerConstructed(upgrade.level, this)
+        })
+
         
-        this.jumpHeight += NetworkUtils.getLocalUpgrade("JumpBoost") * 20
         this.speed += NetworkUtils.getLocalUpgrade("Speed") * 2
         speedMult -= NetworkUtils.getLocalUpgrade("Tank") * 0.4
 
