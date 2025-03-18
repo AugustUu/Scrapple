@@ -26,7 +26,7 @@ export class Hud {
             this.weaponDisplay.innerHTML = `Weapon: ${gun.gunID}`
 
             if((gun.lastTimeReloaded + gun.reloadDelay) < Date.now()){
-                this.ammoCounter.innerHTML = `Ammo: ${gun.ammo}/${Guns.get(gun.gunID).magSize}`
+                this.ammoCounter.innerHTML = `Ammo: ${gun.ammo}/${gun.magSize}`
 
             }else{
                 this.ammoCounter.innerHTML = `Reloading ...`
