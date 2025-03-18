@@ -1,3 +1,5 @@
+import { LocalPlayer } from "../../../../../../client/src/game/LocalPlayer";
+import { GunState } from "../../../../../../server/src/State";
 import { Upgrade } from "../../Upgrade"
 import { registerUpgrade } from "../../UpgradeManager"
 
@@ -5,5 +7,14 @@ import { registerUpgrade } from "../../UpgradeManager"
 export class HighVelocity extends Upgrade {
     constructor() {
         super("HighVelocity", 3)
+    }
+
+    serverOnGunConstructed(level: number, gun: GunState) {
+        gun.bulletSpeedMultiplier *= (1 + (1/3) * level)
+        gun.reloadDelay += 300 * level
+    }
+    
+    clientOnPlayerConstructed(level: number, player: LocalPlayer): void {
+        player.speed += level
     }
 }

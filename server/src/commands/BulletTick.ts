@@ -16,7 +16,7 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
                 let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
                 let homeRadius = 300
                 let homeAngle = Math.PI / 4
-                let homeStrength = 0.03
+                let homeStrength = 0.01
 
                 let closestCoord: {x:number, y:number}
                 for(var player of this.state.players.values()){
@@ -40,9 +40,6 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
                         changeAngle = (((changeAngle + Math.PI) % (2*Math.PI)) + (2*Math.PI)) % (2*Math.PI) - Math.PI // just moves number between -pi and pi
                         if(Math.abs(changeAngle) < homeAngle){
                             bullet.angle += Math.min(Math.max(changeAngle, -homeStrength), homeStrength) // clamps to home strength
-                        }
-                        else{
-                            console.log(Math.abs(Math.atan2(closestCoord.y - bullet.position.y, closestCoord.x - bullet.position.x) - bullet.angle))
                         }
                     }
                 }

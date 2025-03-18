@@ -24,6 +24,7 @@ export class LocalPlayer extends Actor {
     line!: Entity
     jumpHeight: number
     speed: number
+    speedMult: number
     radius: number
     grounded: boolean
     lastTimeGrounded: number
@@ -45,34 +46,14 @@ export class LocalPlayer extends Actor {
         
         this.jumpHeight = 60
         this.speed = 5
-        let speedMult = 1
+        this.speedMult = 1
         this.maxGrappleSpeed = 175
         this.radius = 20
+        this.grounded = false
 
         NetworkUtils.getLocalClient().upgrades.forEach((upgrade) => {
             Upgrades.get(upgrade.upgradeID).clientOnPlayerConstructed(upgrade.level, this)
         })
-
-        //this.sprite = new ImageSource("../../../Art/Character").toSprite()
-        this.sprite = null
-
-        /*new ImageSource("../../art/Character.png").load().then((tttt)=>{
-            console.log(tttt)
-        })
-
-        this.graphics.add(this.sprite)*/
-
-        
-        this.speed += NetworkUtils.getLocalUpgrade("Speed") * 2
-        speedMult -= NetworkUtils.getLocalUpgrade("Tank") * 0.4
-
-        this.speed *= speedMult // speed multiply by 0.6 if tank
-
-        this.grounded = false
-
-        
-        //engine.currentScene.camera.strategy.elasticToActor(this, 0.1, 0.1)
-
 
         let rigidBody = new RigidBodyComponent(RigidBodyType.Dynamic);
         this.addComponent(rigidBody)
@@ -131,7 +112,7 @@ export class LocalPlayer extends Actor {
                 this.lastTimeGrounded = Date.now()
             }
         }
-        let moveSpeed = this.speed
+        let moveSpeed = this.speed * this.speedMult
         if(!this.grounded && !this.grappling){
             moveSpeed /= 6
         }
