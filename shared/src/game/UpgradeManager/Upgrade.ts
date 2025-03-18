@@ -1,4 +1,4 @@
-import { GunState, Player, State } from "server/src/State"
+import { Bullet, GunState, Player, State } from "server/src/State"
 import { LocalPlayer } from "client/src/game/LocalPlayer"
 import { GameRoom } from "server/src/rooms/GameRoom"
 
@@ -26,7 +26,11 @@ export class Upgrade {
     }
 
     serverOnServerTick(level: number, state: State, player: Player) {
-        //state.
+        
+    }
+
+    serverOnShoot(level: number, bullet: Bullet, state: State, player: Player) {
+        
     }
 
     clientOnPlayerConstructed(level: number, player: LocalPlayer){
