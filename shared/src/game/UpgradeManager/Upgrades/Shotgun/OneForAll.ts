@@ -5,7 +5,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class OneForAll extends Upgrade {
     constructor() {
-        super("OneForAll", 1)
+        super("OneForAll", 1, null, "Shotgun")
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {
