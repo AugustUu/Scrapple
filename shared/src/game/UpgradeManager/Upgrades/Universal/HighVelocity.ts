@@ -10,11 +10,11 @@ export class HighVelocity extends Upgrade {
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {
-        gun.bulletSpeedMultiplier *= (1 + (1/3) * level)
+        gun.bulletSpeedMultiplier *= (1 + (2/3) * level)
         gun.reloadDelay += 300 * level
     }
     
     clientOnPlayerConstructed(level: number, player: LocalPlayer): void {
-        player.speed += level
+        player.speed += level * 1.5
     }
 }
