@@ -1,6 +1,7 @@
 import { Guns } from "shared/src/game/GunManager/GunManager";
 import { Networking } from "../networking/Networking"
 import { NetworkUtils } from "../networking/NetworkUtils";
+import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 
 export class Hud {
     private static weaponDisplay: HTMLElement;
@@ -36,7 +37,11 @@ export class Hud {
         NetworkUtils.getLocalClient().upgrades.onChange(() => {
             this.upgradesList.innerHTML = ''
             for(let upgrade of NetworkUtils.getLocalClient().upgrades.values()){
-                this.upgradesList.innerHTML += upgrade.upgradeID + " " + upgrade.level + '<br>'
+                this.upgradesList.innerHTML += upgrade.upgradeID
+                if(Upgrades.get(upgrade.upgradeID).max > 1){
+                    this.upgradesList.innerHTML += " " + upgrade.level
+                }
+                this.upgradesList.innerHTML += '<br>'
             }
         })
 

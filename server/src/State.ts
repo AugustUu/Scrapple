@@ -2,7 +2,6 @@ import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 import { Gun } from "shared/src/game/GunManager/Gun";
 import { Guns } from "shared/src/game/GunManager/GunManager";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
-import { OneForAll } from "shared/src/game/UpgradeManager/Upgrades/Shotgun/OneForAll";
 
 
 export class Position extends Schema {
@@ -21,11 +20,20 @@ export class GunState extends Schema {
 
     @type("number") ammo: number;
     @type("number") lastTimeReloaded: number;
-    @type("number") reloadDelay: number;
     @type("number") lastTimeShot: number;
+
+    @type("number") reloadDelay: number;
     @type("number") fireDelay: number;
     @type("number") bulletsPerShot: number;
     @type("number") spread: number;
+    
+    @type("number") damage: number;
+    @type("number") magSize: number;
+    
+    @type("boolean") automatic: boolean;
+    @type("number") bulletSpeedMultiplier: number;
+    @type("number") bulletSize: number
+
 
 
 
@@ -36,21 +44,26 @@ export class GunState extends Schema {
         this.gunID = gunID
         let gunInfo = Guns.get(gunID)
 
-        if(this.gunID == "Shotgun" && client.getUpgradeLevel("OneForAll") != 0){
-            console.log("sludge returns!!!")
-            //guninfo is now the part that doesn't work!!
-            gunInfo = new Gun("shotgun", 3, 0.05, 3, 1, 30, 30, true, 10, 8)
-        }
-
         this.ammo = gunInfo.magSize
         this.lastTimeReloaded = 0;
         this.lastTimeShot = 0;
-        this.fireDelay = gunInfo.fireRate * 1000 - (client.getUpgradeLevel("SprayAndPray") * 100);
 
-        this.reloadDelay = gunInfo.timeToReload * 1000 - (client.getUpgradeLevel("ReloadSpeed") * 500);
+        this.reloadDelay = gunInfo.timeToReload * 1000;
+        this.fireDelay = gunInfo.fireRate * 1000;
         this.bulletsPerShot = gunInfo.bulletsPerShot;
+        this.spread = gunInfo.spread;
 
-        this.spread = gunInfo.spread + (client.getUpgradeLevel("SprayAndPray") * 8);
+        this.damage = gunInfo.damage;
+        this.magSize = gunInfo.magSize;
+
+        this.automatic = gunInfo.automatic
+        this.bulletSpeedMultiplier = gunInfo.bulletSpeedMultiplier
+        this.bulletSize = gunInfo.bulletSize
+
+
+        client.upgrades.forEach((upgrade) => {
+            Upgrades.get(upgrade.upgradeID).serverOnGunConstructed(upgrade.level, this)
+        })
     }
 }
 
@@ -86,9 +99,12 @@ export class Player extends Schema {
         this.id = id;
         this.gun = new GunState(client.gunOptions.options[client.gunOptions.picked], client);
         this.position = new Position(0, 0)
-        this.health = 100 + (30 * client.getUpgradeLevel("Tank")) // 30 health per upgrade
+        this.health = 100;
         this.maxHealth = this.health
-        console.log(client.getUpgradeLevel("Tank"))
+
+        client.upgrades.forEach((upgrade) => {
+            Upgrades.get(upgrade.upgradeID).serverOnPlayerConstructed(upgrade.level, this)
+        })
     }
 }
 
@@ -201,9 +217,10 @@ export class PlayerClient extends Schema {
     }
 
     randomizeUpgradeOptions(checkGunDep: boolean,heldGunId?: string) {
+        console.log("randomise ", Upgrades)
         let upgradeMap = new Map(Upgrades)
         for (let upgrade of upgradeMap.entries()) {
-            if (upgrade[1].level >= upgradeMap.get(upgrade[0]).max) {
+            if (upgradeMap.get(upgrade[0]).max <= 1) {
                 upgradeMap.delete(upgrade[0])
                 continue
             }
