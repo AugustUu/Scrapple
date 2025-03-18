@@ -1,4 +1,4 @@
-import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, Circle } from "excalibur";
+import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite, ExcaliburGraphicsContext2DCanvas } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -30,6 +30,9 @@ export class LocalPlayer extends Actor {
     maxGrappleSpeed: number
     grappleCooldown = 0.25 // seconds
     timeLastGrappled = 0
+    graphics: GraphicsComponent;
+
+    sprite: Sprite
 
     doubleJump: boolean
     dash: boolean
@@ -38,7 +41,7 @@ export class LocalPlayer extends Actor {
 
 
     constructor(x: number, y: number) {
-        super({name:"localplayer", x: x, y: y, radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value), anchor: Vector.Half });
+        super({name:"localplayer", x: x, y: y, radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value), anchor: Vector.Half});
         
         this.jumpHeight = 60
         this.speed = 5
@@ -49,6 +52,15 @@ export class LocalPlayer extends Actor {
         NetworkUtils.getLocalClient().upgrades.forEach((upgrade) => {
             Upgrades.get(upgrade.upgradeID).clientOnPlayerConstructed(upgrade.level, this)
         })
+
+        //this.sprite = new ImageSource("../../../Art/Character").toSprite()
+        this.sprite = null
+
+        /*new ImageSource("../../art/Character.png").load().then((tttt)=>{
+            console.log(tttt)
+        })
+
+        this.graphics.add(this.sprite)*/
 
         
         this.speed += NetworkUtils.getLocalUpgrade("Speed") * 2
@@ -248,7 +260,6 @@ export class LocalPlayer extends Actor {
 
     public update(engine: Engine, delta: number) {
         
-
         //engine.currentScene.camera.pos = this.pos
 
         if(Networking.client.room == null || this.isKilled()){ // who ever designed it so it rarely will update even when killed is a dumbass

@@ -1,4 +1,4 @@
-import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering,  } from 'excalibur';
+import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering, ExcaliburGraphicsContext2DCanvas,  } from 'excalibur';
 import { Game } from './scenes/Game';
 
 import { MainMenu } from './scenes/MainMenu';
@@ -6,6 +6,8 @@ import RAPIER from '@dimforge/rapier2d-compat';
 import { MouseInput } from './util';
 import { StartScreen } from './scenes/StartScreen';
 import { EndRoundScreen } from './scenes/EndRoundScreen';
+import { ExcaliburGraphicsContextWebGL } from 'excalibur';
+
 
 
 export const engine = new Engine({
