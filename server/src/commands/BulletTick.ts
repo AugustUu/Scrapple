@@ -14,7 +14,7 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
 
             if (this.state.players.has(bullet.shotById)) {
                 let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
-                let homeRadius = 300
+                let homeRadius = bullet.homeRadius
                 let homeAngle = Math.PI / 4
                 let homeStrength = 0.01
 
@@ -67,7 +67,7 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
                         if (!this.state.players.get(bullet.shotById)) {
                             return
                         }
-                        player.health -= Guns.get(this.state.players.get(bullet.shotById).gun.gunID).damage
+                        player.health -= this.state.players.get(bullet.shotById).gun.damage
 
                         if (player.health <= 0) {
                             this.state.players.delete(player.id);

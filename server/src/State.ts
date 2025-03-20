@@ -115,14 +115,16 @@ export class Bullet extends Schema {
     @type("string") shotById: string;
     @type("number") speed: number;
     @type("number") timeCreated: number;
+    @type("number") homeRadius: number;
 
-    constructor(x: number, y: number, angle: number, radius: number, shotById: string, speed: number) {
+    constructor(x: number, y: number, angle: number, radius: number, shotById: string, speed: number, homeRadius: number) {
         super()
         this.position = new Position(x, y)
         this.angle = angle;
         this.shotById = shotById;
         this.radius = radius;
         this.speed = speed;
+        this.homeRadius = homeRadius;
         this.timeCreated = Date.now()
     }
 }
@@ -238,7 +240,8 @@ export class PlayerClient extends Schema {
                 if (!checkGunDep || heldGunId == undefined) {
                     upgradeMap.delete(upgrade[0])
                     continue
-                } else {
+                } else 
+                {
                     let dep = upgradeMap.get(upgrade[0]).gunDep
                     if (heldGunId != dep) {
                         upgradeMap.delete(upgrade[0])

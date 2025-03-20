@@ -3,15 +3,18 @@ import { Upgrade } from "../../Upgrade"
 import { registerUpgrade } from "../../UpgradeManager"
 
 @registerUpgrade
-export class OneForAll extends Upgrade {
+export class AllForOne extends Upgrade {
     constructor() {
-        super("One For All", 1, null, "Shotgun")
+        super("All For One", 1, null, "Shotgun")
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {
-        gun.bulletsPerShot *= gun.magSize
-        gun.magSize = 1
-        gun.ammo = 1
+        gun.bulletSize *= (gun.bulletsPerShot/2)
+        gun.bulletSpeedMultiplier /= (gun.bulletsPerShot/4)
+        gun.damage *=  (gun.bulletsPerShot/4)
+        
+        gun.bulletsPerShot = 1  
         gun.reloadDelay *= 2
+
     }
 }

@@ -19,7 +19,7 @@ export class StartGameCommand extends Command<GameRoom, { client: Client}> {
                 
                 let pickedUpgradeID = otherClient.upgradeOptions.options[otherClient.upgradeOptions.picked]
 
-                console.log(this.state.clients.get(id).upgradeOptions.options[otherClient.upgradeOptions.picked])
+                console.log("GOT UPGRADE",this.state.clients.get(id).upgradeOptions.options[otherClient.upgradeOptions.picked])
 
                 if (Upgrades.has(pickedUpgradeID)){
                     if(otherClient.upgrades.has(pickedUpgradeID)){
