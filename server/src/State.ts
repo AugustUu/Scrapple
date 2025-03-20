@@ -26,10 +26,10 @@ export class GunState extends Schema {
     @type("number") fireDelay: number;
     @type("number") bulletsPerShot: number;
     @type("number") spread: number;
-    
+
     @type("number") damage: number;
     @type("number") magSize: number;
-    
+
     @type("boolean") automatic: boolean;
     @type("number") bulletSpeedMultiplier: number;
     @type("number") bulletSize: number
@@ -216,15 +216,14 @@ export class PlayerClient extends Schema {
         this.gunOptions = new Option(options)
     }
 
-    randomizeUpgradeOptions(checkGunDep: boolean,heldGunId?: string) {
-        console.log("randomise ", Upgrades)
+    randomizeUpgradeOptions(checkGunDep: boolean, heldGunId?: string) {
         let upgradeMap = new Map(Upgrades)
         for (let upgrade of upgradeMap.entries()) {
-            if (upgradeMap.get(upgrade[0]).max <= 1) {
+            if (upgradeMap.get(upgrade[0]).max == 100) {
                 upgradeMap.delete(upgrade[0])
                 continue
             }
-            
+
 
             if (upgradeMap.get(upgrade[0]).upgradeDep != undefined) {
                 let dep = upgradeMap.get(upgrade[0]).upgradeDep
@@ -233,14 +232,15 @@ export class PlayerClient extends Schema {
                     continue
                 }
             }
+            
             if (upgradeMap.get(upgrade[0]).gunDep != undefined) {
-                if(!checkGunDep){
+                console.log(heldGunId, " ", upgradeMap.get(upgrade[0]).gunDep)
+                if (!checkGunDep || heldGunId == undefined) {
                     upgradeMap.delete(upgrade[0])
                     continue
-                }
-                else{
+                } else {
                     let dep = upgradeMap.get(upgrade[0]).gunDep
-                    if(heldGunId != dep){
+                    if (heldGunId != dep) {
                         upgradeMap.delete(upgrade[0])
                         continue
                     }

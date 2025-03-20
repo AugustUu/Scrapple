@@ -15,6 +15,7 @@ import { Minigun } from "shared/src/game/GunManager/Guns/Minigun"
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 import { engine } from "..";
 import { NetworkUtils } from "../networking/NetworkUtils";
+import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 
 export class LocalPlayer extends Actor {
     joint!: ImpulseJoint;
@@ -23,6 +24,7 @@ export class LocalPlayer extends Actor {
     line!: Entity
     jumpHeight: number
     speed: number
+    speedMult: number
     radius: number
     grounded: boolean
     lastTimeGrounded: number
@@ -44,7 +46,7 @@ export class LocalPlayer extends Actor {
         
         this.jumpHeight = 60
         this.speed = 5
-        let speedMult = 1
+        this.speedMult = 1
         this.maxGrappleSpeed = 175
         this.radius = 20
 
@@ -64,18 +66,12 @@ export class LocalPlayer extends Actor {
 
         //this.graphics.add(this.sprite)
 
-        
-        this.jumpHeight += NetworkUtils.getLocalUpgrade("JumpBoost") * 20
-        this.speed += NetworkUtils.getLocalUpgrade("Speed") * 2
-        speedMult -= NetworkUtils.getLocalUpgrade("Tank") * 0.4
-
-        this.speed *= speedMult // speed multiply by 0.6 if tank
 
         this.grounded = false
 
-        
-        //engine.currentScene.camera.strategy.elasticToActor(this, 0.1, 0.1)
-
+        NetworkUtils.getLocalClient().upgrades.forEach((upgrade) => {
+            Upgrades.get(upgrade.upgradeID).clientOnPlayerConstructed(upgrade.level, this)
+        })
 
         let rigidBody = new RigidBodyComponent(RigidBodyType.Dynamic);
         this.addComponent(rigidBody)
@@ -134,7 +130,7 @@ export class LocalPlayer extends Actor {
                 this.lastTimeGrounded = Date.now()
             }
         }
-        let moveSpeed = this.speed
+        let moveSpeed = this.speed * this.speedMult
         if(!this.grounded && !this.grappling){
             moveSpeed /= 6
         }
