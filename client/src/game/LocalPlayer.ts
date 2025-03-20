@@ -1,4 +1,4 @@
-import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite, ExcaliburGraphicsContext2DCanvas } from "excalibur";
+import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite, ExcaliburGraphicsContext2DCanvas, Loader } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -49,6 +49,24 @@ export class LocalPlayer extends Actor {
         this.speedMult = 1
         this.maxGrappleSpeed = 175
         this.radius = 20
+
+
+
+        //this.sprite = new ImageSource("/Art/Character.png").toSprite()
+        let image = new ImageSource("../../Art/Character.png")
+
+        /*new ImageSource("/Art/Character.png").load().then((tttt)=>{
+            console.log(tttt)
+        })*/
+        
+        if (image.isLoaded()){
+            console.log("yep")
+            this.sprite = image.toSprite()
+        }
+
+        //this.graphics.add(this.sprite)
+
+
         this.grounded = false
 
         NetworkUtils.getLocalClient().upgrades.forEach((upgrade) => {
