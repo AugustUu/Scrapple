@@ -1,5 +1,7 @@
-import { Loader } from "excalibur"
+import { Loader, ImageSource } from "excalibur"
+import { engine } from ".";
 
-export class Resources{
-    loader = new Loader()
+export const Resources = {
+    playerSprite: new ImageSource("/Art/Character.png")
 }
+

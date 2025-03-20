@@ -114,7 +114,7 @@ export class PhysicsObjectRenderSystem extends System {
             }*/
                 transform.pos.x = bodyPosition.x * 10
                 transform.pos.y = -bodyPosition.y * 10
-            //transform.rotation = -body.rotation();
+            transform.rotation = -body.rotation();
         }
     }
 

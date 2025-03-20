@@ -1,4 +1,4 @@
-import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite, ExcaliburGraphicsContext2DCanvas, Loader } from "excalibur";
+import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -7,15 +7,11 @@ import { Networking } from "../networking/Networking";
 import { C2SPacket, S2CPackets } from "shared/src/networking/Packet";
 import { CreateGrappleLine } from "./Entities/GrappleLine";
 import { Game } from "../scenes/Game";
-import { Pistol} from "shared/src/game/GunManager/Guns/Pistol";
-import { Rifle } from "shared/src/game/GunManager/Guns/Rifle";
-import { Shotgun } from "shared/src/game/GunManager/Guns/Shotgun";
-import { Sniper } from "shared/src/game/GunManager/Guns/Sniper";
-import { Minigun } from "shared/src/game/GunManager/Guns/Minigun"
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 import { engine } from "..";
 import { NetworkUtils } from "../networking/NetworkUtils";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
+import { Resources } from "../Resources";
 
 export class LocalPlayer extends Actor {
     joint!: ImpulseJoint;
@@ -42,7 +38,7 @@ export class LocalPlayer extends Actor {
 
 
     constructor(x: number, y: number) {
-        super({name:"localplayer", x: x, y: y, radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value), anchor: Vector.Half});
+        super({name:"localplayer", x: x, y: y, /*radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value),*/ anchor: Vector.Half});
         
         this.jumpHeight = 60
         this.speed = 5
@@ -53,7 +49,7 @@ export class LocalPlayer extends Actor {
 
 
         //this.sprite = new ImageSource("/Art/Character.png").toSprite()
-        let image = new ImageSource("../../Art/Character.png")
+        let image = Resources.playerSprite
 
         /*new ImageSource("/Art/Character.png").load().then((tttt)=>{
             console.log(tttt)
@@ -63,8 +59,11 @@ export class LocalPlayer extends Actor {
             console.log("yep")
             this.sprite = image.toSprite()
         }
+        else{
+            console.log("nope")
+        }
 
-        //this.graphics.add(this.sprite)
+        this.graphics.add(this.sprite)
 
 
         this.grounded = false
@@ -290,24 +289,6 @@ export class LocalPlayer extends Actor {
 
         this.healthBar.scale.x = NetworkUtils.getLocalState().health / 100
 
-        //switch gun hotkeys!!
-        /*if (engine.input.keyboard.wasPressed(Keys.Key1)) {
-            this.inventory.ChangeGun(idList[0]) 
-        }
-        if (engine.input.keyboard.wasPressed(Keys.Key2)) {
-            this.inventory.ChangeGun(idList[1])
-        }
-        if (engine.input.keyboard.wasPressed(Keys.Key3)) {
-            this.inventory.ChangeGun(idList[2])
-        }
-        if (engine.input.keyboard.wasPressed(Keys.Key4)) {
-            this.inventory.ChangeGun(idList[3])
-        }
-        if (engine.input.keyboard.wasPressed(Keys.Key5)) {
-            this.inventory.ChangeGun(idList[4])
-        }        if (engine.input.keyboard.wasPressed(Keys.Key6)) {
-            this.inventory.ChangeGun(idList[5])
-        }*/
         if (engine.input.keyboard.wasPressed(Keys.Key7)) {
             Networking.client.room?.send(C2SPacket.LevelUpgrade, { id:"Speed" })
         }

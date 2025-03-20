@@ -15,7 +15,6 @@ export class MainMenu extends Scene {
 
     public onInitialize() {
 
-
         this.rootElement = document.getElementById('menu')!;
         this.inputElement = document.getElementById('serverInput')! as HTMLInputElement;
         this.createOrJoin = document.getElementById('joinButton')!;

@@ -1,4 +1,4 @@
-import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering, ExcaliburGraphicsContext2DCanvas, } from 'excalibur';
+import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering, Loader} from 'excalibur';
 import { Game } from './scenes/Game';
 
 import { MainMenu } from './scenes/MainMenu';
@@ -7,7 +7,7 @@ import { MouseInput } from './util';
 import { StartScreen } from './scenes/StartScreen';
 import { EndRoundScreen } from './scenes/EndRoundScreen';
 import { ExcaliburGraphicsContextWebGL } from 'excalibur';
-
+import { Resources } from './Resources';
 
 
 export const engine = new Engine({
@@ -36,9 +36,17 @@ export const engine = new Engine({
 async function init() {
 
     await RAPIER.init();
-
-    engine.start();
+    var loader = new Loader;
+    loader.suppressPlayButton = true;
+    
+    for (let resource of Object.values(Resources)){
+        loader.addResource(resource);
+    }
+    await engine.start(loader)
+    loader.load()
     engine.goToScene("mainMenu");
+
+
 
     MouseInput.init();
 
