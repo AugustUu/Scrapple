@@ -27,7 +27,7 @@ import("./Upgrades/Shotgun/AllForOne")
 
 
 
-import("./Upgrades/AntsInYoPants")
+//import("./Upgrades/AntsInYoPants")
 
 
 export function registerUpgrade(upgradeType: typeof Upgrade) {
