@@ -1,4 +1,4 @@
-import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering, ExcaliburGraphicsContext2DCanvas,  } from 'excalibur';
+import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering, ExcaliburGraphicsContext2DCanvas, } from 'excalibur';
 import { Game } from './scenes/Game';
 
 import { MainMenu } from './scenes/MainMenu';
@@ -23,25 +23,25 @@ export const engine = new Engine({
         multiSampleAntialiasing: true, // turns on msaa which smooths quad boundaries
         filtering: ImageFiltering.Blended, // hints the image loader to use blended filtering
         canvasImageRendering: 'auto' // applies the 'auto'-matic css to the canvas CSS image-rendering
-      },
+    },
     scenes: {
         mainMenu: MainMenu,
         game: Game,
         startScreen: StartScreen,
         endRoundScreen: EndRoundScreen
-        
+
     }
 });
 
 async function init() {
-   
+
     await RAPIER.init();
 
     engine.start();
     engine.goToScene("mainMenu");
-    
+
     MouseInput.init();
-        
+
 }
 
 init()
