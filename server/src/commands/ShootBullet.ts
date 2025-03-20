@@ -22,7 +22,7 @@ export class ShootCommand extends Command<GameRoom, { client: Client, message: a
 
                     for (let i = 0; i < player.gun.bulletsPerShot; i++) {
                         let angle = message.angle + (getRandomNumber(player.gun.spread * -1, player.gun.spread + 1) * (Math.PI / 180))
-                        let bullet = new Bullet(player.position.x, player.position.y, angle, player.gun.bulletSize, client.id, player.gun.bulletSpeedMultiplier * getRandomNumber(0.9, 1.1))
+                        let bullet = new Bullet(player.position.x, player.position.y, angle, player.gun.bulletSize, client.id, player.gun.bulletSpeedMultiplier * getRandomNumber(0.9, 1.1), message.homeRadius)
                         this.state.bullets.set(randomBytes(16).toString('hex'), bullet)
 
                         this.state.clients.get(client.id).upgrades.forEach((upgrade) => {

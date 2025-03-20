@@ -14,7 +14,7 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
 
             if (this.state.players.has(bullet.shotById)) {
                 let gunInfo = Guns.get(this.state.players.get(bullet.shotById).gun.gunID)
-                let homeRadius = 300
+                let homeRadius = bullet.homeRadius
                 let homeAngle = Math.PI / 4
                 let homeStrength = 0.01
 
