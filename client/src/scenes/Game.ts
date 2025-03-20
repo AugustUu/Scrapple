@@ -18,8 +18,6 @@ export var LocalPlayerInstance: LocalPlayer;
 
 export class Game extends Scene {
 
-    private playButton: Actor | undefined;
-
     public onInitialize() {
         this.world.systemManager.addSystem(PhysicsSystem);
         this.world.systemManager.addSystem(PhysicsObjectRenderSystem);
@@ -103,23 +101,6 @@ export class Game extends Scene {
         Hud.enable()
 
         this.camera.zoom = 0.8 - (NetworkUtils.getLocalUpgrade("Scope") * 0.2)  
-
-        this.playButton = new Actor({
-            width: 50,
-            height: 50,
-            color: Color.Orange,
-            pos: new Vector(-400, -400),
-            anchor: Vector.Half
-        })
-
-        this.playButton.on("pointerdown", function () {
-            Networking.client.room?.leave();
-            engine.goToScene("mainMenu");
-        })
-
-        this.add(this.playButton)
-        //this.add(createOtherPlayerEntity("test", vec(0, -20)))
-
 
     }
 
