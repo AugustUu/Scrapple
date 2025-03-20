@@ -67,7 +67,7 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
                         if (!this.state.players.get(bullet.shotById)) {
                             return
                         }
-                        player.health -= Guns.get(this.state.players.get(bullet.shotById).gun.gunID).damage
+                        player.health -= this.state.players.get(bullet.shotById).gun.damage
 
                         if (player.health <= 0) {
                             this.state.players.delete(player.id);
