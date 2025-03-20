@@ -27,7 +27,7 @@ export class ReloadCommand extends Command<GameRoom, { client: Client }> {
                 }
 
                 player.gun.lastTimeReloaded = Date.now();
-                player.gun.ammo = gunInfo.magSize
+                player.gun.ammo = player.gun.magSize
             }
         }
 

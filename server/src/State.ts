@@ -62,6 +62,7 @@ export class GunState extends Schema {
 
 
         client.upgrades.forEach((upgrade) => {
+            console.log(client.name,"GUN UPGRADE",upgrade.upgradeID,upgrade.level)
             Upgrades.get(upgrade.upgradeID).serverOnGunConstructed(upgrade.level, this)
         })
     }
