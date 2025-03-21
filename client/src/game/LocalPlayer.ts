@@ -12,6 +12,7 @@ import { engine } from "..";
 import { NetworkUtils } from "../networking/NetworkUtils";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { Resources } from "../Resources";
+import { NetworkClient } from "../networking/NetworkClient";
 
 export class LocalPlayer extends Actor {
     joint!: ImpulseJoint;
@@ -258,7 +259,15 @@ export class LocalPlayer extends Actor {
 
     public update(engine: Engine, delta: number) {
         
-        //engine.currentScene.camera.pos = this.pos
+        let avgPos: {x:number, y:number}
+        /*for(let player of Networking.client.room.state.players.values()){
+            avgPos.x += player.position.x
+            avgPos.y += player.position.y
+        }*/
+        //avgPos.x /= Networking.client.room.state.players.size
+        //avgPos.y /= Networking.client.room.state.players.size
+        //engine.currentScene.camera.pos = new Vector(avgPos.x, avgPos.y)
+        console.log(avgPos)
 
         if(Networking.client.room == null || this.isKilled()){ // who ever designed it so it rarely will update even when killed is a dumbass
             return
