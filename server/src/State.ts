@@ -84,6 +84,7 @@ export class Player extends Schema {
     @type("number") health: number;
     @type("number") maxHealth: number;
     @type(Position) position: Position;
+    @type("number") rotation: number;
 
     @type(GunState) gun: GunState;
 
@@ -99,6 +100,7 @@ export class Player extends Schema {
         this.id = id;
         this.gun = new GunState(client.gunOptions.options[client.gunOptions.picked], client);
         this.position = new Position(0, 0)
+        this.rotation = 0
         this.health = 100;
         this.maxHealth = this.health
 

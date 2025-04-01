@@ -100,9 +100,9 @@ export class OtherPlayerMoveSystem extends System {
             let state = Networking.client.room!.state.players.get(player.id)
             if (state) {
 
-
                 entity.get(TransformComponent).pos.x = state.position.x //lerp(entity.get(TransformComponent).pos.x, state.position.x, elapsedMs / 120)
                 entity.get(TransformComponent).pos.y = state.position.y //lerp(entity.get(TransformComponent).pos.y, state.position.y, elapsedMs / 120)
+                entity.get(TransformComponent).rotation = state.rotation
                 let sprite = entity.children[1].get(GraphicsComponent)
                 let healthBar = sprite.getGraphic(sprite.getNames()[0]) as Rectangle
                 //console.log(entity.get(OtherPlayerComponent).health)
