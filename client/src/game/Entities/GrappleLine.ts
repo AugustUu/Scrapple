@@ -3,7 +3,7 @@ import RAPIER, { RigidBody, JointData, ImpulseJoint, Ray, Collider, RigidBodyTyp
 import { Vector2, MathUtils } from "../../util";
 
 export class GrappleLineSystem extends System {
-    public systemType = SystemType.Update;
+    public systemType = SystemType.Draw;
     spriteQuery: Query<typeof GraphicsComponent | typeof GrappleLineComponent>;
 
 

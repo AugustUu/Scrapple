@@ -1,4 +1,4 @@
-import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite } from "excalibur";
+import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite, BoundingBox } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -47,10 +47,15 @@ export class LocalPlayer extends Actor {
         this.radius = 20
 
 
+        //engine.currentScene.camera.strategy.lockToActor(this);
+        
+
+
+
 
         //this.sprite = new ImageSource("/Art/Character.png").toSprite()
         let image = Resources.playerSprite
-
+        
         /*new ImageSource("/Art/Character.png").load().then((tttt)=>{
             console.log(tttt)
         })*/
@@ -58,6 +63,7 @@ export class LocalPlayer extends Actor {
         if (image.isLoaded()){
             console.log("yep")
             this.sprite = image.toSprite()
+            //this.sprite.tint = Color.fromHex((document.getElementById('colorpicker') as any).value)
         }
         else{
             console.log("nope")
@@ -258,7 +264,6 @@ export class LocalPlayer extends Actor {
 
     public update(engine: Engine, delta: number) {
         
-        //engine.currentScene.camera.pos = this.pos
 
         if(Networking.client.room == null || this.isKilled()){ // who ever designed it so it rarely will update even when killed is a dumbass
             return

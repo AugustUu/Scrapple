@@ -5,6 +5,7 @@ import { Network } from "inspector/promises";
 import { Networking } from "../networking/Networking";
 import { lerp } from "../util";
 import { engine } from "..";
+import { Game, LocalPlayerInstance } from "../scenes/Game";
 
 export class PhysicsSystem extends System {
     public systemType = SystemType.Update;
@@ -93,6 +94,8 @@ export class PhysicsObjectRenderSystem extends System {
             if (entity.isKilled()) {
                 continue
             }
+
+            //console.log(entity.name)
             const transform = entity.get(TransformComponent);
             const body = entity.get(RigidBodyComponent).body;
 
@@ -112,9 +115,17 @@ export class PhysicsObjectRenderSystem extends System {
                 transform.pos.x = bodyPosition.x * 10
                 transform.pos.y = -bodyPosition.y * 10
             }*/
-                transform.pos.x = bodyPosition.x * 10
-                transform.pos.y = -bodyPosition.y * 10
+            transform.pos.x = bodyPosition.x * 10
+            transform.pos.y = -bodyPosition.y * 10
             transform.rotation = -body.rotation();
+
+            if(entity.name == "localplayer"){
+                
+                engine.currentScene.camera.pos = new Vector(transform.pos.x,transform.pos.y)
+
+                engine.currentScene.camera.pos.clampMagnitude(1000)
+            }
+
         }
     }
 
