@@ -1,4 +1,4 @@
-import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite } from "excalibur";
+import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite, BoundingBox } from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -48,6 +48,11 @@ export class LocalPlayer extends Actor {
         this.speedMult = 1
         this.maxGrappleSpeed = 175
         this.radius = 20
+
+
+        //engine.currentScene.camera.strategy.lockToActor(this);
+        
+
 
 
 
@@ -266,6 +271,7 @@ export class LocalPlayer extends Actor {
 
 
     public update(engine: Engine, delta: number) {
+        
 
         if(Networking.client.room == null || this.isKilled()){ // who ever designed it so it rarely will update even when killed is a dumbass
             return

@@ -1,9 +1,10 @@
 import { Actor, Color, Component, CoordPlane, Engine, Entity, GraphicsComponent, Input, Keys, Rectangle, System, SystemType, TransformComponent, Util, Vector, Line, Query, World } from "excalibur";
 import RAPIER, { RigidBody, JointData, ImpulseJoint, Ray, Collider, RigidBodyType } from '@dimforge/rapier2d-compat';
 import { Vector2, MathUtils } from "../../util";
+import { LocalPlayerInstance } from "../../scenes/Game";
 
 export class GrappleLineSystem extends System {
-    public systemType = SystemType.Update;
+    public systemType = SystemType.Draw;
     spriteQuery: Query<typeof GraphicsComponent | typeof GrappleLineComponent>;
 
 
@@ -19,14 +20,15 @@ export class GrappleLineSystem extends System {
             let end = entity.get(GrappleLineComponent).endPoint
             let start = entity.get(GrappleLineComponent).player.get(TransformComponent).pos
             
+            entity.get(TransformComponent).pos = start
 
                 //let rot_anchor1 = new Vector2(joint.anchor1()).rotate(joint.body2().rotation())         add later question markÍ
                 //let pos1 = MathUtils.rapierToExc(new Vector2(joint.body1().translation()))//.add(rot_anchor1))
 
-                //let pos2 = MathUtils.rapierToExc(new Vector2(joint.body2().translation()).add(joint.anchor2()))
-            let line: Line = sprite.getGraphic(sprite.getNames()[0]) as Line
-
-            line.start.setTo(start.x, start.y);
+                //let pos2 = MathUtils.rapierToExc(new Vector2(joint.body2().translation()).add(joint.anchor2()))\
+            
+            let line: Line = sprite.current as Line
+            line.start.setTo(0,0);
             line.end.setTo(end.x, end.y);
 
         }
