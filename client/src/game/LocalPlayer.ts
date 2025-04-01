@@ -12,6 +12,7 @@ import { engine } from "..";
 import { NetworkUtils } from "../networking/NetworkUtils";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { Resources } from "../Resources";
+import { NetworkClient } from "../networking/NetworkClient";
 
 export class LocalPlayer extends Actor {
     joint!: ImpulseJoint;
