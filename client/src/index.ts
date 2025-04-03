@@ -36,7 +36,7 @@ export const engine = new Engine({
 async function init() {
 
     await RAPIER.init();
-    var loader = new Loader;
+    const loader = new Loader;
     loader.suppressPlayButton = true;
     
     for (let resource of Object.values(Resources)){

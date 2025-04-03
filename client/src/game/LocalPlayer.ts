@@ -57,7 +57,7 @@ export class LocalPlayer extends Actor {
 
 
         //this.sprite = new ImageSource("/Art/Character.png").toSprite()
-        const image = Resources.playerSprite
+        const image = Resources.char1
 
         /*new ImageSource("/Art/Character.png").load().then((tttt)=>{
             console.log(tttt)
@@ -66,15 +66,14 @@ export class LocalPlayer extends Actor {
             const sprite = new Sprite({
                 image: image,
                 destSize: {
-                    width: 40,
-                    height: 40
+                    width: 42,
+                    height: 42
                 }
             })
-            console.log("yep")
             this.sprite = sprite
         }
         else{
-            console.log("nope")
+            console.log("attempted to use unloaded sprite")
         }
 
         this.graphics.add(this.sprite)
