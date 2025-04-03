@@ -1,14 +1,19 @@
-import { Circle, Color, Component, CoordPlane, Entity, Font, GraphicsComponent, GraphicsGroup, Query, Rectangle, System, SystemType, Text, TextAlign, TransformComponent, vec, Vector, World } from "excalibur";
+import { Circle, Color, Component, CoordPlane, Entity, Font, GraphicsComponent, GraphicsGroup, Query, Rectangle, Sprite, System, SystemType, Text, TextAlign, TransformComponent, vec, Vector, World } from "excalibur";
 import { Networking } from "../../networking/Networking";
 import { lerp, Vector2 } from "../../util";
 import { Player } from "server/src/State";
 import { engine } from "../..";
 import { CreateGrappleLine } from "./GrappleLine";
+import { Resources } from "../../Resources";
 
 export class OtherPlayerComponent extends Component {
     public name: string = 'jorbis';
     public id: string = "";
     public grappleLine?: Entity;
+    public healthBar: Entity;
+    public nameTag: Entity;
+
+    
 
     constructor(name: string, id: string) {
         super();
@@ -26,10 +31,29 @@ export function createOtherPlayerEntity(playerState: Player, id: string): Entity
 
     entity.addComponent(new OtherPlayerComponent(playerState.name, id))
 
-    let sprite = new Circle({ radius: 20, color: Color.fromHex(Networking.client.room.state.clients.get(id).color) })
+    let playerData = entity.get(OtherPlayerComponent);
+
+    //let sprite = new Circle({ radius: 20, color: Color.fromHex(Networking.client.room.state.clients.get(id).color) })
 
     let graphics = new GraphicsComponent();
-    graphics.use(sprite);
+
+    let image = Resources.char2
+    let playerSprite: Sprite
+    if (image.isLoaded()){
+        const sprite = new Sprite({
+            image: image,
+            destSize: {
+                width: 42,
+                height: 42
+            }
+        })
+        playerSprite = sprite
+    }
+    else{
+        console.log("attempted to use unloaded sprite")
+    }
+
+    graphics.use(playerSprite);
 
     entity.addComponent(graphics)
 
@@ -42,26 +66,29 @@ export function createOtherPlayerEntity(playerState: Player, id: string): Entity
     let nameTag = new Text({ text: playerState.name, font: new Font({ size: 15, textAlign: TextAlign.Left }) })
     let nameTagGraphics = new GraphicsComponent();
     nameTagGraphics.use(nameTag)
+    nameTagGraphics.current.transform.setPosition(0, -40)
     let nameTagTransform = new TransformComponent();
-    nameTagTransform.pos.y -= 40
 
     let nameTagEntity = new Entity()
     .addComponent(nameTagGraphics)
     .addComponent(nameTagTransform)
-    entity.addChild(nameTagEntity)
+    engine.add(nameTagEntity)
+    playerData.nameTag = nameTagEntity
+    
 
     let healthBar = new Rectangle({ width: 50, height: 5, color: new Color(0, 255, 0) })
     let healthBarGraphics = new GraphicsComponent();
     healthBarGraphics.add(healthBar)
+    healthBarGraphics.current.transform.setPosition(0, -28)
     
     
     let healthBarTransform = new TransformComponent();
-    healthBarTransform.pos.y -= 28
     
     let healthBarEntity = new Entity({name: "healthBar"})
     .addComponent(healthBarGraphics)
     .addComponent(healthBarTransform)
-    entity.addChild(healthBarEntity)
+    engine.add(healthBarEntity)
+    playerData.healthBar = healthBarEntity
 
 
     playerState.listen("grappling", (value: boolean, previousValue: boolean) => {
@@ -99,14 +126,14 @@ export class OtherPlayerMoveSystem extends System {
             let player = entity.get(OtherPlayerComponent);
             let state = Networking.client.room!.state.players.get(player.id)
             if (state) {
-
-                entity.get(TransformComponent).pos.x = state.position.x //lerp(entity.get(TransformComponent).pos.x, state.position.x, elapsedMs / 120)
-                entity.get(TransformComponent).pos.y = state.position.y //lerp(entity.get(TransformComponent).pos.y, state.position.y, elapsedMs / 120)
-                entity.get(TransformComponent).rotation = state.rotation
-                let sprite = entity.children[1].get(GraphicsComponent)
-                let healthBar = sprite.getGraphic(sprite.getNames()[0]) as Rectangle
+                let entityTransform = entity.get(TransformComponent)
+                entityTransform.pos.x = state.position.x //lerp(entity.get(TransformComponent).pos.x, state.position.x, elapsedMs / 120)
+                entityTransform.pos.y = state.position.y //lerp(entity.get(TransformComponent).pos.y, state.position.y, elapsedMs / 120)
+                entityTransform.rotation = state.rotation
+                player.healthBar.get(TransformComponent).pos = new Vector(entityTransform.pos.x, entityTransform.pos.y - 28)
+                player.nameTag.get(TransformComponent).pos = new Vector(entityTransform.pos.x, entityTransform.pos.y - 40)
                 //console.log(entity.get(OtherPlayerComponent).health)
-                healthBar.scale.x = state.health / 100
+                player.healthBar.get(GraphicsComponent).current.scale.x = state.health / 100
             }
         }
     }
