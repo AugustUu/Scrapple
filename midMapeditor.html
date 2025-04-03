@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shape Drawer</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+        #controls {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <button id="circleButton">Draw Circle</button>
+        <button id="rectangleButton">Draw Rectangle</button>
+        <button id="exportButton">Export to Code</button>
+    </div>
+    <canvas id="canvas" width="1000" height="1000"></canvas>
+    <pre id="output"></pre>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let shapes = [];
+        let currentShape = null;
+        let isPanning = false;
+        let startX, startY;
+        let panOffset = { x: 0, y: 0 }; // Track pan offset
+
+        document.getElementById('circleButton').addEventListener('click', () => {
+            currentShape = 'circle';
+        });
+
+        document.getElementById('rectangleButton').addEventListener('click', () => {
+            currentShape = 'rectangle';
+        });
+
+        canvas.addEventListener('click', (event) => {
+            if (isPanning) return; // Ignore clicks while panning
+
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left - panOffset.x; // Adjust for pan offset
+            const y = event.clientY - rect.top - panOffset.y; // Adjust for pan offset
+
+            if (currentShape === 'circle') {
+                const radius = 20; // Fixed radius for simplicity
+                shapes.push({ type: 'Circle', position: { x, y }, radius });
+                drawShapes();
+            } else if (currentShape === 'rectangle') {
+                const width = 40; // Fixed width for simplicity
+                const height = 40; // Fixed height for simplicity
+                shapes.push({ type: 'Rectangle', position: { x, y }, width, height });
+                drawShapes();
+            }
+        });
+
+        canvas.addEventListener('mousedown', (event) => {
+            if (event.button === 1) { // Middle mouse button
+                isPanning = true;
+                startX = event.clientX;
+                startY = event.clientY;
+            }
+        });
+
+        canvas.addEventListener('mouseup', (event) => {
+            if (event.button === 1) { // Middle mouse button
+                isPanning = false;
+            }
+        });
+
+        canvas.addEventListener('mousemove', (event) => {
+            if (isPanning) {
+                const dx = event.clientX - startX;
+                const dy = event.clientY - startY;
+
+                panOffset.x += dx; // Update pan offset
+                panOffset.y += dy;
+
+                startX = event.clientX;
+                startY = event.clientY;
+
+                drawShapes();
+            }
+        });
+
+        function drawShapes() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(panOffset.x, panOffset.y); // Apply pan offset
+
+            shapes.forEach(shape => {
+                if (shape.type === 'Circle') {
+                    ctx.beginPath();
+                    ctx.arc(shape.position.x, shape.position.y, shape.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'blue';
+                    ctx.fill();
+                    ctx.closePath();
+                } else if (shape.type === 'Rectangle') {
+                    ctx.fillStyle = 'red';
+                    ctx.fillRect(shape.position.x, shape.position.y, shape.width, shape.height);
+                }
+            });
+
+            ctx.restore();
+        }
+
+        document.getElementById('exportButton').addEventListener('click', () => {
+            const output = shapes.map(shape => {
+                const scale = 10; // Scale factor
+                if (shape.type === 'Circle') {
+                    return `this.state.colliders.push(new CircleCollider(${(shape.position.x ).toFixed(2)}, ${(shape.position.y ).toFixed(2)}, ${shape.radius / scale}));`;
+                } else if (shape.type === 'Rectangle') {
+                    return `this.state.colliders.push(new RectangleCollider(${(shape.position.x ).toFixed(2)}, ${(shape.position.y ).toFixed(2)}, ${shape.width / scale}, ${shape.height / scale}));`;
+                }
+            }).join('\n');
+
+            document.getElementById('output').textContent = output;
+        });
+    </script>
+</body>
+</html>
