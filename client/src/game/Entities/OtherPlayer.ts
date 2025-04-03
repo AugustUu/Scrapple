@@ -69,7 +69,7 @@ export function createOtherPlayerEntity(playerState: Player, id: string): Entity
         let playerData = entity.get(OtherPlayerComponent);
 
         if (value) {
-            let grapple = CreateGrappleLine(entity, new Vector2({ x: playerState.grappleX, y: playerState.grappleY }))
+            let grapple = CreateGrappleLine(entity, new Vector(playerState.grappleX, playerState.grappleY ))
             engine.add(grapple);
             playerData.grappleLine = grapple;
         } else {
