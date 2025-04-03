@@ -13,6 +13,7 @@ export class MoveCommand extends Command<GameRoom, { client: Client, message: an
             let player = this.state.players.get(client.sessionId)
             player.position.x = message.x
             player.position.y = message.y
+            player.rotation = message.rotation
         }
 
     }

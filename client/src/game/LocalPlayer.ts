@@ -33,9 +33,11 @@ export class LocalPlayer extends Actor {
     sprite: Sprite
 
     doubleJump: boolean
-    dash: boolean
+    canDash: boolean
 
     healthBar: Rectangle
+    healthBarTransform: TransformComponent
+    healthBarEntity: Entity
 
 
     constructor(x: number, y: number) {
@@ -55,16 +57,21 @@ export class LocalPlayer extends Actor {
 
 
         //this.sprite = new ImageSource("/Art/Character.png").toSprite()
-        let image = Resources.playerSprite
-        
+        const image = Resources.playerSprite
+
         /*new ImageSource("/Art/Character.png").load().then((tttt)=>{
             console.log(tttt)
         })*/
-        
         if (image.isLoaded()){
+            const sprite = new Sprite({
+                image: image,
+                destSize: {
+                    width: 40,
+                    height: 40
+                }
+            })
             console.log("yep")
-            this.sprite = image.toSprite()
-            //this.sprite.tint = Color.fromHex((document.getElementById('colorpicker') as any).value)
+            this.sprite = sprite
         }
         else{
             console.log("nope")
@@ -91,21 +98,21 @@ export class LocalPlayer extends Actor {
         this.grappling = false
 
         this.doubleJump = false
-        this.dash = false;
+        this.canDash = false;
 
         this.healthBar = new Rectangle({ width: 50, height: 5, color: new Color(0, 255, 0) })
         let healthBarGraphics = new GraphicsComponent();
         healthBarGraphics.add(this.healthBar)
             
             
-        let healthBarTransform = new TransformComponent();
-        healthBarTransform.pos.y -= 28
+        this.healthBarTransform = new TransformComponent();
+        this.healthBarTransform.pos.y -= 28
             
-        let healthBarEntity = new Entity({name: "healthBar"})
+        this.healthBarEntity = new Entity({name: "healthBar"})
         .addComponent(healthBarGraphics)
-        .addComponent(healthBarTransform)
-        this.addChild(healthBarEntity)
+        .addComponent(this.healthBarTransform)
 
+        engine.add(this.healthBarEntity)
     }
 
     private move(engine: Engine, delta: number) {
@@ -119,7 +126,7 @@ export class LocalPlayer extends Actor {
                 if(!this.grounded){
                     this.grounded = true;
                     this.doubleJump = true;
-                    this.dash = true;
+                    this.canDash = true;
                 }
             }
             else {
@@ -170,11 +177,11 @@ export class LocalPlayer extends Actor {
         }
 
         //dash
-        if(engine.input.keyboard.wasPressed(Keys.Q) && this.dash){
+        if(engine.input.keyboard.wasPressed(Keys.Q) && this.canDash){
             let dashSpeed = 100
             let direction = new Vector2({x:this.pos.x - engine.input.pointers.primary.lastWorldPos.x, y:this.pos.y - engine.input.pointers.primary.lastWorldPos.y}).normalized().scale(dashSpeed)
             rigidBody.setLinvel({x: rigidBody.linvel().x - (direction.x * 3), y: rigidBody.linvel().y + direction.y}, true)
-            this.dash = false
+            this.canDash = false
         }
 
 
@@ -295,12 +302,9 @@ export class LocalPlayer extends Actor {
         }
 
         this.healthBar.scale.x = NetworkUtils.getLocalState().health / 100
+        this.healthBarTransform.pos = new Vector(this.transform.pos.x, this.transform.pos.y - 28)
 
-        if (engine.input.keyboard.wasPressed(Keys.Key7)) {
-            Networking.client.room?.send(C2SPacket.LevelUpgrade, { id:"Speed" })
-        }
-
-        Networking.client.room?.send(C2SPacket.Move, { x: this.pos.x, y: this.pos.y })
+        Networking.client.room?.send(C2SPacket.Move, { x: this.pos.x, y: this.pos.y, rotation: this.rotation })
         super.update(engine, delta);
     }
 

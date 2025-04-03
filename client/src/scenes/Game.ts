@@ -37,6 +37,7 @@ export class Game extends Scene {
                 if(LocalPlayerInstance.line){
                     LocalPlayerInstance.line.kill()
                 }
+                LocalPlayerInstance.healthBarEntity.kill()
                 LocalPlayerInstance.kill()
             }
             PlayerEntities.forEach((player)=>{
