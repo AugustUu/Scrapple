@@ -238,7 +238,8 @@ export class LocalPlayer extends Actor {
 
         if (hit != null) {
             let hit_point = ray.pointAt(hit.timeOfImpact);
-            if (engine.input.keyboard.wasPressed(Keys.Space) && this.timeLastGrappled + this.grappleCooldown * 1000 <= Date.now()) {
+            if (engine.input.keyboard.wasPressed(Keys.Space)) {
+
 
                 //console.log("Collider", hit.collider, "hit at point", hitPoint); 
                 if (!this.joint.isValid()) {
@@ -248,7 +249,7 @@ export class LocalPlayer extends Actor {
                     if (newJoint != undefined) {
                         this.joint = newJoint
                         let endPoint = MathUtils.rapierToExc(hit_point);
-                        this.line = CreateGrappleLine(this, endPoint)
+                        this.line = CreateGrappleLine(this, new Vector(endPoint.x,endPoint.y))
                         this.grappling = true
                         engine.add(this.line)
                         Networking.client.room?.send(C2SPacket.Grapple, { x: endPoint.x, y: endPoint.y })
