@@ -120,6 +120,8 @@ export class PhysicsObjectRenderSystem extends System {
             transform.rotation = -body.rotation();
 
             if(entity.name == "localplayer"){
+
+                LocalPlayerInstance.healthBarEntity.get(TransformComponent).pos = new Vector(transform.pos.x,transform.pos.y - 28)
                 
                 engine.currentScene.camera.pos = new Vector(transform.pos.x,transform.pos.y)
 
