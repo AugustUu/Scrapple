@@ -22,7 +22,7 @@ export class ReloadCommand extends Command<GameRoom, { client: Client }> {
                 if (clientInfo.getUpgradeLevel("ReloadBurst") != 0) {
                     let burstBullets = 50
                     for (let i = 0; i < burstBullets; i += 1) {
-                        this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, (2*Math.PI / burstBullets) * i, player.gun.bulletSize, client.id, 2, 0))
+                        this.state.bullets.set(randomBytes(16).toString('hex'), new Bullet(player.position.x, player.position.y, (2*Math.PI / burstBullets) * i, player.gun.bulletSize, client.id, 2, 0, 0))
                     }
                 }
 
