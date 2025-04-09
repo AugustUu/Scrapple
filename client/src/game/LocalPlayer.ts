@@ -35,8 +35,6 @@ export class LocalPlayer extends Actor {
     doubleJump: boolean
     canDash: boolean
 
-    healthBar: Rectangle
-    healthBarTransform: TransformComponent
     healthBarEntity: Entity
 
 
@@ -99,17 +97,17 @@ export class LocalPlayer extends Actor {
         this.doubleJump = false
         this.canDash = false;
 
-        this.healthBar = new Rectangle({ width: 50, height: 5, color: new Color(0, 255, 0) })
+        let healthBar = new Rectangle({ width: 50, height: 5, color: new Color(0, 255, 0) })
         let healthBarGraphics = new GraphicsComponent();
-        healthBarGraphics.add(this.healthBar)
+        healthBarGraphics.add(healthBar)
             
             
-        this.healthBarTransform = new TransformComponent();
-        this.healthBarTransform.pos.y -= 28
+        let healthBarTransform = new TransformComponent();
+        healthBarTransform.pos.y -= 28
             
         this.healthBarEntity = new Entity({name: "healthBar"})
         .addComponent(healthBarGraphics)
-        .addComponent(this.healthBarTransform)
+        .addComponent(healthBarTransform)
 
         engine.add(this.healthBarEntity)
     }
@@ -300,8 +298,8 @@ export class LocalPlayer extends Actor {
             this.shooting = false;
         }
 
-        this.healthBar.scale.x = NetworkUtils.getLocalState().health / 100
-        this.healthBarTransform.pos = new Vector(this.transform.pos.x, this.transform.pos.y - 28)
+        this.healthBarEntity.get(GraphicsComponent).current.scale.x = NetworkUtils.getLocalState().health / 100
+        this.healthBarEntity.get(TransformComponent).pos = new Vector(this.transform.pos.x, this.transform.pos.y - 28)
 
         Networking.client.room?.send(C2SPacket.Move, { x: this.pos.x, y: this.pos.y, rotation: this.rotation })
         super.update(engine, delta);
