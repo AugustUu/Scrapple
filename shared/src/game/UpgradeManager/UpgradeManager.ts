@@ -10,9 +10,10 @@ import("./Upgrades/Universal/Tank")
 import("./Upgrades/Universal/GrappleCooldown")
 import("./Upgrades/Universal/Regen")
 import("./Upgrades/Universal/SprayAndPray")
-
+import("./Upgrades/Universal/Sheild")
 
 import("./Upgrades/Pistol/GlassCannon")
+import("./Upgrades/Pistol/Akimbo")
 
 import("./Upgrades/Sniper/Reversenizer")
 import("./Upgrades/Sniper/Scope")
