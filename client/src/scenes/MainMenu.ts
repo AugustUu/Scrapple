@@ -14,7 +14,6 @@ export class MainMenu extends Scene {
     private colorInput: HTMLInputElement;
 
     public onInitialize() {
-
         this.rootElement = document.getElementById('menu')!;
         this.inputElement = document.getElementById('serverInput')! as HTMLInputElement;
         this.createOrJoin = document.getElementById('joinButton')!;
@@ -43,7 +42,7 @@ export class MainMenu extends Scene {
     }
 
     public onActivate(context: SceneActivationContext<unknown>): void {
-        this.rootElement.style.display = "";
+        this.rootElement.style.display = "block";
     }
 
     public onDeactivate(context: SceneActivationContext): void {

@@ -1,4 +1,4 @@
-import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering, Loader} from 'excalibur';
+import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering, Loader, DefaultLoader} from 'excalibur';
 import { Game } from './scenes/Game';
 
 import { MainMenu } from './scenes/MainMenu';
@@ -36,8 +36,8 @@ export const engine = new Engine({
 async function init() {
 
     await RAPIER.init();
-    const loader = new Loader;
-    loader.suppressPlayButton = true;
+    const loader = new DefaultLoader;
+
     
     for (let resource of Object.values(Resources)){
         loader.addResource(resource);
@@ -45,6 +45,8 @@ async function init() {
     await engine.start(loader)
     loader.load()
     engine.goToScene("mainMenu");
+
+
 
 
 
