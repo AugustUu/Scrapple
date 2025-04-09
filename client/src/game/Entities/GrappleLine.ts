@@ -20,6 +20,7 @@ export class GrappleLineSystem extends System {
             let sprite = entity.get(GraphicsComponent)
             let end = entity.get(GrappleLineComponent).endPoint
 
+
             let start = entity.get(GrappleLineComponent).player.get(TransformComponent).pos
             
             entity.get(TransformComponent).pos = start

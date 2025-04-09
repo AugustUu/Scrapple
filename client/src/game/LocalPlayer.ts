@@ -110,6 +110,7 @@ export class LocalPlayer extends Actor {
         .addComponent(healthBarTransform)
 
         engine.add(this.healthBarEntity)
+
     }
 
     private move(engine: Engine, delta: number) {
@@ -310,8 +311,9 @@ export class LocalPlayer extends Actor {
             this.shooting = false;
         }
 
+
         this.healthBarEntity.get(GraphicsComponent).current.scale.x = NetworkUtils.getLocalState().health / 100
-        this.healthBarEntity.get(TransformComponent).pos = new Vector(this.transform.pos.x, this.transform.pos.y - 28)
+
 
         Networking.client.room?.send(C2SPacket.Move, { x: this.pos.x, y: this.pos.y, rotation: this.rotation })
         super.update(engine, delta);

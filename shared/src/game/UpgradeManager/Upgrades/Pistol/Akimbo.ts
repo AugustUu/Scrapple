@@ -3,18 +3,18 @@ import { Upgrade } from "../../Upgrade"
 import { registerUpgrade } from "../../UpgradeManager"
 
 @registerUpgrade
-export class GlassCannon extends Upgrade {
+export class Akimbo extends Upgrade {
     constructor() {
-        super("GlassCannon", 3, null, "Pistol")
+        super("Akimbo", 3, null, "Pistol")
     }
     
     serverOnPlayerConstructed(level: number, player: Player): void {
-        player.maxHealth / (level + 1);
-        player.health / (level + 1);
+        //player.
 
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {
-        gun.damage *=  (level + 0.5)
+        gun.damage /= (1.5 * level)
+        gun.bulletsPerShot *= level*2
     }
 }
