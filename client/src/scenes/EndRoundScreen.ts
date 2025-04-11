@@ -10,9 +10,13 @@ export class EndRoundScreen extends Scene {
     private nextRoundButton!: HTMLButtonElement;
     private playerList!: HTMLElement;
     private upgradeButtons!: HTMLElement[]
+    private serverCode!: HTMLElement;
 
     onInitialize(engine: Engine): void {
         this.rootElement = document.getElementById('endRoundScreen')!;
+
+        this.serverCode = document.getElementById('endRoundServerCode')!;
+
 
         this.playerList = document.getElementById('playerList')!;
         this.nextRoundButton = document.getElementById('nextRoundButton')! as HTMLButtonElement;
@@ -28,6 +32,10 @@ export class EndRoundScreen extends Scene {
 
     onActivate(context: SceneActivationContext<unknown>): void {
         this.rootElement.style.display = "block";
+
+        this.serverCode.innerHTML = Networking.client.room.id
+
+
         this.playerList.innerHTML = "";
 
         this.nextRoundButton.disabled = !NetworkUtils.getLocalClient().host

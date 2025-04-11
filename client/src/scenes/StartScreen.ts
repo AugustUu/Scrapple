@@ -1,6 +1,7 @@
 import { Engine, Scene, SceneActivationContext } from "excalibur";
 import { Networking } from "../networking/Networking";
 import { C2SPacket } from "shared/src/networking/Packet";
+import { NetworkClient } from "../networking/NetworkClient";
 
 export class StartScreen extends Scene {
     private rootElement!: HTMLElement;
@@ -10,10 +11,13 @@ export class StartScreen extends Scene {
 
     private startButton!: HTMLButtonElement;
     private playerList!: HTMLElement;
+    private serverCode!: HTMLElement;
 
 
     public onInitialize(engine: Engine) {
         this.rootElement = document.getElementById('startScreen')!;
+
+        this.serverCode = document.getElementById('serverCode')!;
         
         this.gunButtons = [document.getElementById('gun1Button'), document.getElementById('gun2Button'), document.getElementById('gun3Button')];
         this.upgradeButtons = [document.getElementById('upgrade1Button'), document.getElementById('upgrade2Button'), document.getElementById('upgrade3Button')];
@@ -33,6 +37,9 @@ export class StartScreen extends Scene {
 
     public onActivate(context: SceneActivationContext<unknown>): void {
         this.rootElement.style.display = "block";
+
+        this.serverCode.innerHTML = Networking.client.room.id
+
         this.playerList.innerHTML = "";
 
         Networking.client.room!.state.clients.forEach((client) => {

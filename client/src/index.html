@@ -43,6 +43,10 @@
             left: 5%;
         }
 
+        .left-15{
+            left: 15%;
+        }
+
         .left-25 {
             left: 25%;
         }
@@ -314,6 +318,24 @@
         #ammoCounter {
             font-weight: 700;
         }
+
+        #serverCode {
+            -webkit-touch-callout: all;
+            -webkit-user-select: all;
+            -khtml-user-select: all;
+            -moz-user-select: all;
+            -ms-user-select: all;
+            user-select: all;
+        }
+
+        #endRoundServerCode {
+            -webkit-touch-callout: all;
+            -webkit-user-select: all;
+            -khtml-user-select: all;
+            -moz-user-select: all;
+            -ms-user-select: all;
+            user-select: all;
+        }
         
     </style>
 </head>
@@ -350,6 +372,9 @@
         </div>
 
         <div id="startScreen">
+            <div class="fixed left-15 top-10">
+                Server Code: <h3 id="serverCode"></h3>
+            </div>
             <div class="fixed left-25 top-50">
                 <button id="gun1Button" class="optionButton"></button>
             </div>
@@ -380,6 +405,9 @@
         </div>
 
         <div id="endRoundScreen">
+            <div class="fixed left-15 top-10">
+                Server Code: <h3 id="endRoundServerCode"></h3>
+            </div>
             <div class="fixed left-25 top-50">
                 <button id="upgrade4Button" class="optionButton"></button>
             </div>

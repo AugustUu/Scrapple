@@ -13,6 +13,7 @@ export class Tank extends Upgrade {
     serverOnPlayerConstructed(level: number, player: Player): void {
         player.maxHealth += 50 * level;
         player.health += 50 * level;
+        player.radius += 5 * level
     }
 
     clientOnPlayerConstructed(level: number, player: LocalPlayer): void {
