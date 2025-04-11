@@ -155,19 +155,26 @@ export class LocalPlayer extends Actor {
         if (engine.input.keyboard.isHeld(Keys.S)) {
             rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, -50) }, true);
         }
-        if (engine.input.keyboard.wasPressed(Keys.W)) {
-
-            if(this.grounded || Date.now() - this.lastTimeGrounded < 100){
-                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
-            }   
-            else if(/*NetworkUtils.getUpgrade("AntsInYoPants") &&*/ this.doubleJump && !this.grappling){
-                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
-                this.doubleJump = false
-            }            
-            
+        if(this.grappling){
+            if (engine.input.keyboard.isHeld(Keys.W)) {
+                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: rigidBody.linvel().y + 3 }, true);
+            }
         }
-        if (engine.input.keyboard.wasReleased(Keys.W)){
-            rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, rigidBody.linvel().y * 0.25) }, true);
+        else{
+            if (engine.input.keyboard.wasPressed(Keys.W)) {
+
+                if(this.grounded || Date.now() - this.lastTimeGrounded < 100){
+                    rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
+                }   
+                else if(/*NetworkUtils.getUpgrade("AntsInYoPants") &&*/ this.doubleJump && !this.grappling){
+                    rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
+                    this.doubleJump = false
+                }            
+                
+            }
+            if (engine.input.keyboard.wasReleased(Keys.W)){
+                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, rigidBody.linvel().y * 0.25) }, true);
+            }
         }
 
         if (engine.input.keyboard.wasPressed(Keys.E) && NetworkUtils.getLocalUpgrade("Reversenizer")){
@@ -202,7 +209,12 @@ export class LocalPlayer extends Actor {
             else{
                 damping = 0.995
             }
-            rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: rigidBody.linvel().y}, true)
+            if(this.grappling){
+                rigidBody.setLinvel(new Vector2(rigidBody.linvel()).scale(damping), true) 
+            }
+            else{
+                rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: rigidBody.linvel().y}, true)
+            }
         }
         
 
@@ -289,10 +301,10 @@ export class LocalPlayer extends Actor {
         if (MouseInput.mouseButtons.left) {
             if (Guns.get(NetworkUtils.getLocalState().gun.gunID).automatic) {
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI, homeRadius: 300 })
+                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI, homeRadius: 300, homeStrength: 0.01 })
             } else if (this.shooting == false) {
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI, homeRadius: 300 })
+                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI, homeRadius: 300, homeStrength: 0.01  })
                 this.shooting = true;
             }
         }else{

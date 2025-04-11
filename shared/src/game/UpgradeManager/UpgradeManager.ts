@@ -11,6 +11,8 @@ import("./Upgrades/Universal/GrappleCooldown")
 import("./Upgrades/Universal/Regen")
 import("./Upgrades/Universal/SprayAndPray")
 import("./Upgrades/Universal/Sheild")
+import("./Upgrades/Universal/HomeLess")
+
 
 import("./Upgrades/Pistol/GlassCannon")
 import("./Upgrades/Pistol/Akimbo")

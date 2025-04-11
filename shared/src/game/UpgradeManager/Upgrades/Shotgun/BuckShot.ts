@@ -4,6 +4,6 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class BuckShot extends Upgrade {
     constructor() {
-        super("BuckShot", 1,null,"Shotgun")
+        super("BuckShot", 1, null, "Shotgun")
     }
 }
