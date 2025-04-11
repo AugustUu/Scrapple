@@ -45,7 +45,9 @@ export class LocalPlayer extends Actor {
         this.speed = 5
         this.speedMult = 1
         this.maxGrappleSpeed = 175
-        this.radius = 20
+
+        this.radius = NetworkUtils.getLocalState().radius
+
 
 
         //engine.currentScene.camera.strategy.lockToActor(this);
@@ -64,8 +66,8 @@ export class LocalPlayer extends Actor {
             const sprite = new Sprite({
                 image: image,
                 destSize: {
-                    width: 42,
-                    height: 42
+                    width: 2.1*this.radius,
+                    height: 2.1*this.radius
                 }
             })
             this.sprite = sprite
@@ -86,7 +88,7 @@ export class LocalPlayer extends Actor {
         let rigidBody = new RigidBodyComponent(RigidBodyType.Dynamic);
         this.addComponent(rigidBody)
         
-        this.addComponent(new ColliderComponent(RAPIER.ColliderDesc.ball(2).setCollisionGroups(0x00020007), rigidBody.body))
+        this.addComponent(new ColliderComponent(RAPIER.ColliderDesc.ball(this.radius/10).setCollisionGroups(0x00020007), rigidBody.body))
         
 
         console.log("new", rigidBody)
@@ -118,7 +120,7 @@ export class LocalPlayer extends Actor {
         let col = this.get(ColliderComponent).collider;
 
         let shape = new Ball(this.radius / 12)
-        let hit = PhysicsSystem.physicsWorld.castShape(rigidBody.translation(), rigidBody.rotation(), {x: 0, y: -1}, shape, 0, 0.5, false, undefined, 0x00020007, col)
+        let hit = PhysicsSystem.physicsWorld.castShape(rigidBody.translation(), rigidBody.rotation(), {x: 0, y: -this.radius/20}, shape, 0, 0.5, false, undefined, 0x00020007, col)
         if (hit != null) {
             if (hit.collider.collisionGroups() == 0x00010007) {
                 if(!this.grounded){

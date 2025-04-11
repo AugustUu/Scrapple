@@ -33,7 +33,9 @@ export function createOtherPlayerEntity(playerState: Player, id: string): Entity
 
     let playerData = entity.get(OtherPlayerComponent);
 
-    //let sprite = new Circle({ radius: 20, color: Color.fromHex(Networking.client.room.state.clients.get(id).color) })
+    //let sprite = new Circle({ radius: Networking.client.room.state.players.get(id).radius, color: Color.fromHex(Networking.client.room.state.clients.get(id).color) })
+
+    let radius = Networking.client.room.state.players.get(id).radius;
 
     let graphics = new GraphicsComponent();
 
@@ -43,8 +45,8 @@ export function createOtherPlayerEntity(playerState: Player, id: string): Entity
         const sprite = new Sprite({
             image: image,
             destSize: {
-                width: 42,
-                height: 42
+                width: 2.1*radius,
+                height: 2.1*radius
             }
         })
         playerSprite = sprite

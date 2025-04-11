@@ -28,6 +28,8 @@ import("./Upgrades/Shotgun/BirdShot")
 import("./Upgrades/Shotgun/BuckShot")
 import("./Upgrades/Shotgun/SawedOff")
 
+import("./Upgrades/Minigun/Ammobelt")
+
 
 
 import("./Upgrades/AntsInYoPants")

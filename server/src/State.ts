@@ -78,6 +78,17 @@ export class UpgradeState extends Schema {
     }
 }
 
+export class EffectState extends Schema {
+    @type("string") effectsID: string;
+    @type("number") endTime: number;
+
+    constructor(effectsID: string,endTime : number) {
+        super();
+        this.effectsID = effectsID
+        this.endTime = endTime
+    }
+}
+
 export class Player extends Schema {
     @type("string") name: string;
     @type("string") id: string;
@@ -85,6 +96,8 @@ export class Player extends Schema {
     @type("number") maxHealth: number;
     @type(Position) position: Position;
     @type("number") rotation: number;
+
+    @type({ map: EffectState }) effects: MapSchema<EffectState>;
 
     @type(GunState) gun: GunState;
 
