@@ -32,7 +32,8 @@ export class LocalPlayer extends Actor {
 
     sprite: Sprite
 
-    doubleJump: boolean
+    airJumps: number
+    maxJumps: number
     canDash: boolean
 
     healthBarEntity: Entity
@@ -47,6 +48,8 @@ export class LocalPlayer extends Actor {
         this.maxGrappleSpeed = 175
         this.radius = 20
 
+        this.maxJumps = 0
+        this.airJumps = 0
 
         //engine.currentScene.camera.strategy.lockToActor(this);
         
@@ -94,7 +97,7 @@ export class LocalPlayer extends Actor {
         this.shooting = false
         this.grappling = false
 
-        this.doubleJump = false
+        
         this.canDash = false;
 
         let healthBar = new Rectangle({ width: 50, height: 5, color: new Color(0, 255, 0) })
@@ -123,7 +126,7 @@ export class LocalPlayer extends Actor {
             if (hit.collider.collisionGroups() == 0x00010007) {
                 if(!this.grounded){
                     this.grounded = true;
-                    this.doubleJump = true;
+                    this.airJumps = this.maxJumps;
                     this.canDash = true;
                 }
             }
@@ -145,6 +148,9 @@ export class LocalPlayer extends Actor {
         if(!this.grounded && !this.grappling){
             moveSpeed /= 6
         }
+        if(this.grappling){
+            moveSpeed /= 1.5
+        }
 
         if (engine.input.keyboard.isHeld(Keys.A)) {
             rigidBody.setLinvel({ x: rigidBody.linvel().x - moveSpeed, y: rigidBody.linvel().y }, true);
@@ -157,20 +163,17 @@ export class LocalPlayer extends Actor {
         }
         if(this.grappling){
             if (engine.input.keyboard.isHeld(Keys.W)) {
-                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: rigidBody.linvel().y + 3 }, true);
+                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: rigidBody.linvel().y + moveSpeed * 0.5 }, true);
             }
         }
         else{
             if (engine.input.keyboard.wasPressed(Keys.W)) {
-
-                if(this.grounded || Date.now() - this.lastTimeGrounded < 100){
+                if(this.grounded || this.airJumps > 0 || Date.now() - this.lastTimeGrounded < 100){
                     rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
-                }   
-                else if(/*NetworkUtils.getUpgrade("AntsInYoPants") &&*/ this.doubleJump && !this.grappling){
-                    rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.max(rigidBody.linvel().y, this.jumpHeight)}, true);
-                    this.doubleJump = false
-                }            
-                
+                    if(!(this.grounded || Date.now() - this.lastTimeGrounded < 100)){
+                        this.airJumps -= 1
+                    }
+                }
             }
             if (engine.input.keyboard.wasReleased(Keys.W)){
                 rigidBody.setLinvel({ x: rigidBody.linvel().x, y: Math.min(rigidBody.linvel().y, rigidBody.linvel().y * 0.25) }, true);
@@ -188,12 +191,9 @@ export class LocalPlayer extends Actor {
             rigidBody.setLinvel({x: rigidBody.linvel().x - (direction.x * 3), y: rigidBody.linvel().y + direction.y}, true)
             this.canDash = false
         }
-
-
-
         let damping: number
         if(this.grappling){
-            damping = 0.97
+            damping = 0.975
             rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: Math.min(rigidBody.linvel().y * damping, rigidBody.linvel().y)}, true)
         }
         else{
@@ -209,17 +209,8 @@ export class LocalPlayer extends Actor {
             else{
                 damping = 0.995
             }
-            if(this.grappling){
-                rigidBody.setLinvel(new Vector2(rigidBody.linvel()).scale(damping), true) 
-            }
-            else{
-                rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: rigidBody.linvel().y}, true)
-            }
+            rigidBody.setLinvel({x: rigidBody.linvel().x * damping, y: rigidBody.linvel().y}, true)
         }
-        
-
-
-        
 
         if(this.grappling){
             let linvel = new Vector2(rigidBody.linvel())
@@ -249,7 +240,7 @@ export class LocalPlayer extends Actor {
 
         if (hit != null) {
             let hit_point = ray.pointAt(hit.timeOfImpact);
-            if (engine.input.keyboard.wasPressed(Keys.Space)) {
+            if (engine.input.keyboard.wasPressed(Keys.Space) && this.timeLastGrappled + this.grappleCooldown * 1000 <= Date.now()) {
 
 
                 //console.log("Collider", hit.collider, "hit at point", hitPoint); 

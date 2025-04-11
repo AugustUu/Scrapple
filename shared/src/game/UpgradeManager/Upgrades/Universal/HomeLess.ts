@@ -14,6 +14,6 @@ export class HomeLess extends Upgrade {
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {
-        gun.damage *= 1.4
+        gun.damage *= 1.5
     }
 }

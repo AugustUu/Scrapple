@@ -4,9 +4,9 @@ import { Upgrade } from "../../Upgrade"
 import { registerUpgrade } from "../../UpgradeManager"
 
 @registerUpgrade
-export class Tank extends Upgrade {
+export class Grappler extends Upgrade {
     constructor() {
-        super("Tank", 1)
+        super("Grappler", 10)
     }
 
 

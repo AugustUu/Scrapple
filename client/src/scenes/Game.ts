@@ -76,6 +76,8 @@ export class Game extends Scene {
         })
 
         Networking.client.room!.state.players.onRemove((player: any, id: string) => {
+            PlayerEntities.get(id)?.get(OtherPlayerComponent).healthBar.kill()
+            PlayerEntities.get(id)?.get(OtherPlayerComponent).nameTag.kill()
             PlayerEntities.get(id)?.kill()
         })
 
