@@ -10,7 +10,7 @@ import("./Upgrades/Universal/Tank")
 import("./Upgrades/Universal/GrappleCooldown")
 import("./Upgrades/Universal/Regen")
 import("./Upgrades/Universal/SprayAndPray")
-import("./Upgrades/Universal/Sheild")
+import("./Upgrades/Universal/Shield")
 import("./Upgrades/Universal/HomeLess")
 
 
