@@ -3,9 +3,9 @@ import { Upgrade } from "../../Upgrade"
 import { registerUpgrade } from "../../UpgradeManager"
 
 @registerUpgrade
-export class Sheild extends Upgrade {
+export class Shield extends Upgrade {
     constructor() {
-        super("Sheild", 5)
+        super("Shield", 5)
     }
 
     serverOnPlayerConstructed(level: number, player: Player): void {
