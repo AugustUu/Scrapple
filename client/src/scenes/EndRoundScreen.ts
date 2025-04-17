@@ -38,7 +38,7 @@ export class EndRoundScreen extends Scene {
 
         this.playerList.innerHTML = "";
 
-        this.nextRoundButton.disabled = !NetworkUtils.getLocalClient().host
+        this.nextRoundButton.disabled = !NetworkUtils.getLocalClient().ready
 
 
         let upgradeOptions = NetworkUtils.getLocalClient().upgradeOptions.options;

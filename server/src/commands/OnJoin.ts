@@ -12,7 +12,7 @@ export class OnJoinCommand extends Command<GameRoom, { client: Client, options: 
 
         console.log(client.sessionId, "joined!", options);
         if (options && options.name && options.color) {
-            this.state.clients.set(client.sessionId, new PlayerClient(options.name, client.id, this.state.clients.size == 0, options.color));
+            this.state.clients.set(client.sessionId, new PlayerClient(options.name, client.id, options.color));
             client.send(S2CPackets.InitClient, {})
             //this.state.players.set(client.sessionId, new Player(options.name, client.id, idList[0]));
         }

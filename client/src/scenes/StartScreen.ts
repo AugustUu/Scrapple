@@ -9,7 +9,7 @@ export class StartScreen extends Scene {
     private gunButtons!: HTMLElement[]
     private upgradeButtons!: HTMLElement[]
 
-    private startButton!: HTMLButtonElement;
+    private readyButton!: HTMLButtonElement;
     private playerList!: HTMLElement;
     private serverCode!: HTMLElement;
 
@@ -25,13 +25,13 @@ export class StartScreen extends Scene {
 
 
         this.playerList = document.getElementById('playerList')!;
-        this.startButton = document.getElementById('startButton')! as HTMLButtonElement;
+        this.readyButton = document.getElementById('readyButton')! as HTMLButtonElement;
 
-        this.startButton.addEventListener("click", () => {
+        this.readyButton.addEventListener("click", () => {
             Networking.client.room.send(C2SPacket.StartGame, {})
         })
 
-        this.startButton.disabled = !Networking.client.room.state.clients.get(Networking.client.clientId).host
+        this.readyButton.disabled = !Networking.client.room.state.clients.get(Networking.client.clientId).ready
 
     }
 
