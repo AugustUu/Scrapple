@@ -75,6 +75,10 @@
             top: 20%;
         }
 
+        .top-30{
+            top: 30%;
+        }
+
         .top-50 {
             top: 50%;
         }
@@ -181,9 +185,103 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
+        #creditsButton {
+            padding: 12px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #4d4d50;
+            color: #e0e0e0;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #tutorialButton {
+            padding: 12px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #4d4d50;
+            color: #e0e0e0;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
         #quickplay:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(255, 0, 204, 0.4);
+        }
+
+        #credits{
+            display: none;
+            position: absolute;
+            z-index: 1999;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        #creditsTitle {
+            font-size: 80px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #FFFFFF, #FFFFFF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #creditsText {
+            padding: 12px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        #tutorial{
+            display: none;
+            position: absolute;
+            z-index: 1999;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        #tutorialTitle {
+            font-size: 80px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #FFFFFF, #FFFFFF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #tutorialText {
+            padding: 12px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        #mainMenuButton {
+            padding: 12px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #4d4d50;
+            color: #e0e0e0;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
         #startScreen {
@@ -347,6 +445,10 @@
                 Scrapple
             </div>
 
+            <div class="fixed center-x top-30">
+                <button id="creditsButton">Credits</button>
+            </div>
+
             <div class="fixed center-x top-50"
                 style="display: flex; flex-direction: column; align-items: left; gap: 15px;font-weight: 600;font-size:18px;">
                 <div>
@@ -420,6 +522,40 @@
 
             <div class="fixed center-x top-80">
                 <button id="nextRoundButton">Next Round</button>
+            </div>
+        </div>
+
+        <dv id="credits">
+            <div id="creditsTitle" class="fixed center-x top-20 text-center">
+                Credits
+            </div>
+
+            <div id="creditsText" class = "fixed center-x top-30">
+                August - Knows how the server works and good at convincing us not to use Unity<br>
+                Takumi - Knows how grappling works and good at math<br>
+                Seth - Founder of Bunkashit Games and designed Sludge<br>
+                Sevin - Graphics
+            </div>
+
+            <div class = "fixed center-x top-60">
+                <button id="mainMenuButton">Main Menu</button>
+            </div>
+        </dv>
+
+        <div id="tutorialScreen">
+            <div id="tutorialTitle" class="fixed center-x top-20 text-center">
+                Tutorial
+            </div>
+
+            <div id="tutorialText" class = "fixed center-x top-30">
+                August - Knows how the server works and good at convincing us not to use Unity<br>
+                Takumi - Knows how grappling works and good at math<br>
+                Seth - Founder of Bunkashit Games and designed Sludge<br>
+                Sevin - Graphics
+            </div>
+
+            <div class = "fixed center-x top-60">
+                <button id="mainMenuButton">Main Menu</button>
             </div>
         </div>
 
