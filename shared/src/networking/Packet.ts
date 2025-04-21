@@ -21,5 +21,6 @@ export var S2CPackets = {
     InitClient: "initclient",
     StartGame: "startgame",
     EndGame: "endgame",
-    Killed: "killed"
+    Killed: "killed",
+    Readied: "readied"
 }

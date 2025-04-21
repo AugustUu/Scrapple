@@ -58,8 +58,7 @@ export class GameRoom extends Room<State> {
         })
 
         this.onMessage(C2SPacket.Ready, (client, message) => {
-            new ReadyCommand()
-            //this.dispatcher.dispatch, {});
+            this.dispatcher.dispatch(new ReadyCommand(), { client: client });
         })
 
         this.onMessage(C2SPacket.PickGun, (client, message) => {

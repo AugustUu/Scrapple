@@ -4,15 +4,19 @@ import { NetworkUtils } from "../../../client/src/networking/NetworkUtils";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { Player, UpgradeState } from "../State";
 import { S2CPackets } from "shared/src/networking/Packet";
+import { Client } from "colyseus";
 
 // code for random upgrades that nshould run every tick
-export class ReadyCommand extends Command<GameRoom, {}> {
+export class ReadyCommand extends Command<GameRoom, { client: Client }> {
 
-    execute({} = this.payload) {
-        //NetworkUtils.getLocalClient().ready = !NetworkUtils.getLocalClient().ready BROKEN BUT IS THE MAIN PURPOSE OF THIS FILE
+    execute({ client } = this.payload) {
+        this.state.clients.get(client.sessionId).ready = !this.state.clients.get(client.sessionId).ready
+
+        console.log(this.state.clients.get(client.sessionId).ready)
+        this.room.broadcast(S2CPackets.Readied)
         let allReady = true
-        for(var client of this.state.clients.values()){
-            allReady = allReady && !client.ready
+        for(var otherClient of this.state.clients.values()){
+            allReady = allReady && otherClient.ready
         }
         if(allReady){
             if (!this.state.game.inRound) {
