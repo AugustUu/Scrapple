@@ -223,7 +223,7 @@
             background: #818184;
         }
 
-        #startButton {
+        .readyButton {
             padding: 15px 40px;
             border: none;
             border-radius: 10px;
@@ -235,12 +235,12 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        #startButton:hover {
+        .readyButton:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
         }
 
-        #playerList {
+        .playerList {
             list-style-type: none;
             padding: 10px;
             margin: 0;
@@ -472,12 +472,12 @@
             </div>
 
             <div class="fixed center-x top-80">
-                <button id="startButton">Start Game</button>
+                <button id="readyButtonStart" class="readyButton">Ready</button>
             </div>
 
             <div class="fixed center-x top-10 text-center">
                 Players:
-                <ul id="playerList"></ul>
+                <ul id="playerListStart" class="playerList"></ul>
             </div>
         </div>
 
@@ -496,8 +496,14 @@
             </div>
 
             <div class="fixed center-x top-80">
-                <button id="nextRoundButton">Next Round</button>
+                <button id="readyButtonNext" class="readyButton">Ready</button>
             </div>
+
+            <div class="fixed center-x top-10 text-center">
+                Players:
+                <ul id="playerListNext" class="playerList"></ul>
+            </div>
+
         </div>
 
         <div id="hud">

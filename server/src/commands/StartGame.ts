@@ -11,7 +11,7 @@ export class StartGameCommand extends Command<GameRoom, { client: Client}> {
 
     execute({ client } = this.payload) {
 
-        if (this.state.clients.get(client.id).host && !this.state.game.inRound) {
+        if (this.state.clients.get(client.id).ready && !this.state.game.inRound) {
             this.state.game.inRound = true;
 
             this.state.clients.forEach((otherClient, id) => {

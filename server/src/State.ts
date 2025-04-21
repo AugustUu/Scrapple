@@ -190,7 +190,7 @@ class Option extends Schema {
 export class PlayerClient extends Schema {
     @type("string") name: string;
     @type("string") id: string;
-    @type("boolean") host: boolean;
+    @type("boolean") ready: boolean;
     @type("number") wins: number;
     @type("string") color: string = "ff3300";
 
@@ -200,7 +200,7 @@ export class PlayerClient extends Schema {
     @type(Option) gunOptions: Option;
     @type(Option) upgradeOptions: Option;
 
-    constructor(name: string, id: string, host: boolean, color: string) {
+    constructor(name: string, id: string, color: string) {
         super();
 
         this.upgrades = new MapSchema();
@@ -210,7 +210,7 @@ export class PlayerClient extends Schema {
 
         this.name = name
         this.id = id;
-        this.host = host
+        this.ready = false
         this.wins = 0;
         this.color = color
     }
