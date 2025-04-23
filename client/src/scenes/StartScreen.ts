@@ -103,7 +103,7 @@ export class StartScreen extends Scene {
         })
 
         this.upgradeButtons.forEach((button, index) => {
-            button.innerText = upgradeOptions[index] + "\n\n\n\n" + Upgrades.get(upgradeOptions[index]).description
+            button.innerText = upgradeOptions[index] + "\n\n\n" + Upgrades.get(upgradeOptions[index]).description
             button.addEventListener("click", () => {
                 Networking.client.room.send(C2SPacket.PickUpgrade, index)
 

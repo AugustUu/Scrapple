@@ -5,7 +5,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class ReloadSpeed extends Upgrade {
     constructor() {
-        super("ReloadSpeed", 5,null,null,"Reload faster")
+        super("ReloadSpeed", 5,null,null,"Reload speedier")
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {

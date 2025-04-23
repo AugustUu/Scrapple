@@ -6,7 +6,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class JumpBoost extends Upgrade {
     constructor() {
-        super("JumpBoost", 3)
+        super("JumpBoost", 3, null, null, "Reach for the stars")
     }
 
     clientOnPlayerConstructed(level: number, player: LocalPlayer): void {
