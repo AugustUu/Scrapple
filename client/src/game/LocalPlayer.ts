@@ -62,7 +62,7 @@ export class LocalPlayer extends Actor {
 
         //this.sprite = new ImageSource("/Art/Character.png").toSprite()
         const image = Resources.char1
-
+        const Shotgun = new Sound('./Sound/Gun/Shotgun.mp3');
         /*new ImageSource("/Art/Character.png").load().then((tttt)=>{
             console.log(tttt)
         })*/
@@ -282,20 +282,13 @@ export class LocalPlayer extends Actor {
         }
 
 
-        const game = new Engine();
-        const shotgun = new Sound('Sound/Gun/Shotgun.mp3');
-        const loader = new Loader([shotgun]);
-        game.start(loader).then(() => {
-            // Play the sound
-            shotgun.play(0.5); // Play at half volume
-          });
-
         this.move(engine, delta)
         this.grapple(engine, delta)
 
 
-
+        const Shotgun = new Sound('./Sound/Gun/Shotgun.mp3');
         if (engine.input.keyboard.wasPressed(Keys.R)) {
+            Shotgun.play(); // plays the sound?
             Networking.client.room?.send(C2SPacket.Reload, {})
         }
 
