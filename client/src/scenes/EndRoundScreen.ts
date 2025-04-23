@@ -2,6 +2,7 @@ import { Engine, Scene, SceneActivationContext } from "excalibur";
 import { Networking } from "../networking/Networking";
 import { C2SPacket, S2CPackets } from "shared/src/networking/Packet";
 import { NetworkUtils } from "../networking/NetworkUtils";
+import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 
 // bozo name
 export class EndRoundScreen extends Scene {
@@ -84,7 +85,8 @@ export class EndRoundScreen extends Scene {
         this.upgradeButtons[0].style.backgroundColor = "red"
 
         this.upgradeButtons.forEach((button, index) => {
-            button.innerHTML = upgradeOptions[index]
+            button.innerText = upgradeOptions[index] + "\n\n\n\n" + Upgrades.get(upgradeOptions[index]).description
+
             button.addEventListener("click", () => {
                 Networking.client.room.send(C2SPacket.PickUpgrade, index)
 

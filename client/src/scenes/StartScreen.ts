@@ -3,6 +3,7 @@ import { Networking } from "../networking/Networking";
 import { C2SPacket, S2CPackets } from "shared/src/networking/Packet";
 import { NetworkClient } from "../networking/NetworkClient";
 import { NetworkUtils } from "../networking/NetworkUtils";
+import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 
 export class StartScreen extends Scene {
     private rootElement!: HTMLElement;
@@ -102,7 +103,7 @@ export class StartScreen extends Scene {
         })
 
         this.upgradeButtons.forEach((button, index) => {
-            button.innerHTML = upgradeOptions[index]
+            button.innerText = upgradeOptions[index] + "\n\n\n\n" + Upgrades.get(upgradeOptions[index]).description
             button.addEventListener("click", () => {
                 Networking.client.room.send(C2SPacket.PickUpgrade, index)
 
