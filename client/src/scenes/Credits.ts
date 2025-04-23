@@ -9,6 +9,7 @@ export class Credits extends Scene {
     public onInitialize(): void {
         this.rootElement = document.getElementById('credits')!;
         this.mainMenuButton = document.getElementById('credits')!;
+        
 
         this.mainMenuButton.addEventListener("click",()=>{
             engine.goToScene("mainMenu")
