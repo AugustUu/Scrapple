@@ -13,6 +13,7 @@ export class MainMenu extends Scene {
     private quickPlay: HTMLElement;
     private nameInput: HTMLInputElement;
     private colorInput: HTMLInputElement;
+    private credits: HTMLElement;
     private serverList: HTMLElement;
 
     public onInitialize() {
@@ -21,6 +22,7 @@ export class MainMenu extends Scene {
         this.joinButton = document.getElementById('joinButton')!;
         this.createButton = document.getElementById('createButton');
         this.quickPlay = document.getElementById('quickplay')!;
+        this.credits = document.getElementById('creditsButton')!;
         this.serverList = document.getElementById('serverList')!;
 
         this.nameInput = document.getElementById('nameInput')! as HTMLInputElement;
@@ -73,6 +75,11 @@ export class MainMenu extends Scene {
         this.createButton.addEventListener("click",()=>{
             Networking.create(this.nameInput.value,this.colorInput.value)
         })
+
+        this.credits.addEventListener("click",()=>{
+            engine.goToScene("credits")
+        })
+
         
 
     }
