@@ -34,7 +34,8 @@ export class LocalPlayer extends Actor {
 
     airJumps: number
     maxJumps: number
-    canDash: boolean
+    dashes: number
+    maxDashes: number
 
     healthBarEntity: Entity
 
@@ -52,6 +53,8 @@ export class LocalPlayer extends Actor {
 
         this.maxJumps = 0
         this.airJumps = 0
+        this.dashes = 0
+        this.maxDashes = 0
 
         //engine.currentScene.camera.strategy.lockToActor(this);
         
@@ -98,10 +101,7 @@ export class LocalPlayer extends Actor {
 
         this.shooting = false
         this.grappling = false
-
         
-        this.canDash = false;
-
         let healthBar = new Rectangle({ width: 50, height: 5, color: new Color(0, 255, 0) })
         let healthBarGraphics = new GraphicsComponent();
         healthBarGraphics.add(healthBar)
@@ -129,7 +129,7 @@ export class LocalPlayer extends Actor {
                 if(!this.grounded){
                     this.grounded = true;
                     this.airJumps = this.maxJumps;
-                    this.canDash = true;
+                    this.dashes = this.maxDashes;
                 }
             }
             else {
@@ -187,11 +187,11 @@ export class LocalPlayer extends Actor {
         }
 
         //dash
-        if(engine.input.keyboard.wasPressed(Keys.Q) && this.canDash){
+        if(engine.input.keyboard.wasPressed(Keys.Q) && this.dashes > 0){
             let dashSpeed = 100
             let direction = new Vector2({x:this.pos.x - engine.input.pointers.primary.lastWorldPos.x, y:this.pos.y - engine.input.pointers.primary.lastWorldPos.y}).normalized().scale(dashSpeed)
-            rigidBody.setLinvel({x: rigidBody.linvel().x - (direction.x * 3), y: rigidBody.linvel().y + direction.y}, true)
-            this.canDash = false
+            rigidBody.setLinvel({x: -direction.x, y: direction.y * 0.9}, true)
+            this.dashes -= 1
         }
         let damping: number
         if(this.grappling){

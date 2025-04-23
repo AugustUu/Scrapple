@@ -15,7 +15,7 @@ export class Akimbo extends Upgrade {
 
     serverOnGunConstructed(level: number, gun: GunState) {
         gun.damage /= (1.5 * level)
-        gun.bulletsPerShot *= level*2
+        gun.bulletsPerShot *= (level + 1)
         gun.spread *= (1.1*level)
     }
 }

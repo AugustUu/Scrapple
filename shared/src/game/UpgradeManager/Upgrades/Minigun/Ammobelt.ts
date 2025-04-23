@@ -6,7 +6,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class AmmoBelt extends Upgrade {
     constructor() {
-        super("AmmoBelt", 3, null, "Minigun")
+        super("Ammo Belt", 3, null, "Minigun")
     }
     
     clientOnPlayerConstructed(level: number, player: LocalPlayer){
