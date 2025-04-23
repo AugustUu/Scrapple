@@ -6,6 +6,7 @@ import RAPIER from '@dimforge/rapier2d-compat';
 import { MouseInput } from './util';
 import { StartScreen } from './scenes/StartScreen';
 import { EndRoundScreen } from './scenes/EndRoundScreen';
+import { Credits } from './scenes/Credits';
 import { ExcaliburGraphicsContextWebGL } from 'excalibur';
 import { Resources } from './Resources';
 
@@ -28,7 +29,8 @@ export const engine = new Engine({
         mainMenu: MainMenu,
         game: Game,
         startScreen: StartScreen,
-        endRoundScreen: EndRoundScreen
+        endRoundScreen: EndRoundScreen,
+        credits: Credits,
 
     }
 });

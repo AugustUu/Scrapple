@@ -5,7 +5,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Shield extends Upgrade {
     constructor() {
-        super("Shield", 5)
+        super("Shield", 5,null,null,"Absorption hearts")
     }
 
     serverOnPlayerConstructed(level: number, player: Player): void {

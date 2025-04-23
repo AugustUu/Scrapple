@@ -5,7 +5,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class SprayAndPray extends Upgrade {
     constructor() {
-        super("SprayAndPray", 3)
+        super("SprayAndPray", 3, null, null, "Goes great with the sniper")
     }
 
 

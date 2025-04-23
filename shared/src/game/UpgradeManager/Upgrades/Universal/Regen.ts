@@ -6,7 +6,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Regen extends Upgrade {
     constructor() {
-        super("Regen", 3)
+        super("Regen", 3,null,null, "Start with less health but you won't believe what happens next")
     }
 
     serverOnPlayerConstructed(level: number, player: Player): void {

@@ -43,7 +43,7 @@
             left: 5%;
         }
 
-        .left-15{
+        .left-15 {
             left: 15%;
         }
 
@@ -75,6 +75,10 @@
             top: 20%;
         }
 
+        .top-30 {
+            top: 30%;
+        }
+
         .top-50 {
             top: 50%;
         }
@@ -89,6 +93,10 @@
 
         .top-80 {
             top: 80%;
+        }
+
+        .top-85 {
+            top: 85%;
         }
 
         .top-95 {
@@ -121,11 +129,12 @@
 
         #colorpicker {
             border: none;
-            padding: 5px;
-            border-radius: 8px;
+            padding: 0px;
             background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             cursor: pointer;
+
+            min-height: 42px;
+            vertical-align: middle;
         }
 
         #nameInput {
@@ -150,7 +159,8 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
-        #joinButton {
+        #joinButton,
+        #createButton {
             padding: 12px 30px;
             margin: 10px;
             border: none;
@@ -163,7 +173,9 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        #joinButton:hover {
+        #joinButton:hover,
+        #createButton:hover,
+        #quickplay:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
         }
@@ -181,9 +193,73 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
+        #creditsButton {
+            padding: 12px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #4d4d50;
+            color: #e0e0e0;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
         #quickplay:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(255, 0, 204, 0.4);
+
+        }
+
+        #ServerBrowser {
+            position: absolute;
+            z-index: 1999;
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        #credits{
+            display: none;
+            position: absolute;
+            z-index: 1999;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        #creditsTitle {
+            font-size: 80px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #FFFFFF, #FFFFFF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #creditsText {
+            padding: 12px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        #mainMenuButton {
+            padding: 12px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #4d4d50;
+            color: #e0e0e0;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
         #startScreen {
@@ -206,6 +282,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: background 0.3s;
+            max-width: 200px;
         }
 
         .optionButton:hover {
@@ -336,38 +413,98 @@
             -ms-user-select: all;
             user-select: all;
         }
-        
+
+        #serverListHolder {
+
+            border: 5px solid #c6c6c6;
+            border-radius: 10px;
+
+        }
+
+        #serverList {
+            list-style: none;
+            padding: 10px;
+            margin: 5px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            justify-content: center;
+
+            overflow-y: auto;
+            max-height: 400px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #serverList .serverItem {
+            background: rgba(42, 42, 62, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            color: #e0e0e0;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        #serverList .serverItem:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+        }
+
+        #serverList .serverItem .serverName {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        #serverList .serverItem .serverDetails {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        #serverList .serverItem .serverDetails span {
+            display: block;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 
 <body oncontextmenu="return false">
     <main>
         <div id="menu">
-            <div id="menuTitle" class="fixed center-x top-20 text-center">
-                Scrapple
-            </div>
+            <div id="menuTitle" class="fixed center-x top-10 text-center">Scrapple</div>
 
-            <div class="fixed center-x top-50"
-                style="display: flex; flex-direction: column; align-items: left; gap: 15px;font-weight: 600;font-size:18px;">
-                <div>
-                    <label for="colorpicker"  >Player Color:</label>
+            <div class="fixed center-x top-30"
+            
+                style="display: flex; flex-direction: column;gap: 15px;font-weight: 600;font-size:18px;">
+                
+                <div style="margin: auto;">
                     <input type="color" id="colorpicker" value="#15499D" />
-                </div>
-
-                <div>
-                    <label for="nameInput" >Username:</label>
                     <input id="nameInput" type="text" placeholder="name">
                 </div>
 
+                <button id="creditsButton">Credits</button>
+
                 <div>
-                    <label for="serverInput" >Server:</label>
-                    <input id="serverInput" type="text">
-                    <button id="joinButton">Join or create</button>
+                    <button id="quickplay" style="min-width: 45%;">Quickplay</button>
+                    <button id="createButton" style="min-width: 45%;">Create</button>
+                </div>
+
+                <div id="serverListHolder">
+                    <ul id="serverList"></ul>
+
                 </div>
 
                 <div>
-                    <button id="quickplay">Quickplay</button>
+                    <label for="serverInput">Server code:</label>
+                    <input id="serverInput" type="text">
+                    <button id="joinButton">Join</button>
+
                 </div>
+
+
             </div>
         </div>
 
@@ -394,7 +531,7 @@
                 <button id="upgrade3Button" class="optionButton"></button>
             </div>
 
-            <div class="fixed center-x top-80">
+            <div class="fixed center-x top-85">
                 <button id="readyButtonStart" class="readyButton">Ready</button>
             </div>
 
@@ -418,7 +555,7 @@
                 <button id="upgrade6Button" class="optionButton"></button>
             </div>
 
-            <div class="fixed center-x top-80">
+            <div class="fixed center-x top-85">
                 <button id="readyButtonNext" class="readyButton">Ready</button>
             </div>
 
@@ -428,6 +565,23 @@
             </div>
 
         </div>
+
+        <dv id="credits">
+            <div id="creditsTitle" class="fixed center-x top-20 text-center">
+                Credits
+            </div>
+
+            <div id="creditsText" class = "fixed center-x top-30">
+                August - Knows how the server works and good at convincing us not to use Unity<br>
+                Takumi - Knows how grappling works and good at math<br>
+                Seth - Founder of Bunkashit Games and designed Sludge<br>
+                Sevin - Graphics
+            </div>
+
+            <div class = "fixed center-x top-60">
+                <button id="mainMenuButton">Main Menu</button>
+            </div>
+        </dv>
 
         <div id="hud">
             <div id="gunInfo" class="fixed left-90 top-80">

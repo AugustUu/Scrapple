@@ -4,6 +4,6 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class ReloadBurst extends Upgrade {
     constructor() {
-        super("Reload Burst", 3,null,"Shotgun")
+        super("Reload Burst", 1,null,"Shotgun", "Only on an empty magazine.")
     }
 }
