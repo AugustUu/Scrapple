@@ -17,10 +17,12 @@ export let STATIC_DIR: string;
 
 const app = express();
 const gameServer = new Server({
-  server: http.createServer(app),
+    server: http.createServer(app),
 });
 
 gameServer.define("GameRoom", GameRoom);
+
+
 
 app.use("/", express.static(path.resolve(__dirname, "public")));
 
@@ -29,26 +31,35 @@ const auth = basicAuth({ users: { 'admin': 'admin' }, challenge: true });
 app.use("/colyseus", auth, monitor());
 
 app.use(cors({
-   // origin: 'http://localhost:8080'
+    // origin: 'http://localhost:8080'
 }))
 
 
 if (process.env.NODE_ENV !== "production") {
-  app.use("/", playground);
+    app.use("/", playground);
 }
 
 gameServer.listen(port);
 console.log(`Listening on http://${endpoint}:${port}`);
 
 app.get('/quickplay', (req, res) => {
-    
-    matchMaker.findOneRoomAvailable("GameRoom",{}).then((room) => {
-        if(room){
+
+    matchMaker.findOneRoomAvailable("GameRoom", {}).then((room) => {
+        if (room) {
             console.log(room.roomId)
-            res.send({id:room.roomId})
-        }else{
+            res.send({ id: room.roomId })
+        } else {
             res.sendStatus(404)
         }
     })
 })
 
+app.get('/lobbies', (req, res) => {
+    matchMaker.query({ name: "GameRoom" }).then((rooms)=>{
+        if(rooms){
+            res.send(rooms)
+        }else{
+            res.sendStatus(404)
+        }
+    })
+})

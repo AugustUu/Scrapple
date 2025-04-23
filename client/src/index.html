@@ -43,7 +43,7 @@
             left: 5%;
         }
 
-        .left-15{
+        .left-15 {
             left: 15%;
         }
 
@@ -75,12 +75,8 @@
             top: 20%;
         }
 
-        .top-30{
+        .top-30 {
             top: 30%;
-        }
-
-        .top-40{
-            top: 40%;
         }
 
         .top-50 {
@@ -129,11 +125,12 @@
 
         #colorpicker {
             border: none;
-            padding: 5px;
-            border-radius: 8px;
+            padding: 0px;
             background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             cursor: pointer;
+
+            min-height: 42px;
+            vertical-align: middle;
         }
 
         #nameInput {
@@ -158,7 +155,8 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
-        #joinButton {
+        #joinButton,
+        #createButton {
             padding: 12px 30px;
             margin: 10px;
             border: none;
@@ -171,7 +169,9 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        #joinButton:hover {
+        #joinButton:hover,
+        #createButton:hover,
+        #quickplay:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
         }
@@ -204,6 +204,15 @@
         #quickplay:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(255, 0, 204, 0.4);
+
+        #ServerBrowser {
+            position: absolute;
+            z-index: 1999;
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
         }
 
         #credits{
@@ -273,7 +282,7 @@
             background: #818184;
         }
 
-        #startButton {
+        .readyButton {
             padding: 15px 40px;
             border: none;
             border-radius: 10px;
@@ -285,12 +294,12 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        #startButton:hover {
+        .readyButton:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
         }
 
-        #playerList {
+        .playerList {
             list-style-type: none;
             padding: 10px;
             margin: 0;
@@ -397,43 +406,99 @@
             -ms-user-select: all;
             user-select: all;
         }
-        
+
+        #serverListHolder {
+
+            border: 5px solid #c6c6c6;
+            border-radius: 10px;
+
+        }
+
+        #serverList {
+            list-style: none;
+            padding: 10px;
+            margin: 5px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            justify-content: center;
+
+            overflow-y: auto;
+            max-height: 400px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #serverList .serverItem {
+            background: rgba(42, 42, 62, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            color: #e0e0e0;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        #serverList .serverItem:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+        }
+
+        #serverList .serverItem .serverName {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        #serverList .serverItem .serverDetails {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        #serverList .serverItem .serverDetails span {
+            display: block;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 
 <body oncontextmenu="return false">
     <main>
         <div id="menu">
-            <div id="menuTitle" class="fixed center-x top-20 text-center">
-                Scrapple
-            </div>
+            <div id="menuTitle" class="fixed center-x top-10 text-center">Scrapple</div>
 
             <div class="fixed center-x top-30">
                 <button id="creditsButton">Credits</button>
             </div>
 
-
-            <div class="fixed center-x top-50"
-                style="display: flex; flex-direction: column; align-items: left; gap: 15px;font-weight: 600;font-size:18px;">
-                <div>
-                    <label for="colorpicker"  >Player Color:</label>
+            <div class="fixed center-x top-30"
+                style="display: flex; flex-direction: column;gap: 15px;font-weight: 600;font-size:18px;">
+                <div style="margin: auto;">
                     <input type="color" id="colorpicker" value="#15499D" />
-                </div>
-
-                <div>
-                    <label for="nameInput" >Username:</label>
                     <input id="nameInput" type="text" placeholder="name">
                 </div>
 
+
                 <div>
-                    <label for="serverInput" >Server:</label>
-                    <input id="serverInput" type="text">
-                    <button id="joinButton">Join or create</button>
+                    <button id="quickplay" style="min-width: 45%;">Quickplay</button>
+                    <button id="createButton" style="min-width: 45%;">Create</button>
+                </div>
+
+                <div id="serverListHolder">
+                    <ul id="serverList"></ul>
+
                 </div>
 
                 <div>
-                    <button id="quickplay">Quickplay</button>
+                    <label for="serverInput">Server code:</label>
+                    <input id="serverInput" type="text">
+                    <button id="joinButton">Join</button>
+
                 </div>
+
+
             </div>
         </div>
 
@@ -461,12 +526,12 @@
             </div>
 
             <div class="fixed center-x top-80">
-                <button id="startButton">Start Game</button>
+                <button id="readyButtonStart" class="readyButton">Ready</button>
             </div>
 
             <div class="fixed center-x top-10 text-center">
                 Players:
-                <ul id="playerList"></ul>
+                <ul id="playerListStart" class="playerList"></ul>
             </div>
         </div>
 
@@ -485,8 +550,14 @@
             </div>
 
             <div class="fixed center-x top-80">
-                <button id="nextRoundButton">Next Round</button>
+                <button id="readyButtonNext" class="readyButton">Ready</button>
             </div>
+
+            <div class="fixed center-x top-10 text-center">
+                Players:
+                <ul id="playerListNext" class="playerList"></ul>
+            </div>
+
         </div>
 
         <dv id="credits">

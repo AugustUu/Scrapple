@@ -11,6 +11,7 @@ import { OnLeaveCommand } from "../commands/OnLeave";
 import { BulletTickCommand } from "../commands/BulletTick";
 import { ShootCommand } from "../commands/ShootBullet";
 import { StartGameCommand } from "../commands/StartGame";
+import { ReadyCommand } from "../commands/Ready";
 import { ReloadCommand } from "../commands/Reload";
 import { MoveCommand } from "../commands/Move";
 import { EndGrappleCommand, StartGrappleCommand } from "../commands/Grapple";
@@ -54,7 +55,10 @@ export class GameRoom extends Room<State> {
             this.dispatcher.dispatch(new StartGameCommand(), {
                 client: client,
             });
+        })
 
+        this.onMessage(C2SPacket.Ready, (client, message) => {
+            this.dispatcher.dispatch(new ReadyCommand(), { client: client });
         })
 
         this.onMessage(C2SPacket.PickGun, (client, message) => {
