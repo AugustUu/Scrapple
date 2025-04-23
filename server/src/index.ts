@@ -22,6 +22,8 @@ const gameServer = new Server({
 
 gameServer.define("GameRoom", GameRoom);
 
+
+
 app.use("/", express.static(path.resolve(__dirname, "public")));
 
 // add colyseus monitor
