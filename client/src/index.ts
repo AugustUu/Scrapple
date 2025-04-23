@@ -9,7 +9,6 @@ import { EndRoundScreen } from './scenes/EndRoundScreen';
 import { Credits } from './scenes/Credits';
 import { ExcaliburGraphicsContextWebGL } from 'excalibur';
 import { Resources } from './Resources';
-import { TutorialScreen } from './scenes/TutorialScreen';
 
 
 export const engine = new Engine({
@@ -32,7 +31,6 @@ export const engine = new Engine({
         startScreen: StartScreen,
         endRoundScreen: EndRoundScreen,
         credits: Credits,
-        tutorial: TutorialScreen
 
     }
 });

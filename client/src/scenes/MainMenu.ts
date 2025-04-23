@@ -43,6 +43,7 @@ export class MainMenu extends Scene {
         this.credits.addEventListener("click",()=>{
             engine.goToScene("credits")
         })
+
         
 
     }
