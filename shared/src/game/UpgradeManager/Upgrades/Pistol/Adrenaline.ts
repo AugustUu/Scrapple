@@ -6,7 +6,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Adrenaline extends Upgrade {
     constructor() {
-        super("Adrenaline", 3)
+        super("Adrenaline", 3, null, null, "UNIMPLEMENTED")
     }
 
     serverOnServerTick(level: number, state: State, player: Player): void {

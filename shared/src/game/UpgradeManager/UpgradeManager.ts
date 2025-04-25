@@ -12,6 +12,7 @@ import("./Upgrades/Universal/Regen")
 import("./Upgrades/Universal/SprayAndPray")
 import("./Upgrades/Universal/Shield")
 import("./Upgrades/Universal/HomeLess")
+import("./Upgrades/Universal/GetShrunk")
 
 
 import("./Upgrades/Pistol/GlassCannon")

@@ -5,11 +5,11 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class OneForAll extends Upgrade {
     constructor() {
-        super("One For All", 1, null, "Shotgun")
+        super("One For All", 1, null, "Shotgun", "Just like in Hypixel Skyblock")
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {
-        gun.bulletsPerShot *= gun.magSize
+        gun.bulletsPerShot += 2
         gun.magSize = 1
         gun.ammo = 1
         gun.reloadDelay *= 2
