@@ -12,6 +12,7 @@ export class EndRoundScreen extends Scene {
     private playerList!: HTMLElement;
     private upgradeButtons!: HTMLElement[]
     private serverCode!: HTMLElement;
+    private exitButton!: HTMLElement;
 
     onInitialize(engine: Engine): void {
         this.rootElement = document.getElementById('endRoundScreen')!;
@@ -19,6 +20,7 @@ export class EndRoundScreen extends Scene {
         this.serverCode = document.getElementById('endRoundServerCode')!;
         this.playerList = document.getElementById('playerListNext')!;
         this.readyButton = document.getElementById('readyButtonNext')! as HTMLButtonElement;
+        this.exitButton= document.getElementById('exitButtonNext')! as HTMLButtonElement;
 
         this.upgradeButtons = [document.getElementById('upgrade4Button'), document.getElementById('upgrade5Button'), document.getElementById('upgrade6Button')];
 
@@ -30,6 +32,10 @@ export class EndRoundScreen extends Scene {
             else{
                 this.readyButton.innerHTML = "Ready"
             }
+        })
+
+        this.exitButton.addEventListener("click", () => {
+            location.reload()
         })
     }
 

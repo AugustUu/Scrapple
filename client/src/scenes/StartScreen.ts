@@ -14,6 +14,7 @@ export class StartScreen extends Scene {
     private readyButton!: HTMLButtonElement;
     private playerList!: HTMLElement;
     private serverCode!: HTMLElement;
+    private exitButton!: HTMLElement;
 
 
     public onInitialize(engine: Engine) {
@@ -28,6 +29,7 @@ export class StartScreen extends Scene {
 
         this.playerList = document.getElementById('playerListStart')!;
         this.readyButton = document.getElementById('readyButtonStart')! as HTMLButtonElement;
+        this.exitButton= document.getElementById('exitButtonStart')! as HTMLButtonElement;
 
         this.readyButton.addEventListener("click", () => {
             Networking.client.room.send(C2SPacket.Ready, {})
@@ -37,6 +39,10 @@ export class StartScreen extends Scene {
             else {
                 this.readyButton.innerHTML = "Ready"
             }
+        })
+        
+        this.exitButton.addEventListener("click", () => {
+            location.reload()
         })
 
     }
