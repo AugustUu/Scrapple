@@ -6,7 +6,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class GetShrunk extends Upgrade {
     constructor() {
-        super("Get Shrunk", 3)
+        super("Get Shrunk", 3, null, null, "Get skrunk")
     }
 
 

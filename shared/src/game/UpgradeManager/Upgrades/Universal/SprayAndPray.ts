@@ -5,7 +5,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class SprayAndPray extends Upgrade {
     constructor() {
-        super("SprayAndPray", 3, null, null, "Goes great with the sniper")
+        super("SprayAndPray", 3, null, null, "'Spraying meets praying spray emoji pray emoji' -Takumi")
     }
 
 

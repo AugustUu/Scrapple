@@ -6,7 +6,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Tank extends Upgrade {
     constructor() {
-        super("Tank", 1, null, null, "The worst class in League")
+        super("Tank", 1, null, null, "Larger. Slower. Healthier.")
     }
 
 
