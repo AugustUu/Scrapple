@@ -5,7 +5,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Akimbo extends Upgrade {
     constructor() {
-        super("Akimbo", 3, null, "Pistol", "+10 coolness")
+        super("Akimbo", 3, null, "Pistol", "Gain a second gun")
     }
     
     serverOnPlayerConstructed(level: number, player: Player): void {
