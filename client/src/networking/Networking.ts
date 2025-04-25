@@ -5,7 +5,7 @@ import * as NeworkEvents from "./NetworkEvents";
 
 export class Networking {
 
-    private static colyClient: Client = new Client("ws://10.176.42.115:2567");
+    private static colyClient: Client = new Client("ws://localhost:2567");
     static client: NetworkClient = new NetworkClient();
     static events = new EventEmitter<NeworkEvents.Events>();
 
@@ -20,7 +20,7 @@ export class Networking {
     }
 
     static quickPlay(playerName: string, color: string) {
-        fetch("http://10.176.42.115:2567/quickplay",{ mode: 'cors',}).then((resp) => {
+        fetch("http://localhost:2567/quickplay",{ mode: 'cors',}).then((resp) => {
             if(resp.ok){
                 resp.json().then((server) => {
                     Networking.connect(server.id,playerName,color)

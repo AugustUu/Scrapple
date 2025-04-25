@@ -6,7 +6,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Porcupine extends Upgrade {
     constructor() {
-        super("Porcupine", 3, null, "Rifle")
+        super("Porcupine", 3, null, "Rifle", "Porcupines shoot quills when damaged")
     }
     
     serverOnPlayerHit(level: number, state: State, player: Player , otherPlayer: Player): void {

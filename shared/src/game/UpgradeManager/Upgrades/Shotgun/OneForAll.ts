@@ -9,7 +9,7 @@ export class OneForAll extends Upgrade {
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {
-        gun.bulletsPerShot += 2
+        gun.bulletsPerShot *= gun.magSize
         gun.magSize = 1
         gun.ammo = 1
         gun.reloadDelay *= 2
