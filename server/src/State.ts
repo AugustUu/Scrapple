@@ -112,7 +112,7 @@ export class Player extends Schema {
         this.name = name
         this.id = id;
         this.gun = new GunState(client.gunOptions.options[client.gunOptions.picked], client);
-        this.position = new Position(0, 0)
+        this.position = new Position((Math.floor(Math.random() * (20 - (-20) + 1)) - 20), 0)
         this.rotation = 0
         this.health = 100;
         this.maxHealth = this.health
@@ -288,7 +288,7 @@ export class PlayerClient extends Schema {
 export class Game extends Schema {
     @type("boolean") inRound: boolean;
     @type("number") roundsPlayed: number;
-
+    @type("number") roundStartTime: number;
 
 }
 

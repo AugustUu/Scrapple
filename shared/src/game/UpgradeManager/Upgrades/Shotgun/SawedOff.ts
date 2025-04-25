@@ -5,7 +5,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class SawedOff extends Upgrade {
     constructor() {
-        super("Sawed-Off", 1,null,"Shotgun")
+        super("Sawed-Off", 1,null,"Shotgun", "More bullets but less accuracy")
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {

@@ -125,7 +125,7 @@ export class PhysicsObjectRenderSystem extends System {
                 
                 engine.currentScene.camera.pos = new Vector(transform.pos.x,transform.pos.y)
 
-                engine.currentScene.camera.pos.clampMagnitude(1000)
+                engine.currentScene.camera.pos.clampMagnitude(2000)
             }
 
         }

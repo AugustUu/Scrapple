@@ -12,6 +12,10 @@ export class ShootCommand extends Command<GameRoom, { client: Client, message: a
 
     execute({ client, message } = this.payload) {
 
+        if((this.state.game.roundStartTime + 1000) > Date.now()){
+            return;
+        }
+
         if (this.state.players.has(client.sessionId)) {
             let player = this.state.players.get(client.sessionId)
             let clientInfo = this.state.clients.get(client.sessionId)

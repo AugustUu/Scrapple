@@ -48,6 +48,8 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
                 }
                 bullet.position.x += Math.cos(bullet.angle) * bullet.speed
                 bullet.position.y += Math.sin(bullet.angle) * bullet.speed
+            }else{
+                this.state.bullets.delete(BulletID)
             }
 
             this.state.colliders.forEach((collider, key) => {

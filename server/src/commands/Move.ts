@@ -1,6 +1,7 @@
 import { Command } from "@colyseus/command";
 import { GameRoom } from "../rooms/GameRoom";
 import { Client } from "colyseus";
+import { S2CPackets } from "shared/src/networking/Packet";
 
 
 
@@ -14,7 +15,14 @@ export class MoveCommand extends Command<GameRoom, { client: Client, message: an
             player.position.x = message.x
             player.position.y = message.y
             player.rotation = message.rotation
+
+            if((player.position.x**2 + player.position.y**2) > 2400**2){
+                this.state.players.delete(player.id);
+                this.room.clients.getById(player.id).send(S2CPackets.Killed, {})
+            }
+
         }
+
 
     }
 
