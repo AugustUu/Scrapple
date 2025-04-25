@@ -30,6 +30,8 @@ import("./Upgrades/Shotgun/SawedOff")
 
 import("./Upgrades/Minigun/Ammobelt")
 
+import("./Upgrades/Rifle/Porcupine")
+
 
 
 import("./Upgrades/AntsInYoPants")

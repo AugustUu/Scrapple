@@ -2,6 +2,7 @@ import { Actor, Color, Scene, SceneActivationContext, Vector } from "excalibur";
 import { engine } from "..";
 import { Game } from "./Game";
 import { Networking } from "../networking/Networking";
+import { error } from "console";
 
 
 export class MainMenu extends Scene {
@@ -62,6 +63,8 @@ export class MainMenu extends Scene {
                             });
                         })
                     }
+                }).catch((error)=>{
+                    console.log(error)
                 })
             }
     },1000)
