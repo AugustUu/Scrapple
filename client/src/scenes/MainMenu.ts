@@ -2,6 +2,7 @@ import { Actor, Color, Scene, SceneActivationContext, Vector } from "excalibur";
 import { engine } from "..";
 import { Game } from "./Game";
 import { Networking } from "../networking/Networking";
+import { error } from "console";
 
 
 export class MainMenu extends Scene {
@@ -39,7 +40,7 @@ export class MainMenu extends Scene {
         let self = this
         setInterval(function() {
             if(self.rootElement.style.display != "none"){
-                fetch("http://localhost:2567/lobbies",{ mode: 'cors',}).then((resp) => {
+                fetch("http://10.176.42.115:2567/lobbies",{ mode: 'cors',}).then((resp) => {
                     if(resp.ok){
                         resp.json().then((servers) => {
                             self.serverList.innerHTML = ""
@@ -62,6 +63,8 @@ export class MainMenu extends Scene {
                             });
                         })
                     }
+                }).catch((error)=>{
+                    console.log(error)
                 })
             }
     },1000)

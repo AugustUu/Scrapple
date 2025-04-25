@@ -9,6 +9,6 @@ export class GrappleCooldown extends Upgrade {
     }
 
     serverOnShoot(level: number, bullet: Bullet, state: State, player: Player): void {
-        bullet.speed *= 10
+       // bullet.speed *= 10
     }
 }
