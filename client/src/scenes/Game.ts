@@ -1,4 +1,4 @@
-import { Actor, Color, Entity, Scene, Vector, vec, SceneActivationContext } from "excalibur";
+import { Actor, Color, Entity, Scene, Vector, vec, SceneActivationContext, GraphicsComponent, Circle, TransformComponent } from "excalibur";
 import { engine } from "..";
 import { createOtherPlayerEntity, OtherPlayerComponent, OtherPlayerMoveSystem } from "../game/Entities/OtherPlayer";
 import { LocalPlayer } from "../game/LocalPlayer";
@@ -30,6 +30,16 @@ export class Game extends Scene {
         this.camera.zoom = 0.8 - (NetworkUtils.getLocalUpgrade("Scope") * 0.2)
 
         Hud.initMain()
+
+        const circle = new Entity({
+            name: "circle",
+        });
+
+        let graphics = new GraphicsComponent();
+        graphics.use(new Circle({ radius: 2400, color: Color.fromRGB(157, 174, 201) }));
+        circle.addComponent(graphics)
+        circle.addComponent(new TransformComponent())
+        this.engine.currentScene.add(circle)
 
 
         Networking.client.room!.onMessage(S2CPackets.EndGame,()=>{
@@ -66,7 +76,7 @@ export class Game extends Scene {
         Networking.client.room!.state.players.onAdd((playerState: Player, id: string) => {
             if (Networking.client.clientId == id) {
                 Hud.initNetwork()
-                LocalPlayerInstance = new LocalPlayer(0, 300); // add local player
+                LocalPlayerInstance = new LocalPlayer((Math.floor(Math.random() * (400 - (-400) + 1)) - 400), 400); // add local player
                 this.add(LocalPlayerInstance)
             } else {
                 let ent = createOtherPlayerEntity(playerState, id);

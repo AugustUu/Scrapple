@@ -5,11 +5,16 @@ import { Bullet } from "../State";
 import { Guns } from "shared/src/game/GunManager/GunManager";
 import { randomBytes } from "crypto"
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
+import { ReloadCommand } from "./Reload";
 
 
 export class ShootCommand extends Command<GameRoom, { client: Client, message: any }> {
 
     execute({ client, message } = this.payload) {
+
+        if((this.state.game.roundStartTime + 1000) > Date.now()){
+            return;
+        }
 
         if (this.state.players.has(client.sessionId)) {
             let player = this.state.players.get(client.sessionId)
@@ -33,10 +38,9 @@ export class ShootCommand extends Command<GameRoom, { client: Client, message: a
                     player.gun.lastTimeShot = Date.now()
                 }
                 else {
-                    if ((player.gun.lastTimeReloaded + player.gun.reloadDelay) < Date.now()) {
-                        player.gun.lastTimeReloaded = Date.now();
-                        player.gun.ammo = player.gun.magSize
-                    }
+                    this.room.dispatcher.dispatch(new ReloadCommand(), {
+                        client: client
+                    })
                 }
 
             }
