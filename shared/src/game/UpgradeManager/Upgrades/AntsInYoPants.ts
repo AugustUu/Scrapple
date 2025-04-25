@@ -11,6 +11,5 @@ export class AntsInYoPants extends Upgrade {
 
     clientOnPlayerConstructed(level: number, player: LocalPlayer): void {
         player.maxJumps += level
-        console.log(level)
     }
 }

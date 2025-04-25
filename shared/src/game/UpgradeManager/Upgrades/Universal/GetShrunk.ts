@@ -4,19 +4,19 @@ import { Upgrade } from "../../Upgrade"
 import { registerUpgrade } from "../../UpgradeManager"
 
 @registerUpgrade
-export class Tank extends Upgrade {
+export class GetShrunk extends Upgrade {
     constructor() {
-        super("Tank", 1, null, null, "The worst class in League")
+        super("Get Shrunk", 3)
     }
 
 
     serverOnPlayerConstructed(level: number, player: Player): void {
-        player.maxHealth += 50 * level;
-        player.health += 50 * level;
-        player.radius += 5 * level
+        player.maxHealth -= 30 * level;
+        player.health -= 30 * level;
+        player.radius -= 5 * level
     }
 
     clientOnPlayerConstructed(level: number, player: LocalPlayer): void {
-        player.speedMult -= 0.2 * level
+        player.speedMult += 0.2 * level
     }
 }

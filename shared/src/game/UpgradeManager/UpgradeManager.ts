@@ -12,6 +12,7 @@ import("./Upgrades/Universal/Regen")
 import("./Upgrades/Universal/SprayAndPray")
 import("./Upgrades/Universal/Shield")
 import("./Upgrades/Universal/HomeLess")
+import("./Upgrades/Universal/GetShrunk")
 
 
 import("./Upgrades/Pistol/GlassCannon")
@@ -29,6 +30,8 @@ import("./Upgrades/Shotgun/BuckShot")
 import("./Upgrades/Shotgun/SawedOff")
 
 import("./Upgrades/Minigun/Ammobelt")
+
+import("./Upgrades/Rifle/Porcupine")
 
 
 
