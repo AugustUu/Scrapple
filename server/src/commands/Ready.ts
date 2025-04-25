@@ -21,6 +21,7 @@ export class ReadyCommand extends Command<GameRoom, { client: Client }> {
         if(allReady){
             if (!this.state.game.inRound) {
                 this.state.game.inRound = true;
+                this.state.game.roundStartTime = Date.now()
     
                 this.state.clients.forEach((otherClient, id) => {
                    
