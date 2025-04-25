@@ -115,6 +115,10 @@
             top: 85%;
         }
 
+        .top-90 {
+            top: 90%;
+        }
+
         .top-95 {
             top: 95%;
         }
@@ -250,9 +254,12 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.6);
+            background-image: url("/client/Art/bunkashit.png"); background-repeat: no-repeat; background-size: 100% 100%;
         }
 
         #creditsTitle {
+            padding: 12px 20px;
+            margin: 10px;
             font-size: 80px;
             font-weight: 700;
             background: linear-gradient(90deg, #FFFFFF, #FFFFFF);
@@ -553,19 +560,24 @@
             <div class="fixed left-75 top-50">
                 <button id="gun3Button" class="optionButton"></button>
             </div>
-            <div class="fixed left-25 top-60">
+            <div class="fixed left-25 top-50">
                 <button id="upgrade1Button" class="optionButton"></button>
             </div>
-            <div class="fixed left-50 top-60">
+            <div class="fixed left-50 top-50">
                 <button id="upgrade2Button" class="optionButton"></button>
             </div>
-            <div class="fixed left-75 top-60">
+            <div class="fixed left-75 top-50">
                 <button id="upgrade3Button" class="optionButton"></button>
             </div>
 
-            <div class="fixed center-x top-85">
+            <div class="fixed center-x top-80">
                 <button id="readyButtonStart" class="readyButton">Ready</button>
             </div>
+
+            <div class="fixed center-x top-90">
+                <button id="exitButtonStart" class="readyButton">Exit to Lobby</button>
+            </div>
+
 
             <div class="fixed center-x top-10 text-center">
                 Players:
@@ -587,8 +599,11 @@
                 <button id="upgrade6Button" class="optionButton"></button>
             </div>
 
-            <div class="fixed center-x top-85">
+            <div class="fixed center-x top-80">
                 <button id="readyButtonNext" class="readyButton">Ready</button>
+            </div>
+            <div class="fixed center-x top-90">
+                <button id="exitButtonNext" class="readyButton">Exit to Lobby</button>
             </div>
 
             <div class="fixed center-x top-10 text-center">
