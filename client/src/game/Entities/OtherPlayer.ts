@@ -39,23 +39,42 @@ export function createOtherPlayerEntity(playerState: Player, id: string): Entity
 
     let graphics = new GraphicsComponent();
 
-    let image = Resources.char2
+    let image = Resources.PlayerOverlay
+    let image2 = Resources.PlayerFill
+
     let playerSprite: Sprite
-    if (image.isLoaded()){
-        const sprite = new Sprite({
+    let playerSprite2: Sprite
+    if (image.isLoaded() && image2.isLoaded()){
+        playerSprite = new Sprite({
             image: image,
             destSize: {
-                width: 2.1*radius,
-                height: 2.1*radius
+                width: 2*radius,
+                height: 2*radius
             }
         })
-        playerSprite = sprite
+
+        playerSprite2 = new Sprite({
+            image: image2,
+            destSize: {
+                width: 2*radius,
+                height: 2*radius
+            }
+        })
+
     }
     else{
         console.log("attempted to use unloaded sprite")
     }
 
-    graphics.use(playerSprite);
+    playerSprite2.tint = Color.fromHex(Networking.client.room.state.clients.get(id).color)
+
+    graphics.add(new GraphicsGroup({
+        members: [
+          { graphic: playerSprite2, offset: vec(0, 0)},
+          { graphic: playerSprite, offset: vec(0, 0)}
+        ]
+      }));
+    
 
     entity.addComponent(graphics)
 

@@ -22,8 +22,8 @@ export const engine = new Engine({
         pixelArtSampler: true, // turns on the sub-pixel shader for pixel art
         nativeContextAntialiasing: false, // turns off canvas aa
         multiSampleAntialiasing: true, // turns on msaa which smooths quad boundaries
-        filtering: ImageFiltering.Blended, // hints the image loader to use blended filtering
-        canvasImageRendering: 'auto' // applies the 'auto'-matic css to the canvas CSS image-rendering
+        filtering: ImageFiltering.Pixel, // hints the image loader to use blended filtering
+        canvasImageRendering: 'pixelated', // applies the 'auto'-matic css to the canvas CSS image-rendering
     },
     scenes: {
         mainMenu: MainMenu,
@@ -32,7 +32,8 @@ export const engine = new Engine({
         endRoundScreen: EndRoundScreen,
         credits: Credits,
 
-    }
+    },
+    //pixelRatio: 6
 });
 
 async function init() {
