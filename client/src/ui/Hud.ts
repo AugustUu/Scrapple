@@ -30,6 +30,9 @@ export class Hud {
 
             }else{
                 this.ammoCounter.innerHTML = `Reloading ...`
+                setTimeout(()=>{
+                    this.ammoCounter.innerHTML = `Ammo: ${gun.ammo}/${gun.magSize}`
+                },gun.reloadDelay)
             }
         })
 
