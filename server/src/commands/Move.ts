@@ -17,8 +17,12 @@ export class MoveCommand extends Command<GameRoom, { client: Client, message: an
             player.rotation = message.rotation
 
             if((player.position.x**2 + player.position.y**2) > 2400**2){
-                this.state.players.delete(player.id);
-                this.room.clients.getById(player.id).send(S2CPackets.Killed, {})
+                player.health -= (30/64)
+                if(player.health <= 0){
+                    this.state.players.delete(player.id);
+                    this.room.clients.getById(player.id).send(S2CPackets.Killed, {})
+                }
+
             }
 
         }
