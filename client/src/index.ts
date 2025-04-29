@@ -33,7 +33,8 @@ export const engine = new Engine({
         credits: Credits,
 
     },
-    //pixelRatio: 6
+    pixelRatio: 4,
+    pixelArt: true
 });
 
 async function init() {
