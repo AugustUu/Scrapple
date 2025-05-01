@@ -16,7 +16,7 @@ export const engine = new Engine({
     fixedUpdateFps: 120,
     width: 1920,
     height: 1080,
-    displayMode: DisplayMode.FitScreenAndFill,
+    displayMode: DisplayMode.FitScreenAndZoom,
     canvasElementId: 'game',
     antialiasing: {
         pixelArtSampler: true, // turns on the sub-pixel shader for pixel art
