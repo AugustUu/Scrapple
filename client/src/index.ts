@@ -25,6 +25,13 @@ export const engine = new Engine({
         filtering: ImageFiltering.Blended, // hints the image loader to use blended filtering
         canvasImageRendering: 'auto' // applies the 'auto'-matic css to the canvas CSS image-rendering
     },
+    const sound = new Sound('./Sound/Guns/Shotgun.mp3', './Sound/Guns/fallback.wav');
+
+    const loader = new Loader([sound]);
+await game.start(loader);
+sound.play(0.5);
+
+
     scenes: {
         mainMenu: MainMenu,
         game: Game,
