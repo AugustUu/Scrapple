@@ -1,15 +1,14 @@
 import { LocalPlayer } from "../../../../../../client/src/game/LocalPlayer";
-import { Player } from "../../../../../../server/src/State";
 import { Upgrade } from "../../Upgrade"
 import { registerUpgrade } from "../../UpgradeManager"
 
 @registerUpgrade
-export class JumpBoost extends Upgrade {
+export class Dash extends Upgrade {
     constructor() {
-        super("JumpBoost", 3, null, null, "Reach for the stars")
+        super("Dash", 5, null, "Sniper", "Hit 'Q' to fling yourself in the direction of your mouse")
     }
 
     clientOnPlayerConstructed(level: number, player: LocalPlayer): void {
-        player.jumpHeight += level * 20
+        player.maxDashes = level
     }
 }

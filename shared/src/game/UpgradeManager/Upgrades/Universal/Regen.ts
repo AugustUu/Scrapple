@@ -6,11 +6,11 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Regen extends Upgrade {
     constructor() {
-        super("Regen", 3)
+        super("Regen", 3,null,null, "Short for regeneration")
     }
 
     serverOnPlayerConstructed(level: number, player: Player): void {
-        player.health -= player.maxHealth/1.5;
+        player.health -= player.maxHealth/2;
     }
 
     serverOnServerTick(level: number, state: State, player: Player): void {

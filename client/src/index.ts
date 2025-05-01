@@ -7,6 +7,7 @@ import { Sound } from 'excalibur'
 import { MouseInput } from './util';
 import { StartScreen } from './scenes/StartScreen';
 import { EndRoundScreen } from './scenes/EndRoundScreen';
+import { Credits } from './scenes/Credits';
 import { ExcaliburGraphicsContextWebGL } from 'excalibur';
 import { Resources } from './Resources';
 
@@ -22,8 +23,8 @@ export const engine = new Engine({
         pixelArtSampler: true, // turns on the sub-pixel shader for pixel art
         nativeContextAntialiasing: false, // turns off canvas aa
         multiSampleAntialiasing: true, // turns on msaa which smooths quad boundaries
-        filtering: ImageFiltering.Blended, // hints the image loader to use blended filtering
-        canvasImageRendering: 'auto' // applies the 'auto'-matic css to the canvas CSS image-rendering
+        filtering: ImageFiltering.Pixel, // hints the image loader to use blended filtering
+        canvasImageRendering: 'pixelated', // applies the 'auto'-matic css to the canvas CSS image-rendering
     },
     const sound = new Sound('./Sound/Guns/Shotgun.mp3', './Sound/Guns/fallback.wav');
 
@@ -36,9 +37,12 @@ sound.play(0.5);
         mainMenu: MainMenu,
         game: Game,
         startScreen: StartScreen,
-        endRoundScreen: EndRoundScreen
+        endRoundScreen: EndRoundScreen,
+        credits: Credits,
 
-    }
+    },
+    pixelRatio: 4,
+    pixelArt: true
 });
 const Shotgun = new Sound('./Sound/Gun/Shotgun.mp3');
 const Rifle = new Sound('./Sound/Gun/Rifle.mp3');

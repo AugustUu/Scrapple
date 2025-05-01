@@ -39,11 +39,15 @@
             transform: translate(-50%, -50%);
         }
 
+        .centertransform {
+            transform: translate(-50%, -50%);
+        }
+
         .left-5 {
             left: 5%;
         }
 
-        .left-15{
+        .left-15 {
             left: 15%;
         }
 
@@ -63,6 +67,18 @@
             left: 90%;
         }
 
+        .left-95 {
+            left: 95%;
+        }
+
+        .right-1 {
+            right: 1%;
+        }
+
+        .top-1 {
+            top: 1%;
+        }
+
         .top-5 {
             top: 5%;
         }
@@ -73,6 +89,14 @@
 
         .top-20 {
             top: 20%;
+        }
+
+        .top-30 {
+            top: 30%;
+        }
+
+        .top-40 {
+            top: 40%;
         }
 
         .top-50 {
@@ -89,6 +113,14 @@
 
         .top-80 {
             top: 80%;
+        }
+
+        .top-85 {
+            top: 85%;
+        }
+
+        .top-90 {
+            top: 90%;
         }
 
         .top-95 {
@@ -121,11 +153,12 @@
 
         #colorpicker {
             border: none;
-            padding: 5px;
-            border-radius: 8px;
+            padding: 0px;
             background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             cursor: pointer;
+
+            min-height: 42px;
+            vertical-align: middle;
         }
 
         #nameInput {
@@ -150,7 +183,8 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
-        #joinButton {
+        #joinButton,
+        #createButton {
             padding: 12px 30px;
             margin: 10px;
             border: none;
@@ -163,7 +197,9 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        #joinButton:hover {
+        #joinButton:hover,
+        #createButton:hover,
+        #quickplay:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
         }
@@ -186,6 +222,86 @@
             box-shadow: 0 4px 15px rgba(255, 0, 204, 0.4);
         }
 
+        #creditsButton {
+            padding: 12px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #4d4d50;
+            color: #e0e0e0;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #creditsButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+        }
+
+        #ServerBrowser {
+            position: absolute;
+            z-index: 1999;
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        #credits{
+            display: none;
+            position: absolute;
+            z-index: 1999;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            background-image: url("/client/Art/bunkashit.png"); background-repeat: no-repeat; background-size: 100% 100%;
+        }
+
+        #creditsTitle {
+            padding: 12px 20px;
+            margin: 10px;
+            font-size: 80px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #FFFFFF, #FFFFFF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #creditsText {
+            padding: 12px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        #mainMenuButton {
+            padding: 12px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #4d4d50;
+            color: #e0e0e0;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #mainMenuButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+        }
+
         #startScreen {
             position: absolute;
             z-index: 1999;
@@ -206,13 +322,14 @@
             font-weight: 600;
             cursor: pointer;
             transition: background 0.3s;
+            max-width: 200px;
         }
 
         .optionButton:hover {
             background: #818184;
         }
 
-        #startButton {
+        .readyButton {
             padding: 15px 40px;
             border: none;
             border-radius: 10px;
@@ -224,12 +341,12 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        #startButton:hover {
+        .readyButton:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
         }
 
-        #playerList {
+        .playerList {
             list-style-type: none;
             padding: 10px;
             margin: 0;
@@ -336,38 +453,101 @@
             -ms-user-select: all;
             user-select: all;
         }
-        
+
+        #serverListHolder {
+
+            border: 5px solid #c6c6c6;
+            border-radius: 10px;
+
+        }
+
+        #serverList {
+            list-style: none;
+            padding: 10px;
+            margin: 5px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            justify-content: center;
+
+            overflow-y: auto;
+            max-height: 400px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #serverList .serverItem {
+            background: rgba(42, 42, 62, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            color: #e0e0e0;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        #serverList .serverItem:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+        }
+
+        #serverList .serverItem .serverName {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        #serverList .serverItem .serverDetails {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        #serverList .serverItem .serverDetails span {
+            display: block;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 
 <body oncontextmenu="return false">
     <main>
         <div id="menu">
-            <div id="menuTitle" class="fixed center-x top-20 text-center">
-                Scrapple
-            </div>
+            <div id="menuTitle" class="fixed center-x top-10 text-center">Scrapple</div>
 
-            <div class="fixed center-x top-50"
-                style="display: flex; flex-direction: column; align-items: left; gap: 15px;font-weight: 600;font-size:18px;">
-                <div>
-                    <label for="colorpicker"  >Player Color:</label>
+            <div class="fixed center-x top-30"
+            
+                style="display: flex; flex-direction: column;gap: 15px;font-weight: 600;font-size:18px;">
+                
+                <div style="margin: auto;">
                     <input type="color" id="colorpicker" value="#15499D" />
-                </div>
-
-                <div>
-                    <label for="nameInput" >Username:</label>
                     <input id="nameInput" type="text" placeholder="name">
                 </div>
 
+
                 <div>
-                    <label for="serverInput" >Server:</label>
-                    <input id="serverInput" type="text">
-                    <button id="joinButton">Join or create</button>
+                    <button id="quickplay" style="min-width: 45%;">Quickplay</button>
+                    <button id="createButton" style="min-width: 45%;">Create</button>
+                </div>
+
+                <div id="serverListHolder">
+                    <ul id="serverList"></ul>
+
                 </div>
 
                 <div>
-                    <button id="quickplay">Quickplay</button>
+                    <label for="serverInput">Server code:</label>
+                    <input id="serverInput" type="text">
+                    <button id="joinButton">Join</button>
+
                 </div>
+                
+
+            </div>
+
+            <div class="fixed right-1 top-1">
+                <button id="creditsButton">Credits</button>
             </div>
         </div>
 
@@ -375,32 +555,37 @@
             <div class="fixed left-15 top-10">
                 Server Code: <h3 id="serverCode"></h3>
             </div>
-            <div class="fixed left-25 top-50">
+            <div class="fixed left-25 top-40">
                 <button id="gun1Button" class="optionButton"></button>
             </div>
-            <div class="fixed left-50 top-50">
+            <div class="fixed left-50 top-40">
                 <button id="gun2Button" class="optionButton"></button>
             </div>
-            <div class="fixed left-75 top-50">
+            <div class="fixed left-75 top-40">
                 <button id="gun3Button" class="optionButton"></button>
             </div>
-            <div class="fixed left-25 top-60">
+            <div class="fixed left-25 top-50">
                 <button id="upgrade1Button" class="optionButton"></button>
             </div>
-            <div class="fixed left-50 top-60">
+            <div class="fixed left-50 top-50">
                 <button id="upgrade2Button" class="optionButton"></button>
             </div>
-            <div class="fixed left-75 top-60">
+            <div class="fixed left-75 top-50">
                 <button id="upgrade3Button" class="optionButton"></button>
             </div>
 
             <div class="fixed center-x top-80">
-                <button id="startButton">Start Game</button>
+                <button id="readyButtonStart" class="readyButton">Ready</button>
             </div>
+
+            <div class="fixed center-x top-90">
+                <button id="exitButtonStart" class="readyButton">Exit to Lobby</button>
+            </div>
+
 
             <div class="fixed center-x top-10 text-center">
                 Players:
-                <ul id="playerList"></ul>
+                <ul id="playerListStart" class="playerList"></ul>
             </div>
         </div>
 
@@ -419,9 +604,37 @@
             </div>
 
             <div class="fixed center-x top-80">
-                <button id="nextRoundButton">Next Round</button>
+                <button id="readyButtonNext" class="readyButton">Ready</button>
             </div>
+            <div class="fixed center-x top-90">
+                <button id="exitButtonNext" class="readyButton">Exit to Lobby</button>
+            </div>
+
+            <div class="fixed center-x top-10 text-center">
+                Players:
+                <ul id="playerListNext" class="playerList"></ul>
+            </div>
+
         </div>
+
+        <dv id="credits">
+            <div id="creditsTitle" class="fixed center-x top-20 text-center">
+                Credits
+            </div>
+
+            <div id="creditsText" class = "fixed center-x top-30">
+                <h2>
+                August: Knows how the server works - good at convincing us not to use Unity - never made reloading not bad<br>
+                Takumi: Founder of Bunkashit Games - Knows how grappling works - good at math<br>
+                Seth:  Wrote upgrade descriptions and credits screen - Good at implementing a dozen smaller features - created Sludge<br>
+                Sevin: good at graphics
+                </h2>
+            </div>
+
+            <div class = "fixed center-x top-60">
+                <button id="mainMenuButton">Main Menu</button>
+            </div>
+        </dv>
 
         <div id="hud">
             <div id="gunInfo" class="fixed left-90 top-80">

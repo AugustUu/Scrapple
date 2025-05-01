@@ -1,7 +1,9 @@
 import { Engine, Scene, SceneActivationContext } from "excalibur";
 import { Networking } from "../networking/Networking";
-import { C2SPacket } from "shared/src/networking/Packet";
+import { C2SPacket, S2CPackets } from "shared/src/networking/Packet";
 import { NetworkClient } from "../networking/NetworkClient";
+import { NetworkUtils } from "../networking/NetworkUtils";
+import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 
 export class StartScreen extends Scene {
     private rootElement!: HTMLElement;
@@ -9,29 +11,39 @@ export class StartScreen extends Scene {
     private gunButtons!: HTMLElement[]
     private upgradeButtons!: HTMLElement[]
 
-    private startButton!: HTMLButtonElement;
+    private readyButton!: HTMLButtonElement;
     private playerList!: HTMLElement;
     private serverCode!: HTMLElement;
+    private exitButton!: HTMLElement;
 
 
     public onInitialize(engine: Engine) {
         this.rootElement = document.getElementById('startScreen')!;
 
         this.serverCode = document.getElementById('serverCode')!;
-        
+
         this.gunButtons = [document.getElementById('gun1Button'), document.getElementById('gun2Button'), document.getElementById('gun3Button')];
         this.upgradeButtons = [document.getElementById('upgrade1Button'), document.getElementById('upgrade2Button'), document.getElementById('upgrade3Button')];
 
 
 
-        this.playerList = document.getElementById('playerList')!;
-        this.startButton = document.getElementById('startButton')! as HTMLButtonElement;
+        this.playerList = document.getElementById('playerListStart')!;
+        this.readyButton = document.getElementById('readyButtonStart')! as HTMLButtonElement;
+        this.exitButton= document.getElementById('exitButtonStart')! as HTMLButtonElement;
 
-        this.startButton.addEventListener("click", () => {
-            Networking.client.room.send(C2SPacket.StartGame, {})
+        this.readyButton.addEventListener("click", () => {
+            Networking.client.room.send(C2SPacket.Ready, {})
+            if (this.readyButton.innerHTML === "Ready") {
+                this.readyButton.innerHTML = "Unready"
+            }
+            else {
+                this.readyButton.innerHTML = "Ready"
+            }
         })
-
-        this.startButton.disabled = !Networking.client.room.state.clients.get(Networking.client.clientId).host
+        
+        this.exitButton.addEventListener("click", () => {
+            location.reload()
+        })
 
     }
 
@@ -43,14 +55,38 @@ export class StartScreen extends Scene {
         this.playerList.innerHTML = "";
 
         Networking.client.room!.state.clients.forEach((client) => {
-            this.playerList.innerHTML += `<li>${client.name}</li>`
+            if (client.ready) {
+                this.playerList.innerHTML += `<li style="color:MediumSeaGreen;">${client.name}</li>`
+            }
+            else {
+                this.playerList.innerHTML += `<li>${client.name}</li>`
+            }
         })
 
         Networking.client.room!.state.clients.onChange(() => {
             this.playerList.innerHTML = ""
             Networking.client.room!.state.clients.forEach((client) => {
-                this.playerList.innerHTML += `<li>${client.name}</li>`
+                if (client.ready) {
+                    this.playerList.innerHTML += `<li style="color:MediumSeaGreen;">${client.name}</li>`
+                }
+                else {
+                    this.playerList.innerHTML += `<li>${client.name}</li>`
+                }
             })
+        })
+
+        Networking.client.room!.onMessage(S2CPackets.Readied, () => {
+            setTimeout(() => {
+                this.playerList.innerHTML = ""
+                Networking.client.room!.state.clients.forEach((client) => {
+                    if (client.ready) {
+                        this.playerList.innerHTML += `<li style="color:MediumSeaGreen;">${client.name}</li>`
+                    }
+                    else {
+                        this.playerList.innerHTML += `<li>${client.name}</li>`
+                    }
+                })
+            }, 50)
         })
 
 
@@ -71,9 +107,9 @@ export class StartScreen extends Scene {
                 button.style.backgroundColor = "red"
             })
         })
-        
+
         this.upgradeButtons.forEach((button, index) => {
-            button.innerHTML = upgradeOptions[index]
+            button.innerText = upgradeOptions[index] + "\n\n\n" + Upgrades.get(upgradeOptions[index]).description
             button.addEventListener("click", () => {
                 Networking.client.room.send(C2SPacket.PickUpgrade, index)
 

@@ -190,7 +190,7 @@ class Option extends Schema {
 export class PlayerClient extends Schema {
     @type("string") name: string;
     @type("string") id: string;
-    @type("boolean") host: boolean;
+    @type("boolean") ready: boolean;
     @type("number") wins: number;
     @type("string") color: string = "ff3300";
 
@@ -200,7 +200,7 @@ export class PlayerClient extends Schema {
     @type(Option) gunOptions: Option;
     @type(Option) upgradeOptions: Option;
 
-    constructor(name: string, id: string, host: boolean, color: string) {
+    constructor(name: string, id: string, color: string) {
         super();
 
         this.upgrades = new MapSchema();
@@ -210,7 +210,7 @@ export class PlayerClient extends Schema {
 
         this.name = name
         this.id = id;
-        this.host = host
+        this.ready = false
         this.wins = 0;
         this.color = color
     }
@@ -238,12 +238,13 @@ export class PlayerClient extends Schema {
     randomizeUpgradeOptions(checkGunDep: boolean, heldGunId?: string) {
         let upgradeMap = new Map(Upgrades)
         for (let upgrade of upgradeMap.entries()) {
-            if (upgradeMap.get(upgrade[0]).max == 100) {
-                upgradeMap.delete(upgrade[0])
-                continue
+            if(this.upgrades.has(upgrade[0])){
+                if (this.upgrades.get(upgrade[0]).level >= upgradeMap.get(upgrade[0]).max) {
+                    upgradeMap.delete(upgrade[0])
+                    continue
+                }
             }
-
-
+            
             if (upgradeMap.get(upgrade[0]).upgradeDep != undefined) {
                 let dep = upgradeMap.get(upgrade[0]).upgradeDep
                 if (this.upgrades.get(dep.upgrade).level < dep.level) {
@@ -287,7 +288,7 @@ export class PlayerClient extends Schema {
 export class Game extends Schema {
     @type("boolean") inRound: boolean;
     @type("number") roundsPlayed: number;
-
+    @type("number") roundStartTime: number;
 
 }
 

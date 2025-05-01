@@ -5,7 +5,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Akimbo extends Upgrade {
     constructor() {
-        super("Akimbo", 3, null, "Pistol")
+        super("Akimbo", 3, null, "Pistol", "Gain a second gun")
     }
     
     serverOnPlayerConstructed(level: number, player: Player): void {
@@ -15,7 +15,7 @@ export class Akimbo extends Upgrade {
 
     serverOnGunConstructed(level: number, gun: GunState) {
         gun.damage /= (1.5 * level)
-        gun.bulletsPerShot *= level*2
+        gun.bulletsPerShot *= (level + 1)
         gun.spread *= (1.1*level)
     }
 }

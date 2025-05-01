@@ -3,6 +3,7 @@ import { GameRoom } from "../rooms/GameRoom";
 import { S2CPackets } from "shared/src/networking/Packet";
 import { Bullet, CircleCollider, PlayerClient, RectangleCollider } from "../State";
 import { Guns } from "shared/src/game/GunManager/GunManager";
+import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 
 
 
@@ -47,6 +48,8 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
                 }
                 bullet.position.x += Math.cos(bullet.angle) * bullet.speed
                 bullet.position.y += Math.sin(bullet.angle) * bullet.speed
+            }else{
+                this.state.bullets.delete(BulletID)
             }
 
             this.state.colliders.forEach((collider, key) => {
@@ -70,6 +73,11 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
                             return
                         }
                         player.health -= this.state.players.get(bullet.shotById).gun.damage
+
+                        
+                        this.state.clients.get(player.id).upgrades.forEach((upgrade) => {
+                            Upgrades.get(upgrade.upgradeID).serverOnPlayerHit(upgrade.level, this.state, player,this.state.players.get(bullet.shotById))
+                        })
 
                         if (player.health <= 0) {
                             this.state.players.delete(player.id);

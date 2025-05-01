@@ -6,7 +6,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Grappler extends Upgrade {
     constructor() {
-        super("Grappler", 10)
+        super("Grappler", 10, null, null, "UNIMPLEMENTED")
     }
 
 

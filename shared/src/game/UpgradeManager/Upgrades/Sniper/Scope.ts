@@ -4,6 +4,6 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Scope extends Upgrade {
     constructor() {
-        super("Scope", 1, null, "Sniper")
+        super("Scope", 1, null, "Sniper", "UNIMPLEMENTED")
     }
 }

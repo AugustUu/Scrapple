@@ -5,10 +5,10 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class GrappleCooldown extends Upgrade {
     constructor() {
-        super("GrappleCooldown", 3)
+        super("Grapple Cooldown", 3, null, null, "UNIMPLEMENTED")
     }
 
     serverOnShoot(level: number, bullet: Bullet, state: State, player: Player): void {
-        bullet.speed *= 10
+       // bullet.speed *= 10
     }
 }

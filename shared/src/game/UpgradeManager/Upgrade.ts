@@ -33,6 +33,10 @@ export class Upgrade {
         
     }
 
+    serverOnPlayerHit(level: number, state: State, player: Player, otherPlayer: Player) {
+        
+    }
+
     clientOnPlayerConstructed(level: number, player: LocalPlayer){
 
     }

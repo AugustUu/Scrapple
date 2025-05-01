@@ -6,11 +6,10 @@ import { registerUpgrade } from "../UpgradeManager"
 @registerUpgrade
 export class AntsInYoPants extends Upgrade {
     constructor() {
-        super("AntsInYoPants", 1)
+        super("AntsInYoPants", 1, null, null, "Shadows jump twice")
     }
 
     clientOnPlayerConstructed(level: number, player: LocalPlayer): void {
         player.maxJumps += level
-        console.log(level)
     }
 }
