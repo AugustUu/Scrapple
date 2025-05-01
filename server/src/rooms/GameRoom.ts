@@ -34,17 +34,32 @@ export class GameRoom extends Room<State> {
 
         this.state.game.inRound = false;
 
-        this.state.colliders.push(new RectangleCollider(0, 500, 50, 5))
+        //map 1
+        /*this.state.colliders.push(new RectangleCollider(0, 500, 50, 5))
         this.state.colliders.push(new RectangleCollider(700, 100, 20, 5))
         this.state.colliders.push(new RectangleCollider(-700, 100, 20, 5))
         this.state.colliders.push(new CircleCollider(-200, -300, 5))
-        this.state.colliders.push(new CircleCollider(200, -300, 5))
+        this.state.colliders.push(new CircleCollider(200, -300, 5))*/
 
+        //map 2
+        /*this.state.colliders.push(new RectangleCollider(0, 500, 50, 5))
+        this.state.colliders.push(new RectangleCollider(900, 200, 20, 5))
+        this.state.colliders.push(new RectangleCollider(-900, 200, 20, 5))
+        this.state.colliders.push(new RectangleCollider(600, -200, 5, 30))
+        this.state.colliders.push(new RectangleCollider(-600, -200, 5, 30))
+        this.state.colliders.push(new CircleCollider(-700, 800, 5))
+        this.state.colliders.push(new CircleCollider(700, 800, 5))*/
 
-        /*this.state.colliders.push(new RectangleCollider(0, 100, 50, 5))
-        this.state.colliders.push(new RectangleCollider(-200, 500, 5, 50))
-        this.state.colliders.push(new RectangleCollider(200, 500, 5, 50))
-        */
+        this.state.colliders.push(new RectangleCollider(600, 800, 15, 5))
+        this.state.colliders.push(new RectangleCollider(-600, 800, 15, 5))
+        this.state.colliders.push(new RectangleCollider(600, 200, 20, 5))
+        this.state.colliders.push(new RectangleCollider(-600, 200, 20, 5))
+        this.state.colliders.push(new RectangleCollider(600, 500, 5, 30))
+        this.state.colliders.push(new RectangleCollider(-600, 500, 5, 30))
+        this.state.colliders.push(new CircleCollider(-1100, 500, 5))
+        this.state.colliders.push(new CircleCollider(1100, 500, 5))
+        
+        
 
         this.onMessage(C2SPacket.Ping, (client, message) => {
             client.send(S2CPackets.Pong, {})
