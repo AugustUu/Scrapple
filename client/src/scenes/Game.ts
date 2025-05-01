@@ -11,6 +11,7 @@ import { Bullet, CircleCollider, Collider, Player, RectangleCollider } from "ser
 import { S2CPackets } from "shared/src/networking/Packet";
 import { Hud } from "../ui/Hud";
 import { NetworkUtils } from "../networking/NetworkUtils";
+import { EndGameScreen } from "./EndGameScreen";
 
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
 export var BulletEntities: Map<String, Entity<BulletComponent>> = new Map();
@@ -61,6 +62,10 @@ export class Game extends Scene {
                 bullet.kill()
             })
             this.engine.goToScene("endRoundScreen")
+        })
+
+        Networking.client.room!.onMessage(S2CPackets.WinGame,()=>{
+            engine.goToScene("endGameScreen")
         })
 
         Networking.client.room!.state.colliders.onAdd((collider: any, key: number) => {

@@ -9,6 +9,7 @@ import { EndRoundScreen } from './scenes/EndRoundScreen';
 import { Credits } from './scenes/Credits';
 import { ExcaliburGraphicsContextWebGL } from 'excalibur';
 import { Resources } from './Resources';
+import { EndGameScreen } from './scenes/EndGameScreen';
 
 
 export const engine = new Engine({
@@ -31,10 +32,10 @@ export const engine = new Engine({
         startScreen: StartScreen,
         endRoundScreen: EndRoundScreen,
         credits: Credits,
+        endGameScreen: EndGameScreen
 
     },
-    pixelRatio: 4,
-    pixelArt: true
+    pixelRatio: 2
 });
 
 async function init() {

@@ -22,5 +22,6 @@ export var S2CPackets = {
     StartGame: "startgame",
     EndGame: "endgame",
     Killed: "killed",
-    Readied: "readied"
+    Readied: "readied",
+    WinGame: "win"
 }

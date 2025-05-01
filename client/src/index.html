@@ -382,6 +382,15 @@
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
         }
 
+        #endGameScreen{
+            display: none;
+            position: absolute;
+            z-index: 1999;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
         #hud {
             position: absolute;
             z-index: 1999;
@@ -617,24 +626,31 @@
 
         </div>
 
-        <dv id="credits">
+        <div id="credits">
             <div id="creditsTitle" class="fixed center-x top-20 text-center">
                 Credits
             </div>
 
             <div id="creditsText" class = "fixed center-x top-30">
                 <h2>
-                August: Knows how the server works - good at convincing us not to use Unity - never made reloading not bad<br>
+                August: Knows how the server works - good at convincing us not to use Unity - Spent eight months making reloading work<br>
                 Takumi: Founder of Bunkashit Games - Knows how grappling works - good at math<br>
                 Seth:  Wrote upgrade descriptions and credits screen - Good at implementing a dozen smaller features - created Sludge<br>
                 Sevin: good at graphics
+                Keiden: Suggested some level designs
                 </h2>
             </div>
 
             <div class = "fixed center-x top-60">
                 <button id="mainMenuButton">Main Menu</button>
             </div>
-        </dv>
+        </div>
+
+        <div id="endGameScreen">
+            <div id="endgameText" class="fixed center-x top-20 text-center">
+                Yippee
+            </div>
+        </div>
 
         <div id="hud">
             <div id="gunInfo" class="fixed left-90 top-80">
