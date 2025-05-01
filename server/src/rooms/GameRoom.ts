@@ -2,7 +2,7 @@ import { Room, Client } from "@colyseus/core";
 
 import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 
-import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider, PlayerClient, UpgradeState } from "../State"
+import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider, PlayerClient, UpgradeState, TriangleCollider, Position } from "../State"
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { Dispatcher } from "@colyseus/command";
@@ -34,11 +34,12 @@ export class GameRoom extends Room<State> {
 
         this.state.game.inRound = false;
 
-        this.state.colliders.push(new RectangleCollider(0, 500, 50, 5))
-        this.state.colliders.push(new RectangleCollider(700, 100, 20, 5))
-        this.state.colliders.push(new RectangleCollider(-700, 100, 20, 5))
-        this.state.colliders.push(new CircleCollider(-200, -300, 5))
-        this.state.colliders.push(new CircleCollider(200, -300, 5))
+        this.state.colliders.push(new RectangleCollider(119.00, 233.00, 50.5, 2.3));
+        this.state.colliders.push(new RectangleCollider(272.00, 334.00, 1.5, 54.9));
+        this.state.colliders.push(new RectangleCollider(287.00, 883.00, 4, 4));
+        this.state.colliders.push(new CircleCollider(191.00, 116.00, 11.661903789690601));
+        //this.state.colliders.push(new TriangleCollider(0,0,new Position(0,100),new Position(100,100),new Position(-100,100),))
+
 
 
         /*this.state.colliders.push(new RectangleCollider(0, 100, 50, 5))
