@@ -9,6 +9,7 @@ import { CreateGrappleLine } from "./Entities/GrappleLine";
 import { Game } from "../scenes/Game";
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 import { engine } from "..";
+import { Sound } from "excalibur";
 import { NetworkUtils } from "../networking/NetworkUtils";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { Resources } from "../Resources";

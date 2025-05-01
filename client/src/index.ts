@@ -29,8 +29,8 @@ export const engine = new Engine({
     const sound = new Sound('./Sound/Guns/Shotgun.mp3', './Sound/Guns/fallback.wav');
 
     const loader = new Loader([sound]);
-await game.start(loader);
-sound.play(0.5);
+    Game.start(loader);
+    sound.play(0.5);
 
 
     scenes: {
