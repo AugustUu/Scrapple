@@ -1,4 +1,4 @@
-import { Loader, ImageSource } from "excalibur"
+import { Loader, ImageSource, Sound} from "excalibur"
 import { engine } from ".";
 
 export const Resources = {
@@ -7,4 +7,5 @@ export const Resources = {
     PlayerFill: new ImageSource("/Art/GreenFill.png"),
     PlayerOverlay: new ImageSource("/Art/GreenOutline.png"),
 } as const
+
 

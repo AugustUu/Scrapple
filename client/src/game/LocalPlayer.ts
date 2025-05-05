@@ -1,4 +1,4 @@
-import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite, BoundingBox } from "excalibur";
+import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite, BoundingBox, Loader, Sound} from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -9,10 +9,12 @@ import { CreateGrappleLine } from "./Entities/GrappleLine";
 import { Game } from "../scenes/Game";
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 import { engine } from "..";
+import { Sound } from "excalibur";
 import { NetworkUtils } from "../networking/NetworkUtils";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { Resources } from "../Resources";
 import { NetworkClient } from "../networking/NetworkClient";
+
 
 export class LocalPlayer extends Actor {
     joint!: ImpulseJoint;
@@ -39,9 +41,11 @@ export class LocalPlayer extends Actor {
 
     healthBarEntity: Entity
 
+    
 
     constructor(x: number, y: number) {
         super({name:"localplayer", x: x, y: y, /*radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value),*/ anchor: Vector.Half});
+
         
         this.jumpHeight = 60
         this.speed = 5
@@ -49,8 +53,6 @@ export class LocalPlayer extends Actor {
         this.maxGrappleSpeed = 175
 
         this.radius = NetworkUtils.getLocalState().radius
-
-
         this.maxJumps = 0
         this.airJumps = 0
         this.dashes = 0
@@ -58,13 +60,13 @@ export class LocalPlayer extends Actor {
 
         //engine.currentScene.camera.strategy.lockToActor(this);
         
-
-
+    
+    
 
 
         //this.sprite = new ImageSource("/Art/Character.png").toSprite()
         const image = Resources.char1
-
+        const Shotgun = new Sound('./Sound/Gun/Shotgun.mp3');
         /*new ImageSource("/Art/Character.png").load().then((tttt)=>{
             console.log(tttt)
         })*/
@@ -276,19 +278,21 @@ export class LocalPlayer extends Actor {
 
     public update(engine: Engine, delta: number) {
         
-
         if(Networking.client.room == null || this.isKilled()){ // who ever designed it so it rarely will update even when killed is a dumbass
             return
         }
+
 
         this.move(engine, delta)
         this.grapple(engine, delta)
 
 
-
+        const Shotgun = new Sound('./Sound/Gun/Shotgun.mp3');
         if (engine.input.keyboard.wasPressed(Keys.R)) {
+            Shotgun.play(); // plays the sound?
             Networking.client.room?.send(C2SPacket.Reload, {})
         }
+
 
 
         if (MouseInput.mouseButtons.left) {
