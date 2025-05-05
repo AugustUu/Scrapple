@@ -36,7 +36,7 @@ export class Game extends Scene {
         });
 
         let graphics = new GraphicsComponent();
-        graphics.use(new Circle({ radius: 2400, color: Color.fromRGB(157, 174, 201) }));
+        graphics.use(new Circle({ radius: 2000, color: Color.fromRGB(157, 174, 201) }));
         circle.addComponent(graphics)
         circle.addComponent(new TransformComponent())
         this.engine.currentScene.add(circle)
@@ -69,6 +69,9 @@ export class Game extends Scene {
             }
             if (collider.type == "Rectangle") {
                 engine.add(createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Rectangle',  halfWidth: collider.width , halfHeight: collider.height }))
+            }
+            if (collider.type == "Triangle") {
+                engine.add(createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Triangle',  point1: collider.point1, point2: collider.point2, point3: collider.point3  }))
             }
         })
 

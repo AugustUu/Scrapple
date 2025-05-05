@@ -298,10 +298,10 @@ export class LocalPlayer extends Actor {
         if (MouseInput.mouseButtons.left) {
             if (Guns.get(NetworkUtils.getLocalState().gun.gunID).automatic) {
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI, homeRadius: 300, homeStrength: 0.01 })
+                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI})
             } else if (this.shooting == false) {
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI, homeRadius: 300, homeStrength: 0.01  })
+                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI })
                 this.shooting = true;
             }
         }else{
