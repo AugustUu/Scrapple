@@ -2,7 +2,7 @@ import { Room, Client } from "@colyseus/core";
 
 import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 
-import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider, PlayerClient, UpgradeState } from "../State"
+import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider, PlayerClient, UpgradeState, TriangleCollider, Position } from "../State"
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { Dispatcher } from "@colyseus/command";
