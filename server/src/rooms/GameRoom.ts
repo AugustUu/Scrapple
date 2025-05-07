@@ -10,13 +10,13 @@ import { OnJoinCommand } from "../commands/OnJoin";
 import { OnLeaveCommand } from "../commands/OnLeave";
 import { BulletTickCommand } from "../commands/BulletTick";
 import { ShootCommand } from "../commands/ShootBullet";
-import { StartGameCommand } from "../commands/StartGame";
 import { ReadyCommand } from "../commands/Ready";
 import { ReloadCommand } from "../commands/Reload";
 import { MoveCommand } from "../commands/Move";
 import { EndGrappleCommand, StartGrappleCommand } from "../commands/Grapple";
 import { EndGameCommand } from "../commands/EndGame";
 import { UpgradeTickCommand } from "../commands/UpgradeTick";
+import { initStages, Stage, stageList } from "../Stage";
 
 
 
@@ -34,94 +34,16 @@ export class GameRoom extends Room<State> {
 
         this.state.game.inRound = false;
 
-        //map 1 (normal)
-        /*this.state.colliders.push(new RectangleCollider(0, 500, 50, 5))
-        this.state.colliders.push(new RectangleCollider(700, 100, 20, 5))
-        this.state.colliders.push(new RectangleCollider(-700, 100, 20, 5))
-        this.state.colliders.push(new CircleCollider(-200, -300, 5))
-        this.state.colliders.push(new CircleCollider(200, -300, 5))*/
+        initStages()
+        let stage = stageList.get("stage7")
 
-        //map 2 (_| |_)
-        /*this.state.colliders.push(new RectangleCollider(0, 500, 50, 5))
-        this.state.colliders.push(new RectangleCollider(900, 200, 20, 5))
-        this.state.colliders.push(new RectangleCollider(-900, 200, 20, 5))
-        this.state.colliders.push(new RectangleCollider(600, -200, 5, 30))
-        this.state.colliders.push(new RectangleCollider(-600, -200, 5, 30))
-        this.state.colliders.push(new CircleCollider(-700, 800, 5))
-        this.state.colliders.push(new CircleCollider(700, 800, 5))*/
-
-        //map 3 (.I I.)
-        /*this.state.colliders.push(new RectangleCollider(600, 800, 15, 5))
-        this.state.colliders.push(new RectangleCollider(-600, 800, 15, 5))
-        this.state.colliders.push(new RectangleCollider(600, 200, 20, 5))
-        this.state.colliders.push(new RectangleCollider(-600, 200, 20, 5))
-        this.state.colliders.push(new RectangleCollider(600, 500, 5, 30))
-        this.state.colliders.push(new RectangleCollider(-600, 500, 5, 30))
-        this.state.colliders.push(new CircleCollider(-1100, 500, 5))
-        this.state.colliders.push(new CircleCollider(1100, 500, 5))*/
-
-        //map 4 (big tower)
-        /*this.state.colliders.push(new RectangleCollider(0, 1600, 45, 4))
-        this.state.colliders.push(new RectangleCollider(0, 1200, 45, 4))
-        this.state.colliders.push(new RectangleCollider(0, 800, 45, 4))
-        this.state.colliders.push(new RectangleCollider(0, 400, 45, 4))
-        this.state.colliders.push(new RectangleCollider(0, 0, 45, 4))
-        this.state.colliders.push(new RectangleCollider(0, -400, 45, 4))
-        this.state.colliders.push(new RectangleCollider(0, -800, 45, 4))
-        this.state.colliders.push(new RectangleCollider(0, -1200, 45, 4))
-        this.state.colliders.push(new RectangleCollider(0, -1600, 45, 4))*/
-
-        //map 5 (bozo version)
-        /*this.state.colliders.push(new RectangleCollider(0, 0, 8, 8))
-        this.state.colliders.push(new RectangleCollider(800, 0, 8, 8))
-        this.state.colliders.push(new RectangleCollider(-800, 0, 8, 8))
-        this.state.colliders.push(new RectangleCollider(0, 800, 8, 8))
-        this.state.colliders.push(new RectangleCollider(0, -800, 8, 8))
-        this.state.colliders.push(new RectangleCollider(800, 800, 8, 8))
-        this.state.colliders.push(new RectangleCollider(-800, 800, 8, 8))
-        this.state.colliders.push(new RectangleCollider(800, -800, 8, 8))
-        this.state.colliders.push(new RectangleCollider(-800, -800, 8, 8))
-        this.state.colliders.push(new RectangleCollider(400, 400, 4, 4))
-        this.state.colliders.push(new RectangleCollider(-400, 400, 4, 4))
-        this.state.colliders.push(new RectangleCollider(400, -400, 4, 4))
-        this.state.colliders.push(new RectangleCollider(-400, -400, 4, 4))*/
-
-        //map 6 (clockmo)
-        /*this.state.colliders.push(new RectangleCollider(0, 0, 5, 5))
-        this.state.colliders.push(new RectangleCollider(0, -300, 5, 30))
-        this.state.colliders.push(new RectangleCollider(200, 0, 20, 5))
-        this.state.colliders.push(new CircleCollider(692.8, 400, 8))
-        this.state.colliders.push(new CircleCollider(-692.8, 400, 8))
-        this.state.colliders.push(new CircleCollider(692.8, -400, 8))
-        this.state.colliders.push(new CircleCollider(-692.8, -400, 8))
-        this.state.colliders.push(new CircleCollider(400, 692.8, 8))
-        this.state.colliders.push(new CircleCollider(-400, 692.8, 8))
-        this.state.colliders.push(new CircleCollider(400, -692.8, 8))
-        this.state.colliders.push(new CircleCollider(-400, -692.8, 8))
-        this.state.colliders.push(new CircleCollider(800, 0, 8))
-        this.state.colliders.push(new CircleCollider(0, 800, 8))
-        this.state.colliders.push(new CircleCollider(-800, 0, 8))
-        this.state.colliders.push(new CircleCollider(0, -800, 8))*/
-
-        //map 7
-        this.state.colliders.push(new CircleCollider(0, 0, 8))
-        this.state.colliders.push(new RectangleCollider(0, -400, 40, 5))
-        this.state.colliders.push(new RectangleCollider(0, 400, 40, 5))
-        this.state.colliders.push(new RectangleCollider(400, 125, 5, 15))
-        this.state.colliders.push(new RectangleCollider(400, -125, 5, 15))
-        this.state.colliders.push(new RectangleCollider(-400, 125, 5, 15))
-        this.state.colliders.push(new RectangleCollider(-400, -125, 5, 15))
+        for(let collider of stage.colliderList){
+            this.state.colliders.push(collider)
+        }
 
 
         this.onMessage(C2SPacket.Ping, (client, message) => {
             client.send(S2CPackets.Pong, {})
-        })
-
-        this.onMessage(C2SPacket.StartGame, (client, message) => {
-
-            this.dispatcher.dispatch(new StartGameCommand(), {
-                client: client,
-            });
         })
 
         this.onMessage(C2SPacket.Ready, (client, message) => {
