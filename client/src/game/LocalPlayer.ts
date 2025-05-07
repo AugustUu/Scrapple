@@ -1,4 +1,4 @@
-import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite, BoundingBox, Loader, Sound} from "excalibur";
+import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite, BoundingBox, Loader, Sound, GraphicsGroup, vec} from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -9,7 +9,6 @@ import { CreateGrappleLine } from "./Entities/GrappleLine";
 import { Game } from "../scenes/Game";
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 import { engine } from "..";
-import { Sound } from "excalibur";
 import { NetworkUtils } from "../networking/NetworkUtils";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { Resources } from "../Resources";
@@ -62,29 +61,46 @@ export class LocalPlayer extends Actor {
         
     
     
+        let radius = NetworkUtils.getLocalState().radius
 
-
-        //this.sprite = new ImageSource("/Art/Character.png").toSprite()
-        const image = Resources.char1
-        const Shotgun = new Sound('./Sound/Gun/Shotgun.mp3');
-        /*new ImageSource("/Art/Character.png").load().then((tttt)=>{
-            console.log(tttt)
-        })*/
-        if (image.isLoaded()){
-            const sprite = new Sprite({
+        let image = Resources.PlayerOverlay
+        let image2 = Resources.PlayerFill
+    
+        let playerSprite: Sprite
+        let playerSprite2: Sprite
+        if (image.isLoaded() && image2.isLoaded()){
+            playerSprite = new Sprite({
                 image: image,
                 destSize: {
-                    width: 2.1*this.radius,
-                    height: 2.1*this.radius
+                    width: 2*this.radius,
+                    height: 2*radius
                 }
             })
-            this.sprite = sprite
+    
+            playerSprite2 = new Sprite({
+                image: image2,
+                destSize: {
+                    width: 2*radius,
+                    height: 2*radius
+                }
+            })
+    
         }
         else{
             console.log("attempted to use unloaded sprite")
         }
+    
+        playerSprite2.tint = Color.fromHex( NetworkUtils.getLocalClient().color)
 
-        this.graphics.add(this.sprite)
+        this.graphics.add(new GraphicsGroup({
+            members: [
+              { graphic: playerSprite2, offset: vec(0, 0)},
+              { graphic: playerSprite, offset: vec(0, 0)}
+            ]
+          }));
+        
+    
+        //this.addComponent(this.graphics)
 
 
         this.grounded = false

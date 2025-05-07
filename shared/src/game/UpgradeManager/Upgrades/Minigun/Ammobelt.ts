@@ -17,4 +17,6 @@ export class AmmoBelt extends Upgrade {
         gun.ammo += 25 * level
         gun.reloadDelay *= 1 + (0.15 * level)
     }
+
+    
 }

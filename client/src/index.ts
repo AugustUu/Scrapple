@@ -26,11 +26,12 @@ export const engine = new Engine({
         filtering: ImageFiltering.Pixel, // hints the image loader to use blended filtering
         canvasImageRendering: 'pixelated', // applies the 'auto'-matic css to the canvas CSS image-rendering
     },
+    /*
     const sound = new Sound('./Sound/Guns/Shotgun.mp3', './Sound/Guns/fallback.wav');
 
     const loader = new Loader([sound]);
     Game.start(loader);
-    sound.play(0.5);
+    sound.play(0.5);*/
 
 
     scenes: {
