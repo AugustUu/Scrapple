@@ -286,6 +286,7 @@ export class PlayerClient extends Schema {
 }
 
 export class Game extends Schema {
+    @type("boolean") gameEnded: boolean;
     @type("boolean") inRound: boolean;
     @type("number") roundsPlayed: number;
     @type("number") roundStartTime: number;

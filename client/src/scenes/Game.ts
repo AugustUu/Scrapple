@@ -64,7 +64,8 @@ export class Game extends Scene {
             this.engine.goToScene("endRoundScreen")
         })
 
-        Networking.client.room!.onMessage(S2CPackets.WinGame,()=>{
+        Networking.client.room!.onMessage(S2CPackets.WinGame,(message)=>{
+            document.getElementById('whoWon').innerText = message.id
             engine.goToScene("endGameScreen")
         })
 

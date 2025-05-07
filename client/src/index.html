@@ -391,6 +391,25 @@
             background: rgba(0, 0, 0, 0.6);
         }
 
+        #nextGameButton {
+            padding: 12px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #4d4d50;
+            color: #e0e0e0;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #nextGameButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+        }
+
         #hud {
             position: absolute;
             z-index: 1999;
@@ -634,7 +653,7 @@
             <div id="creditsText" class = "fixed center-x top-30">
                 <h2>
                 August: Knows how the server works - good at convincing us not to use Unity - Spent eight months making reloading work<br>
-                Takumi: Founder of Bunkashit Games - Knows how grappling works - good at math<br>
+                Takumi: Founder of Bunkashit Games - Knows how grappling works - made most of the maps - good at math<br>
                 Seth:  Wrote upgrade descriptions and credits screen - Good at implementing a dozen smaller features - created Sludge<br>
                 Sevin: good at graphics
                 Keiden: Suggested some level designs
@@ -648,9 +667,11 @@
 
         <div id="endGameScreen">
             <div id="endgameText" class="fixed center-x top-20 text-center">
-                Yippee
+                Yippee, <div id="whoWon"></div> wins the game!!
             </div>
-            <div id="whoWon" class="fixed center-x top-50 text-center"></div>
+            <div class = "fixed center-x top-60">
+                <button id="nextGameButton">Next Game</button>
+            </div>
         </div>
 
         <div id="hud">
