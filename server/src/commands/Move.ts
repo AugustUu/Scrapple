@@ -18,11 +18,11 @@ export class MoveCommand extends Command<GameRoom, { client: Client, message: an
 
             if((player.position.x**2 + player.position.y**2) > 2000**2){
                 player.health -= (30/64)
-                if(player.health <= 0){
-                    this.state.players.delete(player.id);
-                    this.room.clients.getById(player.id).send(S2CPackets.Killed, {})
-                }
+            }
 
+            if(player.health <= 0){
+                this.state.players.delete(player.id);
+                this.room.clients.getById(player.id).send(S2CPackets.Killed, {})
             }
 
         }

@@ -72,8 +72,8 @@ export class StartScreen extends Scene {
         let gunOptions = Networking.client.room.state.clients.get(Networking.client.clientId).gunOptions.options;
         let upgradeOptions = Networking.client.room.state.clients.get(Networking.client.clientId).upgradeOptions.options;
 
-        this.gunButtons[0].style.backgroundColor = "red"
-        this.upgradeButtons[0].style.backgroundColor = "red"
+        this.gunButtons[0].style.backgroundColor = "#990000"
+        this.upgradeButtons[0].style.backgroundColor = "#990000"
 
         this.gunButtons.forEach((button, index) => {
             button.innerHTML = gunOptions[index]
@@ -83,19 +83,19 @@ export class StartScreen extends Scene {
                 this.gunButtons.forEach((button2) => {
                     button2.style.backgroundColor = ""
                 })
-                button.style.backgroundColor = "red"
+                button.style.backgroundColor = "#990000"
             })
         })
 
         this.upgradeButtons.forEach((button, index) => {
-            button.innerText = upgradeOptions[index] + "\n\n\n" + Upgrades.get(upgradeOptions[index]).description
+            button.innerHTML = `<h3>${upgradeOptions[index]}</h3> <h5 style="margin:0;">Level:${NetworkUtils.getLocalUpgrade(upgradeOptions[index])}</h5>  <h4 style="margin:10px;"> ${Upgrades.get(upgradeOptions[index]).description} </h4>`
             button.addEventListener("click", () => {
                 Networking.client.room.send(C2SPacket.PickUpgrade, index)
 
                 this.upgradeButtons.forEach((button2) => {
                     button2.style.backgroundColor = ""
                 })
-                button.style.backgroundColor = "red"
+                button.style.backgroundColor = "#990000"
             })
         })
     }
