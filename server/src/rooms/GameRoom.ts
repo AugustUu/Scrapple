@@ -2,7 +2,7 @@ import { Room, Client } from "@colyseus/core";
 
 import { S2CPackets, C2SPacket } from "shared/src/networking/Packet"
 
-import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider, PlayerClient, UpgradeState } from "../State"
+import { State, Bullet, Player, GunState, CircleCollider, RectangleCollider, PlayerClient, UpgradeState, TriangleCollider, Position } from "../State"
 import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { Dispatcher } from "@colyseus/command";
@@ -10,13 +10,13 @@ import { OnJoinCommand } from "../commands/OnJoin";
 import { OnLeaveCommand } from "../commands/OnLeave";
 import { BulletTickCommand } from "../commands/BulletTick";
 import { ShootCommand } from "../commands/ShootBullet";
-import { StartGameCommand } from "../commands/StartGame";
 import { ReadyCommand } from "../commands/Ready";
 import { ReloadCommand } from "../commands/Reload";
 import { MoveCommand } from "../commands/Move";
 import { EndGrappleCommand, StartGrappleCommand } from "../commands/Grapple";
 import { EndGameCommand } from "../commands/EndGame";
 import { UpgradeTickCommand } from "../commands/UpgradeTick";
+import { initStages, Stage, stageList } from "../Stage";
 
 
 
@@ -34,27 +34,16 @@ export class GameRoom extends Room<State> {
 
         this.state.game.inRound = false;
 
-        this.state.colliders.push(new RectangleCollider(0, 500, 50, 5))
-        this.state.colliders.push(new RectangleCollider(700, 100, 20, 5))
-        this.state.colliders.push(new RectangleCollider(-700, 100, 20, 5))
-        this.state.colliders.push(new CircleCollider(-200, -300, 5))
-        this.state.colliders.push(new CircleCollider(200, -300, 5))
+        initStages()
+        let stage = stageList.get("stage7")
 
+        for(let collider of stage.colliderList){
+            this.state.colliders.push(collider)
+        }
 
-        /*this.state.colliders.push(new RectangleCollider(0, 100, 50, 5))
-        this.state.colliders.push(new RectangleCollider(-200, 500, 5, 50))
-        this.state.colliders.push(new RectangleCollider(200, 500, 5, 50))
-        */
 
         this.onMessage(C2SPacket.Ping, (client, message) => {
             client.send(S2CPackets.Pong, {})
-        })
-
-        this.onMessage(C2SPacket.StartGame, (client, message) => {
-
-            this.dispatcher.dispatch(new StartGameCommand(), {
-                client: client,
-            });
         })
 
         this.onMessage(C2SPacket.Ready, (client, message) => {
@@ -150,7 +139,7 @@ export class GameRoom extends Room<State> {
 
         if (this.state.players.size == 1 && this.state.game.inRound) {
 
-            this.dispatcher.dispatch(new EndGameCommand(), {});
+            //this.dispatcher.dispatch(new EndGameCommand(), {});
 
         }
 

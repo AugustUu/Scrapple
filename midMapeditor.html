@@ -29,7 +29,10 @@
         let currentShape = null;
         let isPanning = false;
         let startX, startY;
-        let panOffset = { x: 0, y: 0 }; // Track pan offset
+        let panOffset = { x: 0, y: 0 };
+        let selectedShape = null;
+        let isResizing = false;
+        let resizeHandleIndex = null;
 
         document.getElementById('circleButton').addEventListener('click', () => {
             currentShape = 'circle';
@@ -39,69 +42,196 @@
             currentShape = 'rectangle';
         });
 
-        canvas.addEventListener('click', (event) => {
-            if (isPanning) return; // Ignore clicks while panning
+        canvas.addEventListener('mouseup', (event) => {
+            if (isPanning || event.button === 2 || isResizing) return; // Ignore clicks while panning or right-click
 
             const rect = canvas.getBoundingClientRect();
-            const x = event.clientX - rect.left - panOffset.x; // Adjust for pan offset
-            const y = event.clientY - rect.top - panOffset.y; // Adjust for pan offset
+            const x = event.clientX - rect.left - panOffset.x;
+            const y = event.clientY - rect.top - panOffset.y;
 
             if (currentShape === 'circle') {
-                const radius = 20; // Fixed radius for simplicity
+                const radius = 20;
                 shapes.push({ type: 'Circle', position: { x, y }, radius });
                 drawShapes();
             } else if (currentShape === 'rectangle') {
-                const width = 40; // Fixed width for simplicity
-                const height = 40; // Fixed height for simplicity
+                const width = 40;
+                const height = 40;
                 shapes.push({ type: 'Rectangle', position: { x, y }, width, height });
                 drawShapes();
             }
         });
 
         canvas.addEventListener('mousedown', (event) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left - panOffset.x;
+            const y = event.clientY - rect.top - panOffset.y;
+
             if (event.button === 1) { // Middle mouse button
                 isPanning = true;
                 startX = event.clientX;
                 startY = event.clientY;
+            } else if (event.button === 0) { // Left mouse button
+                selectedShape = getShapeAt(x, y);
+                if (selectedShape) {
+                    const handleIndex = getResizeHandleAt(selectedShape, x, y);
+                    if (handleIndex !== null) {
+                        isResizing = true;
+                        resizeHandleIndex = handleIndex;
+                    }
+                }
             }
         });
 
         canvas.addEventListener('mouseup', (event) => {
             if (event.button === 1) { // Middle mouse button
                 isPanning = false;
+            } else if (event.button === 0) { // Left mouse button
+                isResizing = false;
+                resizeHandleIndex = null;
             }
         });
 
         canvas.addEventListener('mousemove', (event) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left - panOffset.x;
+            const y = event.clientY - rect.top - panOffset.y;
+
             if (isPanning) {
                 const dx = event.clientX - startX;
                 const dy = event.clientY - startY;
 
-                panOffset.x += dx; // Update pan offset
+                panOffset.x += dx;
                 panOffset.y += dy;
 
                 startX = event.clientX;
                 startY = event.clientY;
 
                 drawShapes();
+            } else if (isResizing && selectedShape) {
+                const handle = getResizeHandle(selectedShape, resizeHandleIndex);
+                const dx = x - handle.x;
+                const dy = y - handle.y;
+
+                if (selectedShape.type === 'Circle') {
+                    selectedShape.radius = Math.max(10, Math.sqrt((x - selectedShape.position.x) ** 2 + (y - selectedShape.position.y) ** 2));
+                } else if (selectedShape.type === 'Rectangle') {
+                    if (resizeHandleIndex === 0) { // Bottom-right corner
+                        selectedShape.width = Math.max(10, x - selectedShape.position.x);
+                        selectedShape.height = Math.max(10, y - selectedShape.position.y);
+                    } else if (resizeHandleIndex === 1) { // Bottom-left corner
+                        selectedShape.width = Math.max(10, selectedShape.position.x + selectedShape.width - x);
+                        selectedShape.height = Math.max(10, y - selectedShape.position.y);
+                        selectedShape.position.x = x;
+                    } else if (resizeHandleIndex === 2) { // Top-right corner
+                        selectedShape.width = Math.max(10, x - selectedShape.position.x);
+                        selectedShape.height = Math.max(10, selectedShape.position.y + selectedShape.height - y);
+                        selectedShape.position.y = y;
+                    } else if (resizeHandleIndex === 3) { // Top-left corner
+                        selectedShape.width = Math.max(10, selectedShape.position.x + selectedShape.width - x);
+                        selectedShape.height = Math.max(10, selectedShape.position.y + selectedShape.height - y);
+                        selectedShape.position.x = x;
+                        selectedShape.position.y = y;
+                    }
+                }
+
+                drawShapes();
             }
         });
+
+        canvas.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left - panOffset.x;
+            const y = event.clientY - rect.top - panOffset.y;
+
+            const shape = getShapeAt(x, y);
+            if (shape) {
+                shapes = shapes.filter(s => s !== shape);
+                drawShapes();
+            }
+        });
+
+        function getShapeAt(x, y) {
+            for (let i = shapes.length - 1; i >= 0; i--) {
+                const shape = shapes[i];
+                if (shape.type === 'Circle') {
+                    const dx = x - shape.position.x;
+                    const dy = y - shape.position.y;
+                    if (Math.sqrt(dx * dx + dy * dy) <= shape.radius) {
+                        return shape;
+                    }
+                } else if (shape.type === 'Rectangle') {
+                    if (x >= shape.position.x && x <= shape.position.x + shape.width &&
+                        y >= shape.position.y && y <= shape.position.y + shape.height) {
+                        return shape;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function getResizeHandleAt(shape, x, y) {
+            const handles = getResizeHandles(shape);
+            for (let i = 0; i < handles.length; i++) {
+                const handle = handles[i];
+                if (x >= handle.x - 5 && x <= handle.x + 5 &&
+                    y >= handle.y - 5 && y <= handle.y + 5) {
+                    return i;
+                }
+            }
+            return null;
+        }
+
+        function getResizeHandles(shape) {
+            if (shape.type === 'Circle') {
+                return [
+                    { x: shape.position.x + shape.radius, y: shape.position.y } // Right handle
+                ];
+            } else if (shape.type === 'Rectangle') {
+                return [
+                    { x: shape.position.x + shape.width -5 , y: shape.position.y + shape.height -5 }, // Bottom-right
+                    { x: shape.position.x , y: shape.position.y + shape.height -5 }, // Bottom-left
+                    { x: shape.position.x + shape.width -5, y: shape.position.y  }, // Top-right
+                    { x: shape.position.x, y: shape.position.y } // Top-left
+                ];
+            }
+            return [];
+        }
+
+        function getResizeHandle(shape, index) {
+            const handles = getResizeHandles(shape);
+            return handles[index];
+        }
 
         function drawShapes() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
-            ctx.translate(panOffset.x, panOffset.y); // Apply pan offset
+            ctx.translate(panOffset.x, panOffset.y);
 
             shapes.forEach(shape => {
                 if (shape.type === 'Circle') {
                     ctx.beginPath();
                     ctx.arc(shape.position.x, shape.position.y, shape.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = 'blue';
+                    ctx.fillStyle = 'yellow';
                     ctx.fill();
                     ctx.closePath();
+
+                    // Draw resize handle
+                    const handles = getResizeHandles(shape);
+                    handles.forEach(handle => {
+                        ctx.fillStyle = 'blue';
+                        ctx.fillRect(handle.x - 5, handle.y - 5, 5, 5);
+                    });
                 } else if (shape.type === 'Rectangle') {
                     ctx.fillStyle = 'red';
                     ctx.fillRect(shape.position.x, shape.position.y, shape.width, shape.height);
+
+                    // Draw resize handles
+                    const handles = getResizeHandles(shape);
+                    handles.forEach(handle => {
+                        ctx.fillStyle = 'blue';
+                        ctx.fillRect(handle.x, handle.y, 5, 5);
+                    });
                 }
             });
 
@@ -110,11 +240,11 @@
 
         document.getElementById('exportButton').addEventListener('click', () => {
             const output = shapes.map(shape => {
-                const scale = 10; // Scale factor
+                const scale = 10;
                 if (shape.type === 'Circle') {
-                    return `this.state.colliders.push(new CircleCollider(${(shape.position.x ).toFixed(2)}, ${(shape.position.y ).toFixed(2)}, ${shape.radius / scale}));`;
+                    return `this.state.colliders.push(new CircleCollider(${(shape.position.x).toFixed(2)}, ${(shape.position.y).toFixed(2)}, ${shape.radius / scale}));`;
                 } else if (shape.type === 'Rectangle') {
-                    return `this.state.colliders.push(new RectangleCollider(${(shape.position.x ).toFixed(2)}, ${(shape.position.y ).toFixed(2)}, ${shape.width / scale}, ${shape.height / scale}));`;
+                    return `this.state.colliders.push(new RectangleCollider(${(shape.position.x).toFixed(2)}, ${(shape.position.y).toFixed(2)}, ${shape.width / scale}, ${shape.height / scale}));`;
                 }
             }).join('\n');
 

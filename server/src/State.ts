@@ -176,6 +176,20 @@ export class RectangleCollider extends Collider {
     }
 }
 
+export class TriangleCollider extends Collider {
+    @type(Position) point1: Position;
+    @type(Position) point2: Position;
+    @type(Position) point3: Position;
+
+
+    constructor(x: number, y: number, point1: Position, point2: Position , point3: Position) {
+        super(x, y, "Rectangle")
+        this.point1 = point1
+        this.point2 = point3
+        this.point3 = point3
+    }
+}
+
 class Option extends Schema {
     @type(["string"]) options = new ArraySchema<string>();
     @type("number") picked: number;

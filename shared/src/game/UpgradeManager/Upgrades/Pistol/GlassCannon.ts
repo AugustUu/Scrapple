@@ -15,6 +15,6 @@ export class GlassCannon extends Upgrade {
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {
-        gun.damage *=  (level + 0.5)
+        gun.damage *= (level + 0.5)
     }
 }

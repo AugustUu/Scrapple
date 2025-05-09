@@ -1,4 +1,4 @@
-import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite, BoundingBox } from "excalibur";
+import { Actor, Camera, Color, Engine, Entity, Keys, Scene, Vector, Rectangle, GraphicsComponent, TransformComponent, ImageSource, Sprite, BoundingBox, Loader, Sound, GraphicsGroup, vec} from "excalibur";
 import { ColliderComponent, RigidBodyComponent } from "../physics/PhysicsComponents";
 import RAPIER, { JointData, ImpulseJoint, Ray, RigidBodyType, Cuboid, Ball, RayColliderHit } from '@dimforge/rapier2d-compat';
 import { PhysicsSystem } from "../physics/PhysicsSystems";
@@ -13,6 +13,7 @@ import { NetworkUtils } from "../networking/NetworkUtils";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { Resources } from "../Resources";
 import { NetworkClient } from "../networking/NetworkClient";
+
 
 export class LocalPlayer extends Actor {
     joint!: ImpulseJoint;
@@ -39,9 +40,11 @@ export class LocalPlayer extends Actor {
 
     healthBarEntity: Entity
 
+    
 
     constructor(x: number, y: number) {
         super({name:"localplayer", x: x, y: y, /*radius: 20, color: Color.fromHex((document.getElementById('colorpicker') as any).value),*/ anchor: Vector.Half});
+
         
         this.jumpHeight = 60
         this.speed = 5
@@ -49,8 +52,6 @@ export class LocalPlayer extends Actor {
         this.maxGrappleSpeed = 175
 
         this.radius = NetworkUtils.getLocalState().radius
-
-
         this.maxJumps = 0
         this.airJumps = 0
         this.dashes = 0
@@ -58,31 +59,48 @@ export class LocalPlayer extends Actor {
 
         //engine.currentScene.camera.strategy.lockToActor(this);
         
+    
+    
+        let radius = NetworkUtils.getLocalState().radius
 
-
-
-
-        //this.sprite = new ImageSource("/Art/Character.png").toSprite()
-        const image = Resources.char1
-
-        /*new ImageSource("/Art/Character.png").load().then((tttt)=>{
-            console.log(tttt)
-        })*/
-        if (image.isLoaded()){
-            const sprite = new Sprite({
+        let image = Resources.PlayerOverlay
+        let image2 = Resources.PlayerFill
+    
+        let playerSprite: Sprite
+        let playerSprite2: Sprite
+        if (image.isLoaded() && image2.isLoaded()){
+            playerSprite = new Sprite({
                 image: image,
                 destSize: {
-                    width: 2.1*this.radius,
-                    height: 2.1*this.radius
+                    width: 2*this.radius,
+                    height: 2*radius
                 }
             })
-            this.sprite = sprite
+    
+            playerSprite2 = new Sprite({
+                image: image2,
+                destSize: {
+                    width: 2*radius,
+                    height: 2*radius
+                }
+            })
+    
         }
         else{
             console.log("attempted to use unloaded sprite")
         }
+    
+        playerSprite2.tint = Color.fromHex( NetworkUtils.getLocalClient().color)
 
-        this.graphics.add(this.sprite)
+        this.graphics.add(new GraphicsGroup({
+            members: [
+              { graphic: playerSprite2, offset: vec(0, 0)},
+              { graphic: playerSprite, offset: vec(0, 0)}
+            ]
+          }));
+        
+    
+        //this.addComponent(this.graphics)
 
 
         this.grounded = false
@@ -276,28 +294,30 @@ export class LocalPlayer extends Actor {
 
     public update(engine: Engine, delta: number) {
         
-
         if(Networking.client.room == null || this.isKilled()){ // who ever designed it so it rarely will update even when killed is a dumbass
             return
         }
+
 
         this.move(engine, delta)
         this.grapple(engine, delta)
 
 
-
+        const Shotgun = new Sound('./Sound/Gun/Shotgun.mp3');
         if (engine.input.keyboard.wasPressed(Keys.R)) {
+            Shotgun.play(); // plays the sound?
             Networking.client.room?.send(C2SPacket.Reload, {})
         }
+
 
 
         if (MouseInput.mouseButtons.left) {
             if (Guns.get(NetworkUtils.getLocalState().gun.gunID).automatic) {
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI, homeRadius: 300, homeStrength: 0.01 })
+                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI})
             } else if (this.shooting == false) {
                 let angle = Math.atan2(this.pos.y - engine.input.pointers.primary.lastWorldPos.y, this.pos.x - engine.input.pointers.primary.lastWorldPos.x);
-                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI, homeRadius: 300, homeStrength: 0.01  })
+                Networking.client.room?.send(C2SPacket.Shoot, { angle: angle - Math.PI })
                 this.shooting = true;
             }
         }else{

@@ -18,5 +18,6 @@ export class GetShrunk extends Upgrade {
 
     clientOnPlayerConstructed(level: number, player: LocalPlayer): void {
         player.speedMult += 0.2 * level
+        player.jumpHeight += 10 * level
     }
 }

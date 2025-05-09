@@ -3,6 +3,7 @@ import { Game } from './scenes/Game';
 
 import { MainMenu } from './scenes/MainMenu';
 import RAPIER from '@dimforge/rapier2d-compat';
+import { Sound } from 'excalibur'
 import { MouseInput } from './util';
 import { StartScreen } from './scenes/StartScreen';
 import { EndRoundScreen } from './scenes/EndRoundScreen';
@@ -17,7 +18,7 @@ export const engine = new Engine({
     fixedUpdateFps: 120,
     width: 1920,
     height: 1080,
-    displayMode: DisplayMode.FitScreenAndFill,
+    displayMode: DisplayMode.FitScreenAndZoom,
     canvasElementId: 'game',
     antialiasing: {
         pixelArtSampler: true, // turns on the sub-pixel shader for pixel art
@@ -26,6 +27,14 @@ export const engine = new Engine({
         filtering: ImageFiltering.Pixel, // hints the image loader to use blended filtering
         canvasImageRendering: 'pixelated', // applies the 'auto'-matic css to the canvas CSS image-rendering
     },
+    /*
+    const sound = new Sound('./Sound/Guns/Shotgun.mp3', './Sound/Guns/fallback.wav');
+
+    const loader = new Loader([sound]);
+    Game.start(loader);
+    sound.play(0.5);*/
+
+
     scenes: {
         mainMenu: MainMenu,
         game: Game,
@@ -37,6 +46,12 @@ export const engine = new Engine({
     },
     pixelRatio: 2
 });
+const Shotgun = new Sound('./Sound/Gun/Shotgun.mp3');
+const Rifle = new Sound('./Sound/Gun/Rifle.mp3');
+const Pistol = new Sound('./Sound/Gun/Pistol.mp3')
+const Sniper = new Sound('./Sound/Gun/Sniper.mp3')
+const SMG = new Sound('./Sound/Gun/SMG.mp3')
+
 
 async function init() {
 
@@ -50,6 +65,8 @@ async function init() {
     await engine.start(loader)
     loader.load()
     engine.goToScene("mainMenu");
+
+
 
 
 

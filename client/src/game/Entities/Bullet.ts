@@ -1,7 +1,8 @@
-import { Circle, Color, Component, CoordPlane, Entity, GraphicsComponent, Query, System, SystemType, TransformComponent, vec, Vector, World } from "excalibur";
+import { Circle, Color, Component, CoordPlane, EmitterType, Entity, GraphicsComponent, ParticleEmitter, Query, System, SystemType, TransformComponent, vec, Vector, World } from "excalibur";
 import { Networking } from "../../networking/Networking";
 import { lerp } from "../../util";
 import { Bullet, CircleCollider, Collider, Player, RectangleCollider } from "server/src/State";
+import { engine } from "../..";
 
 
 export class BulletComponent extends Component {
@@ -36,6 +37,7 @@ export function createBullet(bullet: Bullet, id: string): Entity {
     transform.pos = vec(bullet.position.x, bullet.position.y);
 
     entity.addComponent(transform);
+
 
 
     return entity;

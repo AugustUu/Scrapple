@@ -8,7 +8,6 @@ export var C2SPacket = {
     SwapGun: "swapgun",
     Grapple: "grapple",
     EndGrapple: "endgrapple",
-    StartGame: "startgame",
     Ready: "ready",
     PickGun: "pickgun",
     PickUpgrade: "pickupgrade",
