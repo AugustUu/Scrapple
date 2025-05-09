@@ -29,7 +29,7 @@ export class EndGameCommand extends Command<GameRoom, {}> {
         }
         else{
             setTimeout(() => {
-                this.room.broadcast(S2CPackets.EndGame)
+                this.room.broadcast(S2CPackets.EndGame,{winner: Array.from(this.state.players.values())[0].name})
                 this.state.players = new MapSchema<Player>();
             }, 100)
         }

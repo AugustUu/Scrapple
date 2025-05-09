@@ -43,7 +43,8 @@ export class Game extends Scene {
         this.engine.currentScene.add(circle)
 
 
-        Networking.client.room!.onMessage(S2CPackets.EndGame,()=>{
+        Networking.client.room!.onMessage(S2CPackets.EndGame,({winner})=>{
+            document.getElementById("RoundWinner").innerText = "Winner: " + winner
             if(LocalPlayerInstance){
                 if(LocalPlayerInstance.line){
                     LocalPlayerInstance.line.kill()
