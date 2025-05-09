@@ -6,6 +6,7 @@ export const Resources = {
     char2: new ImageSource("/Art/Green.png"),
     PlayerFill: new ImageSource("/Art/Player/Fill.png"),
     PlayerOverlay: new ImageSource("/Art/Player/Outline.png"),
+
 } as const
 
 
