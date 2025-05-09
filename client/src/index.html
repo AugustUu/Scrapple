@@ -621,6 +621,11 @@
             <div class="fixed left-15 top-10">
                 Server Code: <h3 id="endRoundServerCode"></h3>
             </div>
+
+            <div id="RoundWinner" class="fixed left-50 top-20 center-x">
+                wwwadwadasd
+            </div>
+
             <div class="fixed left-25 top-50 center-x">
                 <button id="upgrade4Button" class="optionButton"></button>
             </div>
@@ -652,22 +657,30 @@
 
             <div id="creditsText" class = "fixed center-x top-30">
                 <h2>
+                -Devs-<br>
                 August: Knows how the server works - good at convincing us not to use Unity - Spent eight months making reloading work<br>
                 Takumi: Founder of Bunkashit Games - Knows how grappling works - made most of the maps - good at math<br>
-                Seth:  Wrote upgrade descriptions and credits screen - Good at implementing a dozen smaller features - created Sludge<br>
-                Sevin: good at graphics
-                Keiden: Suggested some level designs
+                Seth:  Wrote upgrade descriptions and credits screen - Good at making a zillion small features - created Sludge<br>
+                Sevin: good at graphics<br>
+                -Misc-<br>
+                Keiden: Suggested some level designs<br>
+                Ian: Complained about grappling until Takumi fixed it<br>
+                Kai: Late to class every time
                 </h2>
             </div>
 
-            <div class = "fixed center-x top-60">
+            <div class = "fixed center-x top-70">
                 <button id="mainMenuButton">Main Menu</button>
             </div>
         </div>
 
         <div id="endGameScreen">
-            <div id="endgameText" class="fixed center-x top-20 text-center">
+            <div id="endgameText" class="fixed center-x top-40 text-center">
                 Yippee, <div id="whoWon"></div> wins the game!!
+            </div>
+            <div class="fixed center-x top-10 text-center">
+                Players:
+                <ul id="playerListEnd" class="playerList"></ul>
             </div>
             <div class = "fixed center-x top-60">
                 <button id="nextGameButton">Next Game</button>

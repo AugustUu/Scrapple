@@ -55,38 +55,16 @@ export class StartScreen extends Scene {
         this.playerList.innerHTML = "";
         this.readyButton.innerHTML = "Ready"
 
-        Networking.client.room!.state.clients.forEach((client) => {
-            if (client.ready) {
-                this.playerList.innerHTML += `<li style="color:MediumSeaGreen;">${client.name}</li>`
-            }
-            else {
-                this.playerList.innerHTML += `<li>${client.name}</li>`
-            }
-        })
+
+        this.checkReady()
 
         Networking.client.room!.state.clients.onChange(() => {
-            this.playerList.innerHTML = ""
-            Networking.client.room!.state.clients.forEach((client) => {
-                if (client.ready) {
-                    this.playerList.innerHTML += `<li style="color:MediumSeaGreen;">${client.name}</li>`
-                }
-                else {
-                    this.playerList.innerHTML += `<li>${client.name}</li>`
-                }
-            })
+            this.checkReady()
         })
 
         Networking.client.room!.onMessage(S2CPackets.Readied, () => {
             setTimeout(() => {
-                this.playerList.innerHTML = ""
-                Networking.client.room!.state.clients.forEach((client) => {
-                    if (client.ready) {
-                        this.playerList.innerHTML += `<li style="color:MediumSeaGreen;">${client.name}</li>`
-                    }
-                    else {
-                        this.playerList.innerHTML += `<li>${client.name}</li>`
-                    }
-                })
+                this.checkReady()
             }, 50)
         })
 
@@ -124,5 +102,17 @@ export class StartScreen extends Scene {
 
     public onDeactivate(context: SceneActivationContext): void {
         this.rootElement.style.display = "none";
+    }
+
+    private checkReady(){
+        this.playerList.innerHTML = ""
+        Networking.client.room!.state.clients.forEach((client) => {
+            if (client.ready) {
+                this.playerList.innerHTML += `<li style="color:MediumSeaGreen;">${client.name}</li>`
+            }
+            else {
+                this.playerList.innerHTML += `<li>${client.name}</li>`
+            }
+        })
     }
 }

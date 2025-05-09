@@ -20,7 +20,7 @@ export class EndGameCommand extends Command<GameRoom, {}> {
             client.randomizeUpgradeOptions(true, client.gunOptions.options[client.gunOptions.picked])
         })
 
-        if(this.state.clients.get(this.state.players.values().next().value.id).wins == 8){
+        if(this.state.clients.get(this.state.players.values().next().value.id).wins == 1){
             this.state.game.gameEnded = true;
             setTimeout(() => {
                 this.room.broadcast(S2CPackets.WinGame, {id: this.state.players.values().next().value.name})
@@ -29,7 +29,7 @@ export class EndGameCommand extends Command<GameRoom, {}> {
         }
         else{
             setTimeout(() => {
-                this.room.broadcast(S2CPackets.EndGame)
+                this.room.broadcast(S2CPackets.EndGame,{winner: Array.from(this.state.players.values())[0].name})
                 this.state.players = new MapSchema<Player>();
             }, 100)
         }
