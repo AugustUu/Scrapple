@@ -217,7 +217,7 @@ export class GameRoom extends Room<State> {
 
         if (this.state.players.size == 1 && this.state.game.inRound) {
 
-            //this.dispatcher.dispatch(new EndGameCommand(), {});
+            this.dispatcher.dispatch(new EndGameCommand(), {});
 
         }
 

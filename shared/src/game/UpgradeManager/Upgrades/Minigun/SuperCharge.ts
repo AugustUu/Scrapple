@@ -4,9 +4,9 @@ import { Upgrade } from "../../Upgrade"
 import { registerUpgrade } from "../../UpgradeManager"
 
 @registerUpgrade
-export class AmmoBelt extends Upgrade {
+export class SuperCharge extends Upgrade {
     constructor() {
-        super("AmmoBelt", 3, null, "Minigun", "More ammo Move slower")
+        super("SuperCharge", 3, null, "Minigun", "Shoot faster Shrink bullets")
     }
     
     clientOnPlayerConstructed(level: number, player: LocalPlayer){
@@ -14,8 +14,8 @@ export class AmmoBelt extends Upgrade {
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {
-        gun.ammo += 25 * level
-        gun.reloadDelay *= 1 + (0.15 * level)
+        gun.fireDelay -= (100*level)
+        gun.bulletSize -= 1 * level
     }
 
     
