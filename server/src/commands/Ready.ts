@@ -37,7 +37,7 @@ export class ReadyCommand extends Command<GameRoom, { client: Client }> {
                     otherClient.ready = false
                     let pickedUpgradeID = otherClient.upgradeOptions.options[otherClient.upgradeOptions.picked]
     
-                    console.log("GOT UPGRADE",this.state.clients.get(id).upgradeOptions.options[otherClient.upgradeOptions.picked])
+                    //console.log("GOT UPGRADE",this.state.clients.get(id).upgradeOptions.options[otherClient.upgradeOptions.picked])
     
                     if (Upgrades.has(pickedUpgradeID)){
                         if(otherClient.upgrades.has(pickedUpgradeID)){
