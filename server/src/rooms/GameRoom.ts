@@ -16,7 +16,7 @@ import { MoveCommand } from "../commands/Move";
 import { EndGrappleCommand, StartGrappleCommand } from "../commands/Grapple";
 import { EndGameCommand } from "../commands/EndGame";
 import { UpgradeTickCommand } from "../commands/UpgradeTick";
-import { initStages, Stage, stageList } from "../Stage";
+import { initStages, Stage, stageList } from "shared/src/game/Stage";
 
 
 
@@ -35,7 +35,9 @@ export class GameRoom extends Room<State> {
         this.state.game.inRound = false;
 
         initStages()
-        let stage = stageList.get("stage7")
+        //this.state.game.stage = Array.from(stageList.keys())[Math.floor(Math.random() * Array.from(stageList.keys()).length)]
+        this.state.game.stage = "stage5"
+        let stage = stageList.get(this.state.game.stage)
 
         for(let collider of stage.colliderList){
             this.state.colliders.push(collider)

@@ -22,7 +22,7 @@ export class ReadyCommand extends Command<GameRoom, { client: Client }> {
             if (!this.state.game.inRound) {
                 this.state.game.inRound = true;
                 this.state.game.roundStartTime = Date.now()
-    
+                
                 this.state.clients.forEach((otherClient, id) => {
                    
                     otherClient.ready = false
@@ -37,14 +37,14 @@ export class ReadyCommand extends Command<GameRoom, { client: Client }> {
                             }
                         }
                         else{
-                            otherClient.upgrades.set(pickedUpgradeID, new UpgradeState(pickedUpgradeID))
+                            otherClient.upgrades.set(pickedUpgradeID, new UpgradeState(pickedUpgradeID)) 
                         }
                     }
     
                     this.state.players.set(id, new Player(otherClient.name, id, otherClient));
                 })
     
-                this.room.broadcast(S2CPackets.StartGame)
+                this.room.broadcast(S2CPackets.StartGame, {stage: this.state.game.stage})
             }
             
         }

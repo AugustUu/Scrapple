@@ -11,6 +11,7 @@ import { Bullet, CircleCollider, Collider, Player, RectangleCollider } from "ser
 import { S2CPackets } from "shared/src/networking/Packet";
 import { Hud } from "../ui/Hud";
 import { NetworkUtils } from "../networking/NetworkUtils";
+import { initStages, stageList } from "../../../shared/src/game/Stage";
 
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
 export var BulletEntities: Map<String, Entity<BulletComponent>> = new Map();
@@ -30,6 +31,7 @@ export class Game extends Scene {
         this.camera.zoom = 0.8 - (NetworkUtils.getLocalUpgrade("Scope") * 0.2)
 
         Hud.initMain()
+        initStages()
 
         const circle = new Entity({
             name: "circle",
@@ -77,9 +79,12 @@ export class Game extends Scene {
 
 
         Networking.client.room!.state.players.onAdd((playerState: Player, id: string) => {
+            let spawnPosList = stageList.get(Networking.client.room!.state.game.stage).spawnPosList
+            let spawnPos = spawnPosList[Math.floor(Math.random() * spawnPosList.length)]
             if (Networking.client.clientId == id) {
                 Hud.initNetwork()
-                LocalPlayerInstance = new LocalPlayer((Math.floor(Math.random() * (400 - (-400) + 1)) - 400), 400); // add local player
+                LocalPlayerInstance = new LocalPlayer(spawnPos.x, spawnPos.y); // add local player
+                console.log("added new player")
                 this.add(LocalPlayerInstance)
             } else {
                 let ent = createOtherPlayerEntity(playerState, id);

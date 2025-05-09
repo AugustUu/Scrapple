@@ -1,6 +1,6 @@
-import { Guns } from "shared/src/game/GunManager/GunManager";
-import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
-import { CircleCollider, Collider, Position, RectangleCollider } from "./State";
+import { Guns } from "./GunManager/GunManager";
+import { Upgrades } from "./UpgradeManager/UpgradeManager";
+import { CircleCollider, Collider, Position, RectangleCollider } from "../../../server/src/State";
 
 
 export class Stage{
@@ -14,7 +14,7 @@ export class Stage{
 }
 
 
-export const stageList: Map<String, Stage> = new Map()
+export const stageList: Map<string, Stage> = new Map()
 
 export function initStages(){
     stageList.set("stage1", new Stage(
@@ -95,7 +95,15 @@ export function initStages(){
             new RectangleCollider(-400, -400, 4, 4)
         ),
         new Array<Position>(
-            new Position(0, 0)
+            new Position(0, -150),
+            new Position(800, -150),
+            new Position(-800, -150),
+            new Position(0, 650),
+            new Position(800, 650),
+            new Position(-800, 650),
+            new Position(0, -950),
+            new Position(800, -950),
+            new Position(-800, -950)
         )
     ))
 
