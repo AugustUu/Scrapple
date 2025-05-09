@@ -20,10 +20,10 @@ export class ReadyCommand extends Command<GameRoom, { client: Client }> {
         }
         if(allReady){
             if(this.state.game.gameEnded){
-                console.log("pee pee")
                 this.state.game.gameEnded = false;
                 this.state.clients.forEach((otherClient, id) => {
                     otherClient.ready = false;
+                    otherClient.wins = 0;
                 })
                 allReady = false;
                 this.room.broadcast(S2CPackets.InitClient)
