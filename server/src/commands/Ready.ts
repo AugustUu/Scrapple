@@ -19,7 +19,16 @@ export class ReadyCommand extends Command<GameRoom, { client: Client }> {
             allReady = allReady && otherClient.ready
         }
         if(allReady){
-            if (!this.state.game.inRound) {
+            if(this.state.game.gameEnded){
+                this.state.game.gameEnded = false;
+                this.state.clients.forEach((otherClient, id) => {
+                    otherClient.ready = false;
+                    otherClient.wins = 0;
+                })
+                allReady = false;
+                this.room.broadcast(S2CPackets.InitClient)
+            }
+            else if (!this.state.game.inRound) {
                 this.state.game.inRound = true;
                 this.state.game.roundStartTime = Date.now()
     

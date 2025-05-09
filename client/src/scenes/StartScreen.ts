@@ -53,6 +53,7 @@ export class StartScreen extends Scene {
         this.serverCode.innerHTML = Networking.client.room.id
 
         this.playerList.innerHTML = "";
+        this.readyButton.innerHTML = "Ready"
 
         Networking.client.room!.state.clients.forEach((client) => {
             if (client.ready) {
