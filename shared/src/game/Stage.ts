@@ -26,7 +26,11 @@ export function initStages(){
             new CircleCollider(200, -300, 5)
         ),
         new Array<Position>(
-            new Position(0, 0)
+            new Position(0, 350),
+            new Position(-350, 350),
+            new Position(350, 350),
+            new Position(700, -50),
+            new Position(-700, -50)
         )
     ))
 
@@ -41,7 +45,11 @@ export function initStages(){
             new CircleCollider(700, 800, 5)
         ),
         new Array<Position>(
-            new Position(0, 0)
+            new Position(0, 350),
+            new Position(-350, 350),
+            new Position(350, 350),
+            new Position(-900, 50),
+            new Position(900, 50)
         )
     ))
 
@@ -57,7 +65,14 @@ export function initStages(){
             new CircleCollider(1100, 500, 5)
         ),
         new Array<Position>(
-            new Position(0, 0)
+            new Position(-720, 50),
+            new Position(-480, 50),
+            new Position(-700, 650),
+            new Position(-500, 650),
+            new Position(720, 50),
+            new Position(480, 50),
+            new Position(700, 650),
+            new Position(500, 650)
         )
     ))
 
@@ -74,7 +89,15 @@ export function initStages(){
             new RectangleCollider(0, -1600, 45, 4)
         ),
         new Array<Position>(
-            new Position(0, 0)
+            new Position(0, 1450),
+            new Position(0, 1050),
+            new Position(0, 650),
+            new Position(0, 250),
+            new Position(0, -150),
+            new Position(0, -550),
+            new Position(0, -950),
+            new Position(0, -1350),
+            new Position(0, -1750)
         )
     ))
 
@@ -95,15 +118,15 @@ export function initStages(){
             new RectangleCollider(-400, -400, 4, 4)
         ),
         new Array<Position>(
-            new Position(0, -150),
-            new Position(800, -150),
-            new Position(-800, -150),
-            new Position(0, 650),
-            new Position(800, 650),
-            new Position(-800, 650),
-            new Position(0, -950),
-            new Position(800, -950),
-            new Position(-800, -950)
+            new Position(0, -200),
+            new Position(800, -200),
+            new Position(-800, -200),
+            new Position(0, 600),
+            new Position(800, 600),
+            new Position(-800, 600),
+            new Position(0, -1000),
+            new Position(800, -1000),
+            new Position(-800, -1000)
         )
     ))
 
@@ -126,7 +149,14 @@ export function initStages(){
             new CircleCollider(0, -800, 8)
         ),
         new Array<Position>(
-            new Position(0, 0)
+            new Position(220, -150),
+            new Position(0, -675),
+            new Position(800, -150),
+            new Position(692.8, -550),
+            new Position(692.8, 250),
+            new Position(-800, -150),
+            new Position(-692.8, -550),
+            new Position(-692.8, 250),
         )
     ))
 
@@ -141,7 +171,14 @@ export function initStages(){
             new RectangleCollider(-400, -290, 8, 19)
         ),
         new Array<Position>(
-            new Position(0, 0)
+            new Position(0, -150),
+            new Position(230, 250),
+            new Position(0, 250),
+            new Position(-230, 250),
+            new Position(-400, 20),
+            new Position(400, 20),
+            new Position(-250, -550),
+            new Position(250, -550)
         )
     ))
 }

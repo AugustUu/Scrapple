@@ -35,8 +35,8 @@ export class GameRoom extends Room<State> {
         this.state.game.inRound = false;
 
         initStages()
-        //this.state.game.stage = Array.from(stageList.keys())[Math.floor(Math.random() * Array.from(stageList.keys()).length)]
-        this.state.game.stage = "stage5"
+        this.state.game.stage = Array.from(stageList.keys())[Math.floor(Math.random() * Array.from(stageList.keys()).length)]
+        //this.state.game.stage = "stage7"
         let stage = stageList.get(this.state.game.stage)
 
         for(let collider of stage.colliderList){
