@@ -14,7 +14,6 @@ export class Credits extends Scene {
         this.mainMenuButton.addEventListener("click",()=>{
             engine.goToScene("mainMenu")
         })
-
     }
 
     public onActivate(context: SceneActivationContext<unknown>): void {

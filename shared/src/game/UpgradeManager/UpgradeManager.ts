@@ -17,6 +17,8 @@ import("./Upgrades/Universal/GetShrunk")
 
 import("./Upgrades/Pistol/GlassCannon")
 import("./Upgrades/Pistol/Akimbo")
+import("./Upgrades/Pistol/Bonk")
+
 
 import("./Upgrades/Sniper/Reversenizer")
 import("./Upgrades/Sniper/Scope")
@@ -30,10 +32,10 @@ import("./Upgrades/Shotgun/BuckShot")
 import("./Upgrades/Shotgun/SawedOff")
 
 import("./Upgrades/Minigun/Ammobelt")
+import("./Upgrades/Minigun/SuperCharge")
 
 import("./Upgrades/Rifle/Porcupine")
 import("./Upgrades/Rifle/SharpShooter")
-
 
 
 

@@ -268,7 +268,7 @@ export class PlayerClient extends Schema {
             }
             
             if (upgradeMap.get(upgrade[0]).gunDep != undefined) {
-                console.log(heldGunId, " ", upgradeMap.get(upgrade[0]).gunDep)
+                //console.log(heldGunId, " ", upgradeMap.get(upgrade[0]).gunDep)
                 if (!checkGunDep || heldGunId == undefined) {
                     upgradeMap.delete(upgrade[0])
                     continue
@@ -300,6 +300,7 @@ export class PlayerClient extends Schema {
 }
 
 export class Game extends Schema {
+    @type("boolean") gameEnded: boolean;
     @type("boolean") inRound: boolean;
     @type("number") roundsPlayed: number;
     @type("number") roundStartTime: number;
