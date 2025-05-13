@@ -16,6 +16,7 @@ import { EndGameScreen } from "./EndGameScreen";
 
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
 export var BulletEntities: Map<String, Entity<BulletComponent>> = new Map();
+export var ColliderList: Array<Entity> = new Array();
 export var LocalPlayerInstance: LocalPlayer;
 
 export class Game extends Scene {
@@ -73,17 +74,20 @@ export class Game extends Scene {
         })
 
         Networking.client.room!.state.colliders.onAdd((collider: any, key: number) => {
+            let newCollider
             if (collider.type == "Circle") {
-                engine.add(createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Circle', radius: collider.radius }))
+                newCollider = (createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Circle', radius: collider.radius }))
             }
             if (collider.type == "Rectangle") {
-                engine.add(createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Rectangle',  halfWidth: collider.width , halfHeight: collider.height }))
+                newCollider = (createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Rectangle',  halfWidth: collider.width , halfHeight: collider.height }))
             }
             if (collider.type == "Triangle") {
-                engine.add(createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Triangle',  point1: collider.point1, point2: collider.point2, point3: collider.point3  }))
+                newCollider = (createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Triangle',  point1: collider.point1, point2: collider.point2, point3: collider.point3  }))
             }
+            ColliderList.push(newCollider)
+            engine.add(newCollider)
+            console.log("added " + collider.type)
         })
-
 
         Networking.client.room!.state.players.onAdd((playerState: Player, id: string) => {
             let spawnPosList = stageList.get(Networking.client.room!.state.game.stage).spawnPosList

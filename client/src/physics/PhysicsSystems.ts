@@ -37,7 +37,7 @@ export class PhysicsSystem extends System {
             description.setTranslation(pos.x / 10, -(pos.y / 10))
             rigidBody.body = PhysicsSystem.physicsWorld.createRigidBody(description);
 
-            console.log(description.translation)
+            //console.log(description.translation)
 
             entity.on("kill", function (deadEntity) {
                 let rigidBody = deadEntity.target.get(RigidBodyComponent)

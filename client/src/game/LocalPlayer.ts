@@ -239,7 +239,7 @@ export class LocalPlayer extends Actor {
             }
         }
         
-        console.log(rigidBody.translation())
+        //console.log(rigidBody.translation())
     }
 
     private grapple(engine: Engine, delta: number) {
