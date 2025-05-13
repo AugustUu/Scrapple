@@ -14,5 +14,4 @@ export class SharpShooter extends Upgrade {
         gun.spread = Math.min(0, gun.spread - (-3 * level))
     }
 
-
 }

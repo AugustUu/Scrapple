@@ -1,4 +1,4 @@
-import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering, Loader, DefaultLoader} from 'excalibur';
+import { Engine, Color, DisplayMode, Actor, CollisionType, Scene, Resolution, ImageFiltering, Loader, DefaultLoader, ImageSource} from 'excalibur';
 import { Game } from './scenes/Game';
 
 import { MainMenu } from './scenes/MainMenu';
@@ -9,7 +9,7 @@ import { StartScreen } from './scenes/StartScreen';
 import { EndRoundScreen } from './scenes/EndRoundScreen';
 import { Credits } from './scenes/Credits';
 import { ExcaliburGraphicsContextWebGL } from 'excalibur';
-import { Resources } from './Resources';
+import { Images, Sounds } from './Resources';
 import { EndGameScreen } from './scenes/EndGameScreen';
 
 
@@ -46,11 +46,11 @@ export const engine = new Engine({
     },
     pixelRatio: 2
 });
-const Shotgun = new Sound('./Sound/Gun/Shotgun.mp3');
+/*const Shotgun = new Sound('./Sound/Gun/Shotgun.mp3');
 const Rifle = new Sound('./Sound/Gun/Rifle.mp3');
 const Pistol = new Sound('./Sound/Gun/Pistol.mp3')
 const Sniper = new Sound('./Sound/Gun/Sniper.mp3')
-const SMG = new Sound('./Sound/Gun/SMG.mp3')
+const SMG = new Sound('./Sound/Gun/SMG.mp3')*/
 
 
 async function init() {
@@ -59,8 +59,11 @@ async function init() {
     const loader = new DefaultLoader;
 
     
-    for (let resource of Object.values(Resources)){
-        loader.addResource(resource);
+    for (let image of Object.values(Images)){
+        loader.addResource(image);
+    }
+    for (let sound of Object.values(Sounds)){
+        loader.addResource(sound)
     }
     await engine.start(loader)
     loader.load()
