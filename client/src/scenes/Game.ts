@@ -39,6 +39,7 @@ export class Game extends Scene {
             name: "circle",
         });
 
+
         let graphics = new GraphicsComponent();
         graphics.use(new Circle({ radius: 2000, color: Color.fromRGB(157, 174, 201) }));
         circle.addComponent(graphics)
@@ -61,6 +62,9 @@ export class Game extends Scene {
                     line.kill()
                 }
             })
+            for(let collider of ColliderList){
+                collider.kill()
+            }
 
             BulletEntities.forEach((bullet)=>{
                 bullet.kill()

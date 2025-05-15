@@ -15,12 +15,7 @@ export class EndGameCommand extends Command<GameRoom, {}> {
 
         this.state.clients.get(this.state.players.values().next().value.id).wins += 1
 
-        this.state.game.stage = Array.from(stageList.keys())[Math.floor(Math.random() * Array.from(stageList.keys()).length)]
-        let stage = stageList.get(this.state.game.stage)
         
-        for(let collider of stage.colliderList){
-            this.state.colliders.push(collider)
-        }
         
         this.state.clients.forEach((client, id) => {
             client.randomizeUpgradeOptions(true, client.gunOptions.options[client.gunOptions.picked])
@@ -35,7 +30,12 @@ export class EndGameCommand extends Command<GameRoom, {}> {
         }
         else{
             setTimeout(() => {
-                this.room.broadcast(S2CPackets.EndGame,{winner: Array.from(this.state.players.values())[0].name})
+                let winner = ""
+                if(Array.from(this.state.players.values())[0]){
+                    winner = Array.from(this.state.players.values())[0].name
+                }
+                
+                this.room.broadcast(S2CPackets.EndGame,{winner: winner})
                 this.state.players = new MapSchema<Player>();
             }, 100)
         }

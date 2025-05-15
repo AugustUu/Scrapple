@@ -6,16 +6,12 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Grappler extends Upgrade {
     constructor() {
-        super("Grappler", 10, null, null, "UNIMPLEMENTED")
+        super("Grappler", 10, null, null, "makes your grappling hook better")
     }
 
-
-    serverOnPlayerConstructed(level: number, player: Player): void {
-        player.maxHealth += 50 * level;
-        player.health += 50 * level;
-    }
 
     clientOnPlayerConstructed(level: number, player: LocalPlayer): void {
-        player.speedMult -= 0.3 * level
+        player.maxGrappleSpeed += 25 * level
+        player.grappleCooldown /= 2 * level
     }
 }
