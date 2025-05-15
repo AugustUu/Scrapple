@@ -15,12 +15,7 @@ export class EndGameCommand extends Command<GameRoom, {}> {
 
         this.state.clients.get(this.state.players.values().next().value.id).wins += 1
 
-        this.state.game.stage = Array.from(stageList.keys())[Math.floor(Math.random() * Array.from(stageList.keys()).length)]
-        let stage = stageList.get(this.state.game.stage)
         
-        for(let collider of stage.colliderList){
-            this.state.colliders.push(collider)
-        }
         
         this.state.clients.forEach((client, id) => {
             client.randomizeUpgradeOptions(true, client.gunOptions.options[client.gunOptions.picked])

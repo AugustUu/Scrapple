@@ -61,6 +61,9 @@ export class Game extends Scene {
                     line.kill()
                 }
             })
+            for(let collider of ColliderList){
+                collider.kill()
+            }
 
             BulletEntities.forEach((bullet)=>{
                 bullet.kill()
