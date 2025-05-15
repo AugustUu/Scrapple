@@ -34,8 +34,8 @@ import("./Upgrades/Shotgun/SawedOff")
 import("./Upgrades/Minigun/Ammobelt")
 import("./Upgrades/Minigun/SuperCharge")
 
-import("./Upgrades/Rifle/Porcupine")
-import("./Upgrades/Rifle/SharpShooter")
+import("./Upgrades/Pistol/Porcupine")
+import("./Upgrades/Universal/SharpShooter")
 
 
 
