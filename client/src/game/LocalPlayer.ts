@@ -11,7 +11,7 @@ import { Guns, idList } from "shared/src/game/GunManager/GunManager";
 import { engine } from "..";
 import { NetworkUtils } from "../networking/NetworkUtils";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
-import { Resources } from "../Resources";
+import { Images } from "../Resources";
 import { NetworkClient } from "../networking/NetworkClient";
 
 
@@ -63,8 +63,8 @@ export class LocalPlayer extends Actor {
     
         let radius = NetworkUtils.getLocalState().radius
 
-        let image = Resources.PlayerOverlay
-        let image2 = Resources.PlayerFill
+        let image = Images.PlayerOverlay
+        let image2 = Images.PlayerFill
     
         let playerSprite: Sprite
         let playerSprite2: Sprite
@@ -239,7 +239,7 @@ export class LocalPlayer extends Actor {
             }
         }
         
-        console.log(rigidBody.translation())
+        //console.log(rigidBody.translation())
     }
 
     private grapple(engine: Engine, delta: number) {

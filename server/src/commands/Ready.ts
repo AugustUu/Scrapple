@@ -5,6 +5,7 @@ import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
 import { Player, UpgradeState } from "../State";
 import { S2CPackets } from "shared/src/networking/Packet";
 import { Client } from "colyseus";
+import { stageList } from "shared/src/game/Stage";
 
 // code for random upgrades that nshould run every tick
 export class ReadyCommand extends Command<GameRoom, { client: Client }> {
@@ -31,7 +32,6 @@ export class ReadyCommand extends Command<GameRoom, { client: Client }> {
             else if (!this.state.game.inRound) {
                 this.state.game.inRound = true;
                 this.state.game.roundStartTime = Date.now()
-                
                 this.state.clients.forEach((otherClient, id) => {
                    
                     otherClient.ready = false

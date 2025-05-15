@@ -14,5 +14,4 @@ export class SharpShooter extends Upgrade {
         gun.reloadDelay += 250 * level
     }
 
-
 }
