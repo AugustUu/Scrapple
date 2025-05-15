@@ -239,7 +239,7 @@ export class LocalPlayer extends Actor {
             }
         }
         
-        
+        //console.log(rigidBody.translation())
     }
 
     private grapple(engine: Engine, delta: number) {
@@ -301,6 +301,8 @@ export class LocalPlayer extends Actor {
 
         this.move(engine, delta)
         this.grapple(engine, delta)
+
+        
 
 
         const Shotgun = new Sound('./Sound/Gun/Shotgun.mp3');

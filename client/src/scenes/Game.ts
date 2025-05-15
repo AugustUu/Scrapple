@@ -11,10 +11,12 @@ import { Bullet, CircleCollider, Collider, Player, RectangleCollider } from "ser
 import { S2CPackets } from "shared/src/networking/Packet";
 import { Hud } from "../ui/Hud";
 import { NetworkUtils } from "../networking/NetworkUtils";
+import { initStages, stageList } from "../../../shared/src/game/Stage";
 import { EndGameScreen } from "./EndGameScreen";
 
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
 export var BulletEntities: Map<String, Entity<BulletComponent>> = new Map();
+export var ColliderList: Array<Entity> = new Array();
 export var LocalPlayerInstance: LocalPlayer;
 
 export class Game extends Scene {
@@ -31,6 +33,7 @@ export class Game extends Scene {
         this.camera.zoom = 0.8 - (NetworkUtils.getLocalUpgrade("Scope") * 0.2)
 
         Hud.initMain()
+        initStages()
 
         const circle = new Entity({
             name: "circle",
@@ -43,7 +46,8 @@ export class Game extends Scene {
         this.engine.currentScene.add(circle)
 
 
-        Networking.client.room!.onMessage(S2CPackets.EndGame,()=>{
+        Networking.client.room!.onMessage(S2CPackets.EndGame,({winner})=>{
+            document.getElementById("RoundWinner").innerText = "Winner: " + winner
             if(LocalPlayerInstance){
                 if(LocalPlayerInstance.line){
                     LocalPlayerInstance.line.kill()
@@ -70,22 +74,28 @@ export class Game extends Scene {
         })
 
         Networking.client.room!.state.colliders.onAdd((collider: any, key: number) => {
+            let newCollider
             if (collider.type == "Circle") {
-                engine.add(createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Circle', radius: collider.radius }))
+                newCollider = (createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Circle', radius: collider.radius }))
             }
             if (collider.type == "Rectangle") {
-                engine.add(createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Rectangle',  halfWidth: collider.width , halfHeight: collider.height }))
+                newCollider = (createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Rectangle',  halfWidth: collider.width , halfHeight: collider.height }))
             }
             if (collider.type == "Triangle") {
-                engine.add(createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Triangle',  point1: collider.point1, point2: collider.point2, point3: collider.point3  }))
+                newCollider = (createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Triangle',  point1: collider.point1, point2: collider.point2, point3: collider.point3  }))
             }
+            ColliderList.push(newCollider)
+            engine.add(newCollider)
+            console.log("added " + collider.type)
         })
 
-
         Networking.client.room!.state.players.onAdd((playerState: Player, id: string) => {
+            let spawnPosList = stageList.get(Networking.client.room!.state.game.stage).spawnPosList
+            let spawnPos = spawnPosList[Math.floor(Math.random() * spawnPosList.length)]
             if (Networking.client.clientId == id) {
                 Hud.initNetwork()
-                LocalPlayerInstance = new LocalPlayer((Math.floor(Math.random() * (400 - (-400) + 1)) - 400), 400); // add local player
+                LocalPlayerInstance = new LocalPlayer(spawnPos.x, spawnPos.y); // add local player
+                console.log("added new player")
                 this.add(LocalPlayerInstance)
             } else {
                 let ent = createOtherPlayerEntity(playerState, id);

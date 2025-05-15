@@ -304,6 +304,7 @@ export class Game extends Schema {
     @type("boolean") inRound: boolean;
     @type("number") roundsPlayed: number;
     @type("number") roundStartTime: number;
+    @type("string") stage = "stage1"
 
 }
 
