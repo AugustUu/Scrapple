@@ -1,11 +1,12 @@
 import { Command } from "@colyseus/command";
+import { Schema, MapSchema, type, ArraySchema } from "@colyseus/schema";
 import { GameRoom } from "../rooms/GameRoom";
 import { NetworkUtils } from "../../../client/src/networking/NetworkUtils";
 import { Upgrades } from "shared/src/game/UpgradeManager/UpgradeManager";
-import { Player, UpgradeState } from "../State";
+import { Collider, Player, UpgradeState } from "../State";
 import { S2CPackets } from "shared/src/networking/Packet";
 import { Client } from "colyseus";
-import { stageList } from "shared/src/game/Stage";
+import { Stage, stageList } from "shared/src/game/Stage";
 
 // code for random upgrades that nshould run every tick
 export class ReadyCommand extends Command<GameRoom, { client: Client }> {
@@ -13,7 +14,7 @@ export class ReadyCommand extends Command<GameRoom, { client: Client }> {
     execute({ client } = this.payload) {
         this.state.clients.get(client.sessionId).ready = !this.state.clients.get(client.sessionId).ready
 
-        console.log(this.state.clients.get(client.sessionId).ready)
+
         this.room.broadcast(S2CPackets.Readied)
         let allReady = true
         for(var otherClient of this.state.clients.values()){
@@ -32,14 +33,18 @@ export class ReadyCommand extends Command<GameRoom, { client: Client }> {
             else if (!this.state.game.inRound) {
                 this.state.game.inRound = true;
                 this.state.game.roundStartTime = Date.now()
-
+                
+                let colliderList = new ArraySchema<Collider>
                 this.state.game.stage = Array.from(stageList.keys())[Math.floor(Math.random() * Array.from(stageList.keys()).length)]
                 let stage = stageList.get(this.state.game.stage)
                 
                 for(let collider of stage.colliderList){
-                    this.state.colliders.push(collider)
+                    console.log(collider.type)
+                    colliderList.push(collider)
                 }
 
+                this.state.colliders = colliderList
+                
                 this.state.clients.forEach((otherClient, id) => {
                    
                     otherClient.ready = false
