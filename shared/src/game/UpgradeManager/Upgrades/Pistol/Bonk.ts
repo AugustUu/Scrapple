@@ -6,7 +6,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Bonk extends Upgrade {
     constructor() {
-        super("Bonk", 3, null, "Pistol", "Damage players by rolling into him")
+        super("Bonk", 3, null, "Pistol", "Damage players by rolling into them")
     }
 
     serverOnPlayerConstructed(level: number, player: Player): void {

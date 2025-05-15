@@ -6,7 +6,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class SuperCharge extends Upgrade {
     constructor() {
-        super("SuperCharge", 3, null, "Minigun", "Shoot faster Shrink bullets")
+        super("SuperCharge", 3, null, "Minigun", "Shoot faster, smaller bullets")
     }
     
     clientOnPlayerConstructed(level: number, player: LocalPlayer){

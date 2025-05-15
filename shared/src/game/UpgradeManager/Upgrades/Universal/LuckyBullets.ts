@@ -6,7 +6,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class LuckyBullets extends Upgrade {
     constructor() {
-        super("Lucky Bullets", 3, null, null, "More homing less bullets")
+        super("Lucky Bullets", 3, null, null, "Better chance of not missing")
     }
 
     serverOnGunConstructed(level: number, gun: GunState): void {
