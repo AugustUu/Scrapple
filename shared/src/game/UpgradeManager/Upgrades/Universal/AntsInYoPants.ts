@@ -1,7 +1,7 @@
-import { LocalPlayer } from "../../../../../client/src/game/LocalPlayer"
-import { Player } from "../../../../../server/src/State"
-import { Upgrade } from "../Upgrade"
-import { registerUpgrade } from "../UpgradeManager"
+import { LocalPlayer } from "../../../../../../client/src/game/LocalPlayer"
+import { Player } from "../../../../../../server/src/State"
+import { Upgrade } from "../../Upgrade"
+import { registerUpgrade } from "../../UpgradeManager"
 
 @registerUpgrade
 export class AntsInYoPants extends Upgrade {

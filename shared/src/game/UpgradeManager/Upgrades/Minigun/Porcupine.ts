@@ -6,7 +6,7 @@ import { registerUpgrade } from "../../UpgradeManager"
 @registerUpgrade
 export class Porcupine extends Upgrade {
     constructor() {
-        super("Porcupine", 3, null, "Pistol", "Porcupines shoot quills when damaged")
+        super("Porcupine", 3, null, "Minigun", "Porcupines shoot quills when damaged")
     }
     
     serverOnPlayerHit(level: number, state: State, player: Player , otherPlayer: Player): void {
@@ -28,5 +28,5 @@ function createRandomString(length:number) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return result;
-  }
+}
   
