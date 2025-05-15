@@ -59,7 +59,7 @@ export function CreateGrappleLine(player: Entity, endPoint: Vector) {
     let line = new Line({
         start: Vector.Zero,
         end: Vector.Zero,
-        color: Color.Green,
+        color: Color.Gray,
         thickness: 0
     })
 

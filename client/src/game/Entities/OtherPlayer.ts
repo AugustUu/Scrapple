@@ -4,7 +4,7 @@ import { lerp, Vector2 } from "../../util";
 import { Player } from "server/src/State";
 import { engine } from "../..";
 import { CreateGrappleLine } from "./GrappleLine";
-import { Resources } from "../../Resources";
+import { Images } from "../../Resources";
 
 export class OtherPlayerComponent extends Component {
     public name: string = 'jorbis';
@@ -39,8 +39,8 @@ export function createOtherPlayerEntity(playerState: Player, id: string): Entity
 
     let graphics = new GraphicsComponent();
 
-    let image = Resources.PlayerOverlay
-    let image2 = Resources.PlayerFill
+    let image = Images.PlayerOverlay
+    let image2 = Images.PlayerFill
 
     let playerSprite: Sprite
     let playerSprite2: Sprite
