@@ -12,7 +12,6 @@ import { S2CPackets } from "shared/src/networking/Packet";
 import { Hud } from "../ui/Hud";
 import { NetworkUtils } from "../networking/NetworkUtils";
 import { EndGameScreen } from "./EndGameScreen";
-import { Sounds } from "../Resources";
 
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
 export var BulletEntities: Map<String, Entity<BulletComponent>> = new Map();
@@ -102,7 +101,6 @@ export class Game extends Scene {
         })
 
         Networking.client.room!.state.bullets.onAdd((bullet: Bullet, id: string) => {
-            Sounds.shotgunFire.play()
             let bulletEntity = createBullet(bullet, id)
             BulletEntities.set(id, bulletEntity)
             this.add(bulletEntity)

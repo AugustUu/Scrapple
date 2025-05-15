@@ -9,8 +9,3 @@ export const Images = {
 
 } as const
 
-export const Sounds = {
-    shotgunFire: new Sound("/Sound/Gun/Shotgun.mp3")
-
-} as const
-

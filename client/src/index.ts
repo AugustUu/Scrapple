@@ -9,7 +9,7 @@ import { StartScreen } from './scenes/StartScreen';
 import { EndRoundScreen } from './scenes/EndRoundScreen';
 import { Credits } from './scenes/Credits';
 import { ExcaliburGraphicsContextWebGL } from 'excalibur';
-import { Images, Sounds } from './Resources';
+import { Images } from './Resources';
 import { EndGameScreen } from './scenes/EndGameScreen';
 
 
@@ -61,9 +61,6 @@ async function init() {
     
     for (let image of Object.values(Images)){
         loader.addResource(image);
-    }
-    for (let sound of Object.values(Sounds)){
-        loader.addResource(sound)
     }
     await engine.start(loader)
     loader.load()
