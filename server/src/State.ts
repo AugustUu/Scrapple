@@ -82,7 +82,7 @@ export class EffectState extends Schema {
     @type("string") effectsID: string;
     @type("number") endTime: number;
 
-    constructor(effectsID: string,endTime : number) {
+    constructor(effectsID: string, endTime: number) {
         super();
         this.effectsID = effectsID
         this.endTime = endTime
@@ -132,6 +132,7 @@ export class Bullet extends Schema {
     @type("number") timeCreated: number;
     @type("number") homeRadius: number;
     @type("number") homeStrength: number;
+    @type("number") homeAngle: number = Math.PI / 4;
 
     constructor(x: number, y: number, angle: number, radius: number, shotById: string, speed: number, homeRadius: number, homeStrength: number) {
         super()
@@ -182,7 +183,7 @@ export class TriangleCollider extends Collider {
     @type(Position) point3: Position;
 
 
-    constructor(x: number, y: number, point1: Position, point2: Position , point3: Position) {
+    constructor(x: number, y: number, point1: Position, point2: Position, point3: Position) {
         super(x, y, "Rectangle")
         this.point1 = point1
         this.point2 = point3
@@ -252,13 +253,13 @@ export class PlayerClient extends Schema {
     randomizeUpgradeOptions(checkGunDep: boolean, heldGunId?: string) {
         let upgradeMap = new Map(Upgrades)
         for (let upgrade of upgradeMap.entries()) {
-            if(this.upgrades.has(upgrade[0])){
+            if (this.upgrades.has(upgrade[0])) {
                 if (this.upgrades.get(upgrade[0]).level >= upgradeMap.get(upgrade[0]).max) {
                     upgradeMap.delete(upgrade[0])
                     continue
                 }
             }
-            
+
             if (upgradeMap.get(upgrade[0]).upgradeDep != undefined) {
                 let dep = upgradeMap.get(upgrade[0]).upgradeDep
                 if (this.upgrades.get(dep.upgrade).level < dep.level) {
@@ -266,14 +267,13 @@ export class PlayerClient extends Schema {
                     continue
                 }
             }
-            
+
             if (upgradeMap.get(upgrade[0]).gunDep != undefined) {
                 //console.log(heldGunId, " ", upgradeMap.get(upgrade[0]).gunDep)
                 if (!checkGunDep || heldGunId == undefined) {
                     upgradeMap.delete(upgrade[0])
                     continue
-                } else 
-                {
+                } else {
                     let dep = upgradeMap.get(upgrade[0]).gunDep
                     if (heldGunId != dep) {
                         upgradeMap.delete(upgrade[0])

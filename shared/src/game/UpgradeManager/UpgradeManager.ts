@@ -22,6 +22,7 @@ import("./Upgrades/Pistol/Bonk")
 
 import("./Upgrades/Sniper/Reversenizer")
 import("./Upgrades/Sniper/Scope")
+import("./Upgrades/Sniper/Snail")
 
 
 import("./Upgrades/Shotgun/ReloadBurst")
