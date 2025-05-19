@@ -1,4 +1,4 @@
-import { Actor, Color, Entity, Scene, Vector, vec, SceneActivationContext, GraphicsComponent, Circle, TransformComponent } from "excalibur";
+import { Actor, Color, Entity, Scene, Vector, vec, SceneActivationContext, GraphicsComponent, Circle, TransformComponent, CircleColliderOptions } from "excalibur";
 import { engine } from "..";
 import { createOtherPlayerEntity, OtherPlayerComponent, OtherPlayerMoveSystem } from "../game/Entities/OtherPlayer";
 import { LocalPlayer } from "../game/LocalPlayer";
@@ -17,6 +17,7 @@ import { EndGameScreen } from "./EndGameScreen";
 export var PlayerEntities: Map<String, Entity<OtherPlayerComponent>> = new Map();
 export var BulletEntities: Map<String, Entity<BulletComponent>> = new Map();
 export var ColliderList: Array<Entity> = new Array();
+export var loadingColliderList: Array<Collider> = new Array();
 export var LocalPlayerInstance: LocalPlayer;
 
 export class Game extends Scene {
@@ -62,9 +63,6 @@ export class Game extends Scene {
                     line.kill()
                 }
             })
-            for(let collider of ColliderList){
-                collider.kill()
-            }
 
             BulletEntities.forEach((bullet)=>{
                 bullet.kill()
@@ -75,22 +73,6 @@ export class Game extends Scene {
         Networking.client.room!.onMessage(S2CPackets.WinGame,(message)=>{
             document.getElementById('whoWon').innerText = message.id
             engine.goToScene("endGameScreen")
-        })
-
-        Networking.client.room!.state.colliders.onAdd((collider: any, key: number) => {
-            let newCollider
-            if (collider.type == "Circle") {
-                newCollider = (createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Circle', radius: collider.radius }))
-            }
-            if (collider.type == "Rectangle") {
-                newCollider = (createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Rectangle',  halfWidth: collider.width , halfHeight: collider.height }))
-            }
-            if (collider.type == "Triangle") {
-                newCollider = (createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Triangle',  point1: collider.point1, point2: collider.point2, point3: collider.point3  }))
-            }
-            ColliderList.push(newCollider)
-            engine.add(newCollider)
-            console.log("added " + collider.type)
         })
 
         Networking.client.room!.state.players.onAdd((playerState: Player, id: string) => {
@@ -133,8 +115,36 @@ export class Game extends Scene {
 
     }
 
+    
+
     public onActivate(context: SceneActivationContext<unknown>): void {
+        
+        
         Hud.enable()
+
+        let newCollider
+        for(let collider of ColliderList){
+            console.log("killed " + collider)
+            collider.kill()
+        }
+        ColliderList = new Array();
+        for(let collider of loadingColliderList){
+            if (collider.type == "Circle") {
+                newCollider = (createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Circle', radius: (collider as CircleCollider).radius }))
+            }
+            if (collider.type == "Rectangle") {
+                newCollider = (createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Rectangle',  halfWidth: (collider as RectangleCollider).width , halfHeight: (collider as RectangleCollider).height }))
+            }
+            if(newCollider != undefined){
+                ColliderList.push(newCollider)
+                engine.add(newCollider)
+                console.log("added " + collider.type)
+            }
+            else{
+                debugger
+            }
+        }
+        loadingColliderList = new Array();
 
         this.camera.zoom = 0.8 - (NetworkUtils.getLocalUpgrade("Scope") * 0.2)  
 

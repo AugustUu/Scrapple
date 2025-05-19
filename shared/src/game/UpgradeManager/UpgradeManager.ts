@@ -17,7 +17,7 @@ import("./Upgrades/Universal/Shield")
 import("./Upgrades/Universal/ShootSpeed")
 import("./Upgrades/Universal/SprayAndPray")
 import("./Upgrades/Universal/Tank")
-
+import("./Upgrades/Universal/LastBreath")
 
 import("./Upgrades/Pistol/Akimbo")
 import("./Upgrades/Pistol/Bonk")
@@ -29,6 +29,7 @@ import("./Upgrades/Sniper/Dash")
 import("./Upgrades/Sniper/FlankGuard")
 import("./Upgrades/Sniper/Reversenizer")
 import("./Upgrades/Sniper/Scope")
+import("./Upgrades/Sniper/Snail")
 
 
 import("./Upgrades/Shotgun/AllForOne")
