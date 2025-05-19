@@ -9,6 +9,6 @@ export class ReloadSpeed extends Upgrade {
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {
-        gun.reloadDelay -= 500 * level;
+        gun.reloadDelay -= gun.reloadDelay * 0.3 * level;
     }
 }

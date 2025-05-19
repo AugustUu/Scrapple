@@ -11,7 +11,7 @@ export class LuckyBullets extends Upgrade {
 
     serverOnGunConstructed(level: number, gun: GunState): void {
         gun.magSize = Math.round(gun.magSize / 2 )
-        gun.ammo == gun.magSize
+        gun.ammo = gun.magSize
     }
 
     serverOnShoot(level: number, bullet: Bullet, state: State, player: Player): void {

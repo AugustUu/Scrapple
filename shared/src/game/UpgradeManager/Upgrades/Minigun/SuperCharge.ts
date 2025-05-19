@@ -18,5 +18,4 @@ export class SuperCharge extends Upgrade {
         gun.bulletSize -= 1 * level
     }
 
-    
 }

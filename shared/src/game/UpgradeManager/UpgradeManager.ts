@@ -21,6 +21,7 @@ import("./Upgrades/Universal/Tank")
 
 import("./Upgrades/Pistol/Akimbo")
 import("./Upgrades/Pistol/Bonk")
+import("./Upgrades/Pistol/DevilishDeal")
 import("./Upgrades/Pistol/GlassCannon")
 
 
@@ -39,6 +40,7 @@ import("./Upgrades/Shotgun/SawedOff")
 
 
 import("./Upgrades/Minigun/Ammobelt")
+import("./Upgrades/Minigun/Laser")
 import("./Upgrades/Minigun/Porcupine")
 import("./Upgrades/Minigun/SuperCharge")
 

@@ -4,20 +4,16 @@ import { Upgrade } from "../../Upgrade"
 import { registerUpgrade } from "../../UpgradeManager"
 
 @registerUpgrade
-export class AmmoBelt extends Upgrade {
+export class SuperCharge extends Upgrade {
     constructor() {
-        super("AmmoBelt", 3, null, "Minigun", "More ammo Move slower")
-    }
-    
-    clientOnPlayerConstructed(level: number, player: LocalPlayer){
-        player.speed /= 1 + (0.05*level)
+        super("Laser", 1, null, "Minigun", "Halves the magazine but turns your gun into a laser")
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {
-        gun.ammo += 25 * level
-        gun.magSize += 25 * level
-        gun.reloadDelay *= 1 + (0.15 * level)
+        gun.spread = 0;
+        gun.magSize *= 0.5
+        gun.ammo *= 0.5
+        gun.damage *= 0.9
     }
 
-    
 }
