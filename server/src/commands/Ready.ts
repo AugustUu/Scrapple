@@ -39,7 +39,6 @@ export class ReadyCommand extends Command<GameRoom, { client: Client }> {
                 let stage = stageList.get(this.state.game.stage)
                 
                 for(let collider of stage.colliderList){
-                    console.log(collider.type)
                     colliderList.push(collider)
                 }
 
@@ -65,12 +64,11 @@ export class ReadyCommand extends Command<GameRoom, { client: Client }> {
                     this.state.players.set(id, new Player(otherClient.name, id, otherClient));
                 })
     
-                this.room.broadcast(S2CPackets.StartGame, {stage: this.state.game.stage})
+                this.room.broadcast(S2CPackets.StartGame, {stage: this.state.game.stage, colliderList: colliderList})
             }
             
         }
     }
 
 }
-
 

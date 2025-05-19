@@ -6,7 +6,8 @@ import {S2CPackets,C2SPacket} from "shared/src/networking/Packet"
 import { createOtherPlayerEntity } from "../game/Entities/OtherPlayer";
 import { Vector } from "excalibur";
 import { engine } from "..";
-import {State} from "server/src/State"
+import {Collider, State} from "server/src/State"
+import { loadingColliderList } from "../scenes/Game";
 
 export class NetworkClient {
 
@@ -57,13 +58,12 @@ export class NetworkClient {
             engine.goToScene("startScreen");
         })
 
-        room.onMessage(S2CPackets.StartGame,()=>{
+        room.onMessage(S2CPackets.StartGame,(message)=>{
+            message.colliderList.forEach((collider: Collider) => {
+                loadingColliderList.push(collider)
+            });
             engine.goToScene("game");
         })
-
-
-        
-
     }
 
 
