@@ -88,9 +88,15 @@ export class Game extends Scene {
             if (collider.type == "Triangle") {
                 newCollider = (createGroundShape(collider.position.x, collider.position.y, new Color(50, 50, 50), { type: 'Triangle',  point1: collider.point1, point2: collider.point2, point3: collider.point3  }))
             }
-            ColliderList.push(newCollider)
-            engine.add(newCollider)
-            console.log("added " + collider.type)
+            if(newCollider != undefined){
+                ColliderList.push(newCollider)
+                engine.add(newCollider)
+                console.log("added " + collider.type)
+            }
+            else{
+                debugger
+            }
+            
         })
 
         Networking.client.room!.state.players.onAdd((playerState: Player, id: string) => {
