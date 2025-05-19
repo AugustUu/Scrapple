@@ -95,6 +95,7 @@ export class Player extends Schema {
     @type("number") health: number;
     @type("number") maxHealth: number;
     @type(Position) position: Position;
+    @type(Position) oldPosition: Position;
     @type("number") rotation: number;
 
     @type({ map: EffectState }) effects: MapSchema<EffectState>;
@@ -113,6 +114,7 @@ export class Player extends Schema {
         this.id = id;
         this.gun = new GunState(client.gunOptions.options[client.gunOptions.picked], client);
         this.position = new Position(0, 0)
+        this.oldPosition = new Position(0, 0)
         this.rotation = 0
         this.health = 100;
         this.maxHealth = this.health

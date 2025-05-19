@@ -17,7 +17,7 @@ import("./Upgrades/Universal/Shield")
 import("./Upgrades/Universal/ShootSpeed")
 import("./Upgrades/Universal/SprayAndPray")
 import("./Upgrades/Universal/Tank")
-
+import("./Upgrades/Universal/LastBreath")
 
 import("./Upgrades/Pistol/Akimbo")
 import("./Upgrades/Pistol/Bonk")
