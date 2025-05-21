@@ -12,5 +12,6 @@ export class SprayAndPray extends Upgrade {
     serverOnGunConstructed(level: number, gun: GunState) {
         gun.fireDelay -= 100 * level;
         gun.spread += 8 * level;
+        gun.reloadDelay *= 1.25;
     }
 }
