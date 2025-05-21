@@ -47,9 +47,9 @@ export class LocalPlayer extends Actor {
 
         
         this.jumpHeight = 60
-        this.speed = 5
+        this.speed = 4.3
         this.speedMult = 1
-        this.maxGrappleSpeed = 175
+        this.maxGrappleSpeed = 100
 
         this.radius = NetworkUtils.getLocalState().radius
         this.maxJumps = 0
@@ -183,7 +183,7 @@ export class LocalPlayer extends Actor {
         }
         if(this.grappling){
             if (engine.input.keyboard.isHeld(Keys.W)) {
-                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: rigidBody.linvel().y + moveSpeed * 0.5 }, true);
+                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: rigidBody.linvel().y + moveSpeed * 0.4 }, true);
             }
         }
         else{

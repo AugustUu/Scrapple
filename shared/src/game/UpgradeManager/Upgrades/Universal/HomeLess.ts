@@ -9,11 +9,11 @@ export class HomeLess extends Upgrade {
     }
 
     serverOnShoot(level: number, bullet: Bullet, state: State, player: Player): void {
-        bullet.homeStrength *= -0.25
-        bullet.homeRadius *= 1.2
+        bullet.homeStrength *= -0.2 - (0.05 * level)
+        bullet.homeRadius *= 1 + (0.2 * level)
     }
 
     serverOnGunConstructed(level: number, gun: GunState) {
-        gun.damage *= 1.5
+        gun.damage *= 1 + (0.5 * level)
     }
 }
