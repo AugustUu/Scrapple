@@ -17,7 +17,9 @@ export class MoveCommand extends Command<GameRoom, { client: Client, message: an
             player.position.y = message.y
             player.rotation = message.rotation
 
-            if((player.position.x**2 + player.position.y**2) > 2000**2){
+            let radius = 2000 - ((Date.now() - this.state.game.roundStartTime)/5)/15.625
+
+            if((player.position.x**2 + player.position.y**2) > radius**2){
                 player.health -= (30/64)
             }
 
