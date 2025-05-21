@@ -39,6 +39,7 @@ export class EndGameCommand extends Command<GameRoom, {}> {
                 }
                 
                 this.room.broadcast(S2CPackets.EndGame,{winner: winner})
+                this.state.players = new MapSchema<Player>();
             }, 100)
         }
 
