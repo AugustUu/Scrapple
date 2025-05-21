@@ -47,6 +47,10 @@ export class Game extends Scene {
         circle.addComponent(new TransformComponent())
         this.engine.currentScene.add(circle)
 
+        setInterval(()=>{
+            (circle.get(GraphicsComponent).current as Circle).radius =  2000 - ((Date.now() - Networking.client.room.state.game.roundStartTime)/10)/15.625
+        },10)
+
 
         Networking.client.room!.onMessage(S2CPackets.EndGame,({winner})=>{
             document.getElementById("RoundWinner").innerText = "Winner: " + winner
@@ -66,7 +70,7 @@ export class Game extends Scene {
 
             BulletEntities.forEach((bullet)=>{
                 bullet.kill()
-            })
+            })  
             this.engine.goToScene("endRoundScreen")
         })
 
@@ -78,6 +82,8 @@ export class Game extends Scene {
         Networking.client.room!.state.players.onAdd((playerState: Player, id: string) => {
             let spawnPosList = stageList.get(Networking.client.room!.state.game.stage).spawnPosList
             let spawnPos = spawnPosList[Math.floor(Math.random() * spawnPosList.length)]
+
+
             if (Networking.client.clientId == id) {
                 Hud.initNetwork()
                 LocalPlayerInstance = new LocalPlayer(spawnPos.x, spawnPos.y); // add local player

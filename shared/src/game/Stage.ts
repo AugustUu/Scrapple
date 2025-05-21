@@ -37,7 +37,7 @@ export function initStages(){
         )
     ))
 
-    /*stageList.set("stage2", new Stage(
+    stageList.set("stage2", new Stage(
         new Array<Collider>(
             new RectangleCollider(0, 500, 50, 5),
             new RectangleCollider(900, 200, 20, 5),
@@ -184,5 +184,5 @@ export function initStages(){
             new Position(-250, -550),
             new Position(250, -550)
         )
-    ))*/
+    ))
 }
