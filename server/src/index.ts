@@ -40,13 +40,13 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 gameServer.listen(port);
-console.log(`Listening on http://${endpoint}:${port}`);
+//console.log(`Listening on http://${endpoint}:${port}`);
 
 app.get('/quickplay', (req, res) => {
 
     matchMaker.findOneRoomAvailable("GameRoom", {}).then((room) => {
         if (room) {
-            console.log(room.roomId)
+            //console.log(room.roomId)
             res.send({ id: room.roomId })
         } else {
             res.sendStatus(404)

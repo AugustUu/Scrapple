@@ -48,8 +48,13 @@ export class Game extends Scene {
         this.engine.currentScene.add(circle)
 
         setInterval(()=>{
-            (circle.get(GraphicsComponent).current as Circle).radius =  2000 - ((Date.now() - Networking.client.room.state.game.roundStartTime)/10)/15.625
-        },10)
+
+
+            let radius =  2000 - ((Date.now() - Networking.client.room.state.game.roundStartTime)/5)/15.625;
+
+
+            (circle.get(GraphicsComponent).current as Circle).radius = radius;
+        },1)
 
 
         Networking.client.room!.onMessage(S2CPackets.EndGame,({winner})=>{
@@ -87,7 +92,7 @@ export class Game extends Scene {
             if (Networking.client.clientId == id) {
                 Hud.initNetwork()
                 LocalPlayerInstance = new LocalPlayer(spawnPos.x, spawnPos.y); // add local player
-                console.log("added new player")
+                //console.log("added new player")
                 this.add(LocalPlayerInstance)
             } else {
                 let ent = createOtherPlayerEntity(playerState, id);
@@ -113,7 +118,7 @@ export class Game extends Scene {
         })
 
         Networking.client.room.onMessage(S2CPackets.Killed,()=>{
-            console.log("killed")
+            //console.log("killed")
             if(LocalPlayerInstance){
                 if(LocalPlayerInstance.line){
                     LocalPlayerInstance.line.kill()
@@ -134,7 +139,7 @@ export class Game extends Scene {
 
         let newCollider
         for(let collider of ColliderList){
-            console.log("killed " + collider)
+            //("killed " + collider)
             collider.kill()
         }
         ColliderList = new Array();
@@ -148,7 +153,7 @@ export class Game extends Scene {
             if(newCollider != undefined){
                 ColliderList.push(newCollider)
                 engine.add(newCollider)
-                console.log("added " + collider.type)
+                //console.log("added " + collider.type)
             }
             else{
                 debugger

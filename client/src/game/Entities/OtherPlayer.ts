@@ -62,9 +62,7 @@ export function createOtherPlayerEntity(playerState: Player, id: string): Entity
         })
 
     }
-    else{
-        console.log("attempted to use unloaded sprite")
-    }
+
 
     playerSprite2.tint = Color.fromHex(Networking.client.room.state.clients.get(id).color)
 
@@ -153,7 +151,6 @@ export class OtherPlayerMoveSystem extends System {
                 entityTransform.rotation = state.rotation
                 player.healthBar.get(TransformComponent).pos = new Vector(entityTransform.pos.x, entityTransform.pos.y - 28)
                 player.nameTag.get(TransformComponent).pos = new Vector(entityTransform.pos.x, entityTransform.pos.y - 40)
-                //console.log(entity.get(OtherPlayerComponent).health)
                 player.healthBar.get(GraphicsComponent).current.scale.x = state.health / 100
             }
         }

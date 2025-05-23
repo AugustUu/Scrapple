@@ -10,7 +10,7 @@ export class OnJoinCommand extends Command<GameRoom, { client: Client, options: 
 
     execute({ client, options } = this.payload) {
 
-        console.log(client.sessionId, "joined!", options);
+        //console.log(client.sessionId, "joined!", options);
         if (options && options.name && options.color) {
             this.state.clients.set(client.sessionId, new PlayerClient(options.name, client.id, options.color));
             client.send(S2CPackets.InitClient, {})

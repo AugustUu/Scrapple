@@ -21,7 +21,7 @@ export class NetworkClient {
     }
 
     onLeave(code: number): void {
-        console.log("left with code: " + code)
+        //console.log("left with code: " + code)
         Networking.events.emit("disconnected", new NeworkEvents.ServerDisconnected(code));
         this.room = null
     }
@@ -41,7 +41,7 @@ export class NetworkClient {
         this.playerListHud = document.getElementById('playerListHud')
         this.clientId = room.sessionId
 
-        console.log("joined",room.id)
+        //console.log("joined",room.id)
         
         Networking.events.emit("joined", new NeworkEvents.Joined(room));
 
