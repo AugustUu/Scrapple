@@ -15,7 +15,7 @@ export class SuperCharge extends Upgrade {
 
     serverOnGunConstructed(level: number, gun: GunState) {
         gun.fireDelay -= (100*level)
-        gun.bulletSize -= 1 * level
+        gun.bulletSize -= 0.5 * level
     }
 
 }
