@@ -271,7 +271,6 @@ export class PlayerClient extends Schema {
             }
 
             if (upgradeMap.get(upgrade[0]).gunDep != undefined) {
-                //console.log(heldGunId, " ", upgradeMap.get(upgrade[0]).gunDep)
                 if (!checkGunDep || heldGunId == undefined) {
                     upgradeMap.delete(upgrade[0])
                     continue

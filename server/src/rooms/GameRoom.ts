@@ -160,7 +160,7 @@ export class GameRoom extends Room<State> {
     }
 
     onDispose() {
-        console.log("room", this.roomId, "disposing...");
+        //console.log("room", this.roomId, "disposing...");
     }
 
 

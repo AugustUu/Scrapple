@@ -84,7 +84,6 @@ export class BulletTickCommand extends Command<GameRoom, {}> {
                             this.room.clients.getById(player.id).send(S2CPackets.Killed, {})
                         }
                         this.state.bullets.delete(BulletID);
-                        //console.log("player health is " + player.health)
                     }
                 }
             })
