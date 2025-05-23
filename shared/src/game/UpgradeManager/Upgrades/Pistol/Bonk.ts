@@ -17,7 +17,7 @@ export class Bonk extends Upgrade {
         state.players.forEach((otherPlayer: Player) => {
             if(player.id != otherPlayer.id){
                 if (Math.hypot(player.position.x - otherPlayer.position.x, player.position.y - otherPlayer.position.y) <= (otherPlayer.radius + player.radius)) {
-                    otherPlayer.health -= 28/64 * level
+                    otherPlayer.health -= (40 + player.health * 0.15)/64 * level
                 }
             }
         })
