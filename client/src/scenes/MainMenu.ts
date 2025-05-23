@@ -27,10 +27,14 @@ export class MainMenu extends Scene {
         this.serverList = document.getElementById('serverList')!;
 
         this.nameInput = document.getElementById('nameInput')! as HTMLInputElement;
+
+        let dumbNames = ["jorbis", "jorboid", "jorbler", "jorbonoid", "jombous", "joobus", "gorbis", "grathan", "gombus", "doingus", "gorpler", "gonklus", "bonklus", "spoinker", "splanting", "jembus", "john", "jartholomew"]
         
-        this.nameInput.value = "jorbis" + Math.random()
+        this.nameInput.value = dumbNames[Math.floor(Math.random() * dumbNames.length)] + " " + dumbNames[Math.floor(Math.random() * dumbNames.length)] + " #" + Math.floor(Math.random() * 10000)
 
         this.colorInput = (document.getElementById('colorpicker') as HTMLInputElement)
+
+        this.colorInput.value = '#' + Math.floor(Math.random() * 0xffffff).toString(16).padEnd(6, '0');
 
         
         this.quickPlay.addEventListener("click",()=>{
