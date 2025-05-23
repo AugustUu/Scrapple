@@ -11,8 +11,6 @@ export class SuperCharge extends Upgrade {
 
     serverOnGunConstructed(level: number, gun: GunState) {
         gun.spread = 0;
-        gun.magSize = Math.round(gun.magSize / 2 )
-        gun.ammo = Math.round(gun.magSize / 2 )
         gun.damage *= 0.9
     }
 
