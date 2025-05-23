@@ -115,6 +115,10 @@ export class Game extends Scene {
         Networking.client.room.onMessage(S2CPackets.Killed,()=>{
             console.log("killed")
             if(LocalPlayerInstance){
+                if(LocalPlayerInstance.line){
+                    LocalPlayerInstance.line.kill()
+                }
+                LocalPlayerInstance.healthBarEntity.kill()
                 LocalPlayerInstance.kill()
             }
         })
