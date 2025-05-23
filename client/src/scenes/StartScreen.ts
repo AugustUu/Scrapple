@@ -108,10 +108,10 @@ export class StartScreen extends Scene {
         this.playerList.innerHTML = ""
         Networking.client.room!.state.clients.forEach((client) => {
             if (client.ready) {
-                this.playerList.innerHTML += `<li style="color:MediumSeaGreen;">${client.name}</li>`
+                this.playerList.innerHTML += `<li style="color:MediumSeaGreen;">${client.name} | 0</li>`
             }
             else {
-                this.playerList.innerHTML += `<li>${client.name}</li>`
+                this.playerList.innerHTML += `<li>${client.name} | 0</li>`
             }
         })
     }

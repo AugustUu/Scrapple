@@ -13,9 +13,8 @@ export class EndGameCommand extends Command<GameRoom, {}> {
     execute({ } = this.payload) {
         this.state.game.inRound = false
 
-        this.state.clients.get(this.state.players.values().next().value.id).wins += 1
-
-        
+        let winner = this.state.clients.get(this.state.players.values().next().value.id)
+        winner.wins += 1
         
         this.state.clients.forEach((client, id) => {
             client.randomizeUpgradeOptions(true, client.gunOptions.options[client.gunOptions.picked])
@@ -33,12 +32,7 @@ export class EndGameCommand extends Command<GameRoom, {}> {
         }
         else{
             setTimeout(() => {
-                let winner = ""
-                if(Array.from(this.state.clients.values())[0]){
-                    winner = Array.from(this.state.clients.values())[0].name
-                }
-                
-                this.room.broadcast(S2CPackets.EndGame,{winner: winner})
+                this.room.broadcast(S2CPackets.EndGame,{winner: winner.name})
                 this.state.players = new MapSchema<Player>();
             }, 100)
         }

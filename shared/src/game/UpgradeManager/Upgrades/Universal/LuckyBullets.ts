@@ -15,7 +15,7 @@ export class LuckyBullets extends Upgrade {
     }
 
     serverOnShoot(level: number, bullet: Bullet, state: State, player: Player): void {
-        bullet.homeStrength *= 1.3 * level
-        bullet.homeRadius *= 1.2 * level
+        bullet.homeStrength *= 1 + (0.3 * level)
+        bullet.homeRadius *= 1 + (0.2 * level)
     }
 }

@@ -77,7 +77,7 @@ export class EndRoundScreen extends Scene {
                         this.playerList.innerHTML += `<li style="color:MediumSeaGreen;">${client.name} | ${client.wins}</li>`
                     }
                     else {
-                        this.playerList.innerHTML += `<li>${client.name}</li>`
+                        this.playerList.innerHTML += `<li>${client.name} | ${client.wins}</li>`
                     }
                 })
             }, 50)
