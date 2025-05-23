@@ -47,9 +47,9 @@ export class LocalPlayer extends Actor {
 
         
         this.jumpHeight = 60
-        this.speed = 5
+        this.speed = 4.3
         this.speedMult = 1
-        this.maxGrappleSpeed = 175
+        this.maxGrappleSpeed = 100
 
         this.radius = NetworkUtils.getLocalState().radius
         this.maxJumps = 0
@@ -86,9 +86,6 @@ export class LocalPlayer extends Actor {
             })
     
         }
-        else{
-            console.log("attempted to use unloaded sprite")
-        }
     
         playerSprite2.tint = Color.fromHex( NetworkUtils.getLocalClient().color)
 
@@ -115,7 +112,6 @@ export class LocalPlayer extends Actor {
         this.addComponent(new ColliderComponent(RAPIER.ColliderDesc.ball(this.radius/10).setCollisionGroups(0x00020007), rigidBody.body))
         
 
-        console.log("new", rigidBody)
 
         this.shooting = false
         this.grappling = false
@@ -151,7 +147,6 @@ export class LocalPlayer extends Actor {
                 }
             }
             else {
-                console.log("wrong collisiongroup")
                 if(this.grounded){
                     this.grounded = false
                     this.lastTimeGrounded = Date.now()
@@ -183,7 +178,7 @@ export class LocalPlayer extends Actor {
         }
         if(this.grappling){
             if (engine.input.keyboard.isHeld(Keys.W)) {
-                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: rigidBody.linvel().y + moveSpeed * 0.5 }, true);
+                rigidBody.setLinvel({ x: rigidBody.linvel().x, y: rigidBody.linvel().y + moveSpeed * 0.4 }, true);
             }
         }
         else{
@@ -239,7 +234,6 @@ export class LocalPlayer extends Actor {
             }
         }
         
-        //console.log(rigidBody.translation())
     }
 
     private grapple(engine: Engine, delta: number) {
@@ -263,7 +257,6 @@ export class LocalPlayer extends Actor {
             if (engine.input.keyboard.wasPressed(Keys.Space) && this.timeLastGrappled + this.grappleCooldown * 1000 <= Date.now()) {
 
 
-                //console.log("Collider", hit.collider, "hit at point", hitPoint); 
                 if (!this.joint.isValid()) {
 
                     let newJoint = generateRevoluteJoint(hit.collider.parent(), rigidBody, hit_point)

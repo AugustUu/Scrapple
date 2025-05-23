@@ -92,7 +92,7 @@ export class Game extends Scene {
             if (Networking.client.clientId == id) {
                 Hud.initNetwork()
                 LocalPlayerInstance = new LocalPlayer(spawnPos.x, spawnPos.y); // add local player
-                console.log("added new player")
+                //console.log("added new player")
                 this.add(LocalPlayerInstance)
             } else {
                 let ent = createOtherPlayerEntity(playerState, id);
@@ -118,7 +118,7 @@ export class Game extends Scene {
         })
 
         Networking.client.room.onMessage(S2CPackets.Killed,()=>{
-            console.log("killed")
+            //console.log("killed")
             if(LocalPlayerInstance){
                 LocalPlayerInstance.kill()
             }
@@ -135,7 +135,7 @@ export class Game extends Scene {
 
         let newCollider
         for(let collider of ColliderList){
-            console.log("killed " + collider)
+            //("killed " + collider)
             collider.kill()
         }
         ColliderList = new Array();
@@ -149,7 +149,7 @@ export class Game extends Scene {
             if(newCollider != undefined){
                 ColliderList.push(newCollider)
                 engine.add(newCollider)
-                console.log("added " + collider.type)
+                //console.log("added " + collider.type)
             }
             else{
                 debugger

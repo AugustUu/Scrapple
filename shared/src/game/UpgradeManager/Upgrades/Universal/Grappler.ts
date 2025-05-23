@@ -11,7 +11,7 @@ export class Grappler extends Upgrade {
 
 
     clientOnPlayerConstructed(level: number, player: LocalPlayer): void {
-        player.maxGrappleSpeed += 25 * level
+        player.maxGrappleSpeed += 35 * level
         player.grappleCooldown /= 2 * level
     }
 }

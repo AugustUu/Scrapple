@@ -12,6 +12,5 @@ export const idList: Array<string> = new Array()
 export function registerGun(target: typeof Gun) {
     let gun = new target();
     idList.push(target.name)
-    //console.log("registered gun", gun)
     Guns.set(target.name, gun)
 }
