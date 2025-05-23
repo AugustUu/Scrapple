@@ -48,8 +48,13 @@ export class Game extends Scene {
         this.engine.currentScene.add(circle)
 
         setInterval(()=>{
-            (circle.get(GraphicsComponent).current as Circle).radius =  2000 - ((Date.now() - Networking.client.room.state.game.roundStartTime)/10)/15.625
-        },10)
+
+
+            let radius =  2000 - ((Date.now() - Networking.client.room.state.game.roundStartTime)/5)/15.625;
+
+
+            (circle.get(GraphicsComponent).current as Circle).radius = radius;
+        },1)
 
 
         Networking.client.room!.onMessage(S2CPackets.EndGame,({winner})=>{
